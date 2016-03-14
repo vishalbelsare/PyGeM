@@ -1,8 +1,7 @@
 # PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM)
 Python Geometrical Morphing.
 
-<img src="docs/source/_static/logo_PyGeM_small.png" style="float:right; width:150px;">
-
+![Python Geometrical Morphing](docs/source/_static/logo_PyGeM_small.png)
 
 ## Description
 

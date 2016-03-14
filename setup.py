@@ -22,9 +22,7 @@ setup(name='pygem',
 	  license='MIT',
 	  packages=['pygem'],
 	  install_requires=[
-	  		'numpy',
-	  		'scipy >= 0.15.0',
-	  		'matplotlib'
+	  		'numpy'
 	  ],
 	  test_suite='nose.collector',
 	  tests_require=['nose'],

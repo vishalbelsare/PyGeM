@@ -78,23 +78,20 @@ class UnvHandler(FileHandler):
 		self._check_extension('unv')
 
 
-	def parse(finput):
+	def parse(self):
 		"""
-		Reads a unv file called finput and returns a matrix with all the coordinates.
-		
-		:param string finput: name of the input unv files.
+		Method to parse the `filename`. It returns a matrix with all the coordinates.
 	
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh.
 		:rtype: float ndarray
 	
 		.. todo::
-	
-			- check if finput exists
+
 			- specify when it works
 		"""
 	
-		input_file = open(finput, 'r')
+		input_file = open(self.filename, 'r')
 		nline = 0
 		while True:
 			line = input_file.readline()
@@ -113,13 +110,15 @@ class UnvHandler(FileHandler):
 				else:
 					while not(input_file.readline().startswith('    -1')):
 						nline += 1
-	
+		
+		input_file.close()
+
 		n_points = count/2
 		mesh_points = np.zeros(shape=(n_points, 3))
 	
 		nline = 0
 		i = 0
-		with open(finput, 'r') as input_file:
+		with open(self.filename, 'r') as input_file:
 			for line in input_file:
 				nline += 1
 				if nline % 2 == 1 and nline >= start_line and nline < last_line:

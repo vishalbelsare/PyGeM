@@ -1,13 +1,12 @@
 Welcome to PyGeM's documentation!
 ===================================================
 
-Python utilities for geometrical morphing.
-
 .. image:: _static/logo_PyGeM.png
-   :height: 100px
-   :width: 200 px
-   :scale: 50 %
+   :height: 150px
+   :width: 150 px
    :align: right
+
+Python utilities for geometrical morphing.
 
 Guide
 ^^^^^

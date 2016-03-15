@@ -6,7 +6,7 @@ Code Documentation
    :maxdepth: 2
 
    file_handler
-   file_management
+   affine_trans
 
 .. automodule:: pygem
     :members:

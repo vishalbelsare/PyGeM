@@ -2,6 +2,9 @@
 Utilities for reading and writing different CAD files.
 """
 import numpy as np
+from mpl_toolkits import mplot3d
+from matplotlib import pyplot
+from stl import mesh
 
 
 class FileHandler(object):
@@ -10,8 +13,6 @@ class FileHandler(object):
 
 	:cvar string filename: name of the file to be processed
 	:cvar string extension: extension of the file to be processed
-
-	.. todo:: Add virtual methods like parse and write
 	"""
 	def __init__(self):
 		self.filename = None
@@ -21,7 +22,7 @@ class FileHandler(object):
 	def _extract_extension(self):
 		"""
 		It is used in child classes.
-		
+
 		.. todo:: DOCS
 		"""
 		ext = self.filename.split('.')[-1].lower()
@@ -59,6 +60,16 @@ class FileHandler(object):
 		"""
 		raise NotImplementedError("Subclass must implement abstract method " \
 			+ self.__class__.__name__ + ".write")
+
+
+	def plot(self, plot_file):
+		"""
+		Abstract method to plot a specific file.
+
+		Not implemented, it has to be implemented in subclasses.
+		"""
+		raise NotImplementedError("Subclass must implement abstract method " \
+			+ self.__class__.__name__ + ".plot")
 
 
 
@@ -162,3 +173,103 @@ class UnvHandler(FileHandler):
 					output_file.write(line)
 
 
+
+	def plot(self, plot_file=None):
+		"""
+		Method to plot a unv file. If `plot_file` is not given it plots `self.filename`.
+
+		:param string plot_file: the unv filename you want to plot.
+		"""
+		raise NotImplementedError("To be implemented.")
+
+
+
+class StlHandler(FileHandler):
+	"""
+	STereoLithography file handler class
+
+	.. todo:: DOCS
+	"""
+	def __init__(self, filename):
+		super(StlHandler, self).__init__()
+
+		if not isinstance(filename, basestring):
+			raise TypeError("filename must be a string")
+
+		self.filename = filename
+		self.extension = self._extract_extension()
+		self._check_extension('stl')
+
+
+	def parse(self):
+		"""
+		Method to parse the `filename`. It returns a matrix with all the coordinates.
+
+		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
+			the points of the mesh
+		:rtype: numpy.ndarray
+
+		.. todo::
+
+			- specify when it works
+		"""
+		stl_mesh = mesh.Mesh.from_file(self.filename)
+		mesh_points = np.array([stl_mesh.x.ravel(), stl_mesh.y.ravel(), stl_mesh.z.ravel()])
+		mesh_points = mesh_points.T
+
+		return mesh_points
+
+
+	def write(self, mesh_points, outfile):
+		"""
+		Writes a unv file, called outfile, copying all the lines from self.filename but
+		the coordinates. mesh_points is a matrix that contains the new coordinates to
+		write in the unv file.
+
+		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
+			the coordinates of the points of the mesh
+
+		.. todo:: DOCS
+		"""
+		if not isinstance(outfile, basestring):
+			raise TypeError("outfile must be a string")
+
+		n_vertices = mesh_points.shape[0]
+		# number of triplets of vertices
+		n_triplets = n_vertices/3
+		data = np.zeros(n_triplets, dtype=mesh.Mesh.dtype)
+		stl_mesh = mesh.Mesh(data, remove_empty_areas=False)
+
+		for i in range(0, n_triplets):
+			for j in range(0, 3):
+				data['vectors'][i][j] = mesh_points[3*i + j]
+
+		stl_mesh.save(outfile, mode=1, update_normals=True)
+
+
+	def plot(self, plot_file=None):
+		"""
+		Method to plot an stl file. If `plot_file` is not given it plots `self.filename`.
+
+		:param string plot_file: the stl filename you want to plot.
+		"""
+		if plot_file is None:
+			plot_file = self.filename
+		else:
+			if not isinstance(plot_file, basestring):
+				raise TypeError("plot_file must be a string")
+
+		# Create a new plot
+		figure = pyplot.figure()
+		axes = mplot3d.Axes3D(figure)
+
+		# Load the STL files and add the vectors to the plot
+		stl_mesh = mesh.Mesh.from_file(plot_file)
+		axes.add_collection3d(mplot3d.art3d.Poly3DCollection(stl_mesh.vectors))
+
+		# Auto scale to the mesh size
+		scale = stl_mesh.points.flatten(-1)
+		axes.auto_scale_xyz(scale, scale, scale)
+
+		# Show the plot to the screen
+		pyplot.show()

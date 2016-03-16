@@ -25,7 +25,7 @@ The generated html can be found in `docs/build/html`. Open up the `index.html` y
 
 ## Testing
 
-We are using Travis CI for continusous intergration testing. You can check out the current status [here](https://travis-ci.org/mathlab/pygem).
+We are using Travis CI for continuous intergration testing. You can check out the current status [here](https://travis-ci.org/mathLab/PyGeM).
 
 To run tests locally:
 

@@ -23,7 +23,8 @@ setup(name='pygem',
 	  packages=['pygem'],
 	  install_requires=[
 	  		'numpy',
-	  		'numpy-stl'
+	  		'numpy-stl',
+	  		'mpl_toolkits'
 	  ],
 	  test_suite='nose.collector',
 	  tests_require=['nose'],

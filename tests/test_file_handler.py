@@ -3,6 +3,8 @@ from unittest import TestCase
 import unittest
 import pygem.file_handler as fh
 import numpy as np
+import filecmp
+import os
 
 
 class TestFileHandler(TestCase):
@@ -10,7 +12,6 @@ class TestFileHandler(TestCase):
 
 	def test_base_class_members(self):
 		file_handler = fh.FileHandler()
-		assert file_handler.file == None
 		assert file_handler.filename == None
 		assert file_handler.extension == None
 
@@ -23,13 +24,9 @@ class TestFileHandler(TestCase):
 
 	def test_base_class_write(self):
 		file_handler = fh.FileHandler()
+		mesh_points = np.zeros((3, 3))
 		with self.assertRaises(NotImplementedError):
-			file_handler.write()
-	
-
-	def test_unv_file_member(self):
-		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
-		assert unv_handler.file == None
+			file_handler.write(mesh_points, 'output')
 
 
 	def test_unv_filename_member(self):
@@ -77,7 +74,36 @@ class TestFileHandler(TestCase):
 	def test_unv_parse_coords_3(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(abs(mesh_points[100][2]), 0.0)		
+		np.testing.assert_almost_equal(abs(mesh_points[100][2]), 0.0)
 
 
+	def test_unv_parse_coords_4(self):
+		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
+		mesh_points = unv_handler.parse()
+		np.testing.assert_almost_equal(abs(mesh_points[0][0]), 0.0)		
+
+
+	def test_unv_write_failing_outfile_type(self):
+		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
+		mesh_points = unv_handler.parse()
+		with self.assertRaises(TypeError):
+			unv_handler.write(mesh_points, 3)
+ 
+
+	def test_unv_write_outfile(self):
+		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
+		mesh_points = unv_handler.parse()
+		mesh_points[0][0] = 2.2
+		mesh_points[5][1] = 4.3
+		mesh_points[9][2] = 0.5
+		mesh_points[45][0] = 7.2
+		mesh_points[132][1] = -1.2
+		mesh_points[255][2] = -3.6
+
+		outfilename = 'tests/test_datasets/test_square_out.unv'
+		outfilename_expected = 'tests/test_datasets/test_square_out_true.unv'
+
+		unv_handler.write(mesh_points, outfilename)
+		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)
 

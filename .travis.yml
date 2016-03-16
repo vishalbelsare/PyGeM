@@ -17,6 +17,8 @@ install:
  - source activate test
  - conda install --yes numpy pip nose
  - pip install setuptools
+ - pip install numpy-stl
+ - pip install matplotlib
  - python setup.py install
 
 script: python test.py

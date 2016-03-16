@@ -29,6 +29,7 @@ class TestFileHandler(TestCase):
 			file_handler.write(mesh_points, 'output')
 
 
+	# UNV tests
 	def test_unv_filename_member(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		assert unv_handler.filename == 'tests/test_datasets/test_square.unv'
@@ -62,25 +63,25 @@ class TestFileHandler(TestCase):
 	def test_unv_parse_coords_1(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(abs(mesh_points[33][0]), 1.0)
+		np.testing.assert_almost_equal(mesh_points[33][0], 1.0)
 
 
 	def test_unv_parse_coords_2(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(abs(mesh_points[178][1]), 0.4)
+		np.testing.assert_almost_equal(mesh_points[178][1], 0.4)
 
 
 	def test_unv_parse_coords_3(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(abs(mesh_points[100][2]), 0.0)
+		np.testing.assert_almost_equal(mesh_points[100][2], 0.0)
 
 
 	def test_unv_parse_coords_4(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(abs(mesh_points[0][0]), 0.0)		
+		np.testing.assert_almost_equal(mesh_points[0][0], 0.0)		
 
 
 	def test_unv_write_failing_outfile_type(self):
@@ -106,4 +107,100 @@ class TestFileHandler(TestCase):
 		unv_handler.write(mesh_points, outfilename)
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
+
+
+	# STL tests
+	def test_stl_filename_member(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		assert stl_handler.filename == 'tests/test_datasets/test_sphere.stl'
+	
+
+	def test_stl_extension_member(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		assert stl_handler.extension == 'stl'
+
+
+	def test_stl_failing_filename_type(self):
+		with self.assertRaises(TypeError):
+			stl_handler = fh.StlHandler(3)
+
+
+	def test_stl_instantiation(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+	
+
+	def test_stl_failing_check_extension(self):
+		with self.assertRaises(ValueError):
+			stl_handler = fh.StlHandler('tests/test_datasets/test_square.iges')
+
+
+	def test_stl_parse_shape(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		assert mesh_points.shape == (7200, 3)
+
+
+	def test_stl_parse_coords_1(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[33][0], -21.31975937)
+
+
+	def test_stl_parse_coords_2(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[1708][1], 2.58431911)
+
+
+	def test_stl_parse_coords_3(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[3527][2], -2.47207999)
+
+
+	def test_stl_parse_coords_4(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[0][0], -21.31975937)	
+
+
+	def test_stl_parse_coords_5(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[7199][2], -39.05963898)		
+
+
+	def test_stl_write_failing_outfile_type(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		with self.assertRaises(TypeError):
+			stl_handler.write(mesh_points, 3)
+ 
+
+	def test_stl_write_outfile(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		mesh_points = stl_handler.parse()
+		mesh_points[0] = [-40.2, -20.5, 60.9]
+		mesh_points[1] = [-40.2, -10.5, 60.9]
+		mesh_points[2] = [-40.2, -10.5, 60.9]
+		mesh_points[2000] = [-40.2, -20.5, 60.9]
+		mesh_points[2001] = [-40.2, -10.5, 60.9]
+		mesh_points[2002] = [-40.2, -10.5, 60.9]
+		mesh_points[6100] = [-40.2, -20.5, 60.9]
+		mesh_points[6101] = [-40.2, -10.5, 60.9]
+		mesh_points[6102] = [-40.2, -10.5, 60.9]
+
+		outfilename = 'tests/test_datasets/test_sphere_out.stl'
+		outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
+
+		stl_handler.write(mesh_points, outfilename)
+		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)
+
+
+	def test_stl_plot_failing_outfile_type(self):
+		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
+		with self.assertRaises(TypeError):
+			stl_handler.plot(plot_file=3)
+
 

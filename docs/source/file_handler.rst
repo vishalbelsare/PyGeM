@@ -11,3 +11,8 @@ File Handler
     :members:
     :private-members:
     :special-members:
+
+.. autoclass:: StlHandler
+    :members:
+    :private-members:
+    :special-members:

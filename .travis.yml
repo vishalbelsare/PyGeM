@@ -15,9 +15,10 @@ before_install:
 install:
  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
  - source activate test
- - conda install --yes numpy pip nose mpl-toolkits
+ - conda install --yes numpy pip nose
  - pip install setuptools
  - pip install numpy-stl
+ - pip install matplotlib
  - python setup.py install
 
 script: python test.py

@@ -61,8 +61,6 @@ def affine_points_fit(points_start, points_end):
 		raise RuntimeError("points_start and points_end must be of same size.")
 
 	dim = len(q[0])
-	print dim
-	print len(q)
 	if len(q) < dim:
 		raise RuntimeError("Too few points => under-determined system.")
 
@@ -106,7 +104,7 @@ def affine_points_fit(points_start, points_end):
 	
 			:rtype: numpy.ndarray
 			"""
-			res = np.zeros([dim])
+			res = np.zeros(dim)
 			for j in range(dim):
 				for i in range(dim):
 					res[j] += vector[i] * M[i][j+dim+1]

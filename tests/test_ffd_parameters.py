@@ -52,17 +52,3 @@ class TestFFDParameters(TestCase):
 		np.testing.assert_array_almost_equal(params.muYY, np.zeros((3, 4, 6)))
 		np.testing.assert_array_almost_equal(params.muZZ, np.zeros((3, 4, 6)))
 
-	"""
-	def test_base_class_parse(self):
-		file_handler = fh.FileHandler()
-		with self.assertRaises(NotImplementedError):
-			file_handler.parse()
-
-
-	def test_base_class_write(self):
-		file_handler = fh.FileHandler()
-		mesh_points = np.zeros((3, 3))
-		with self.assertRaises(NotImplementedError):
-			file_handler.write(mesh_points, 'output')
-
-	"""

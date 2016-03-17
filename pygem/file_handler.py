@@ -96,7 +96,7 @@ class UnvHandler(FileHandler):
 
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
-		:rtype: float ndarray
+		:rtype: float numpy.ndarray
 
 		.. todo::
 

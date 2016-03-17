@@ -9,12 +9,9 @@ class TestAffineTrans(TestCase):
 
 
 	def test_angles2matrix_rot0(self):
-		rotz = 0
-		roty = 0
-		rotx = 0
 		
 		mat_exact = np.eye(3)
-		mat_test = at.angles2matrix(rotz, roty, rotx)
+		mat_test = at.angles2matrix()
 
 		np.testing.assert_array_almost_equal(mat_exact, mat_test)
 
@@ -109,6 +106,20 @@ class TestAffineTrans(TestCase):
 	def test_affine_points_fit_coplanar(self):
 		p_start = np.array([[0,0,0], [0,0,0], [1, 1, 1], [1, 1, 1]])
 		p_end   = np.array([[0,1,0], [-1,0,0], [0,0,1], [0,0,0]])
+		
+		with self.assertRaises(RuntimeError):
+			transformation = at.affine_points_fit(p_start, p_end)
+			
+	def test_affine_points_fit_right_points_size(self):
+		p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
+		p_end   = np.array([[0,1,0], [-1,0,0], [0,0,1]])
+		
+		with self.assertRaises(RuntimeError):
+			transformation = at.affine_points_fit(p_start, p_end)
+			
+	def test_affine_points_fit_under_determined_system(self):
+		p_start = np.array([[1,0,0], [0,1,0]])
+		p_end   = np.array([[0,1,0], [-1,0,0]])
 		
 		with self.assertRaises(RuntimeError):
 			transformation = at.affine_points_fit(p_start, p_end)

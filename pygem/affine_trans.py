@@ -10,7 +10,7 @@ import sympy as syp
 def angles2matrix(z=0, y=0, x=0):
 	"""
 	Returns matrix for given rotations around z, y and x axes. The output rotation matrix is equal to the composition of the
-	individual rotations. Rotations are counter-clockwise.
+	individual rotations. Rotations are counter-clockwise. The default value of the three rotations is zero.
 
 	:param float z: rotation angle (in radians) around z-axis.
 	:param float y: rotation angle (in radians) around y-axis.
@@ -51,6 +51,7 @@ def affine_points_fit(points_start, points_end):
 	:param numpy.ndarray points_start: set of starting points.
 	:param numpy.ndarray points_end: set of ending points.
 	
+	:return: AffineTrasformation: class containing the affine transformation object and its method to evaluate the transformation.
 	:rtype: AffineTransformation
 	"""
 
@@ -103,12 +104,11 @@ def affine_points_fit(points_start, points_end):
 	
 			:rtype: numpy.ndarray
 			"""
-			res = [0.0 for a in range(dim)]
+			res = np.zeros(dim)
 			for j in range(dim):
 				for i in range(dim):
 					res[j] += vector[i] * M[i][j+dim+1]
 				res[j] += M[dim][j+dim+1]
-			res = np.array(res)
 			return res
 		
 	return AffineTransformation()

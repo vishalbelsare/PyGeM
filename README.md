@@ -20,10 +20,8 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 </p>
 
 <p align="center">
-<img src="readme/DTMB_ffd.png"/>
-![DrivAer Morphing](readme/drivAer_ffd.png?1)
-
-DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.
+<img src="readme/drivAer_ffd.png" alt>
+<em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
 
 

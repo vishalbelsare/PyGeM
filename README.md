@@ -16,13 +16,13 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 
 <p align="center">
 <img src="readme/DTMB_ffd.png" alt>
-
 <em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
 </p>
 
 <p align="center">
 <img src="readme/drivAer_ffd.png" alt>
-
+</p>
+<p align="center">
 <em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
 

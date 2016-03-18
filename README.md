@@ -11,7 +11,7 @@ Python Geometrical Morphing.
 
 By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
 
-Here two applications are shown, taken from the ***naval and automotive*** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
+Here two applications are shown, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
 
 <p align="center">
 <img src="readme/DTMB_ffd.png" alt>

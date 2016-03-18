@@ -16,7 +16,7 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 
 ![DTMB Morphing](readme/DTMB_ffd.png)
 
-->*DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.*<-
+-> DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file. <-
 
 ![DrivAer Morphing](readme/drivAer_ffd.png)
 

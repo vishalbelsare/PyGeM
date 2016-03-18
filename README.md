@@ -17,10 +17,12 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 <p align="center">
 ![DTMB Morphing](readme/DTMB_ffd.png)
 
+<img src="readme/DTMB_ffd.png" alt="Sublime's custom image"/>
+
 *DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.*
 </p>
 
-![DrivAer Morphing](readme/drivAer_ffd.png)
+![DrivAer Morphing](readme/drivAer_ffd.png?1)
 
 -> DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file <-
 

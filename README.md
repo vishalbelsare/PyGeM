@@ -27,7 +27,6 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 <em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
 
-
 If you find this collection useful, feel free to download, use it and suggest pull requests!
 
 

@@ -10,11 +10,15 @@ Python Geometrical Morphing.
 - Computer Aided Design files (in .iges and .stl formats)
 - Mesh files (in .unv and OpenFOAM formats)
 
-By now, it has been used with meshes with up to 14 milions of cells.
+By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
 
-Here two applications are shown, taken from the naval and automotive engineering fields.
+Here two applications are shown, taken from the ***naval and automotive*** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
 
-![DTMB Morphing](readme/bulbous_bow.png)
+![DTMB Morphing](readme/DTMB_ffd.png)
+*DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file*
+
+![DrivAer Morphing](readme/drivAer_ffd.png)
+*DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file*
 
 
 

@@ -15,17 +15,16 @@ By now, it has been used with meshes with up to 14 milions of cells. Try with mo
 Here two applications are shown, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
 
 <p align="center">
-![DTMB Morphing](readme/DTMB_ffd.png)
-
-<img src="readme/DTMB_ffd.png" alt="Sublime's custom image"/>
-
-*DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.*
+<img src="readme/DTMB_ffd.png" alt>
+<em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
 </p>
 
+<p align="center">
+<img src="readme/DTMB_ffd.png"/>
 ![DrivAer Morphing](readme/drivAer_ffd.png?1)
 
--> DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file <-
-
+DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.
+</p>
 
 
 If you find this collection useful, feel free to download, use it and suggest pull requests!

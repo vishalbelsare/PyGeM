@@ -5,6 +5,19 @@ Python Geometrical Morphing.
 
 ## Description
 
+**PyGeM** is a python library using **Free Form Deformation** to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:
+
+- Computer Aided Design files (in .iges and .stl formats)
+- Mesh files (in .unv and OpenFOAM formats)
+
+By now, it has been used with meshes with up to 14 milions of cells.
+
+Here two applications are shown, taken from the naval and automotive engineering fields.
+
+![DTMB Morphing](readme/bulbous_bow.png)
+
+
+
 If you find this collection useful, feel free to download, use it and suggest pull requests!
 
 The official distribution is on GitHub, and you can clone the repository using
@@ -14,7 +27,7 @@ The official distribution is on GitHub, and you can clone the repository using
 
 ## Documentation
 
-`PyGeM` uses [Sphinx](http://www.sphinx-doc.org/en/stable/) for code documentation. To build the html versions of the docs simply:
+**PyGeM** uses [Sphinx](http://www.sphinx-doc.org/en/stable/) for code documentation. To build the html versions of the docs simply:
 
 ```bash
 > cd docs

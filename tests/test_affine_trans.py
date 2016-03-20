@@ -62,7 +62,7 @@ class TestAffineTrans(TestCase):
 		v_exact = v_test
 		
 		transformation = at.affine_points_fit(p_start, p_end)
-		v_trans = transformation.transform_vector(v_test)
+		v_trans = transformation(v_test)
 		np.testing.assert_array_almost_equal(v_exact, v_trans)
 		
 
@@ -73,7 +73,7 @@ class TestAffineTrans(TestCase):
 		v_exact = v_test
 		
 		transformation = at.affine_points_fit(p_start, p_end)
-		v_trans = transformation.transform_vector(v_test)
+		v_trans = transformation(v_test)
 		np.testing.assert_array_almost_equal(v_exact, v_trans)
 		
 
@@ -84,7 +84,7 @@ class TestAffineTrans(TestCase):
 		v_exact = np.array([-2., 1., 3.])
 		
 		transformation = at.affine_points_fit(p_start, p_end)
-		v_trans = transformation.transform_vector(v_test)
+		v_trans = transformation(v_test)
 		np.testing.assert_array_almost_equal(v_exact, v_trans)
 		
 
@@ -95,7 +95,7 @@ class TestAffineTrans(TestCase):
 		v_exact = np.array([-0.68443497,  0.7249467 , -0.34221748])
 		
 		transformation = at.affine_points_fit(p_start, p_end)
-		v_trans = transformation.transform_vector(v_test)
+		v_trans = transformation(v_test)
 		np.testing.assert_array_almost_equal(v_exact, v_trans)
 		
 

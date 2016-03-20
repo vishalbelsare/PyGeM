@@ -62,16 +62,6 @@ class FileHandler(object):
 			+ self.__class__.__name__ + ".write")
 
 
-	def plot(self, plot_file):
-		"""
-		Abstract method to plot a specific file.
-
-		Not implemented, it has to be implemented in subclasses.
-		"""
-		raise NotImplementedError("Subclass must implement abstract method " \
-			+ self.__class__.__name__ + ".plot")
-
-
 
 class UnvHandler(FileHandler):
 	"""
@@ -170,16 +160,6 @@ class UnvHandler(FileHandler):
 					i += 1
 				elif nrow > 17:
 					output_file.write(line)
-
-
-
-	def plot(self, plot_file=None):
-		"""
-		Method to plot a unv file. If `plot_file` is not given it plots `self.filename`.
-
-		:param string plot_file: the unv filename you want to plot.
-		"""
-		raise NotImplementedError("To be implemented.")
 
 
 

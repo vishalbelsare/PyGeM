@@ -1,11 +1,11 @@
 """
 Utilities for the affine transformations of the bounding box of the Free Form Deformation.
 """
-
 import math
 import sys
 import numpy as np
 import sympy as syp
+
 
 def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 	"""
@@ -53,9 +53,20 @@ def affine_points_fit(points_start, points_end):
 	:param numpy.ndarray points_start: set of starting points.
 	:param numpy.ndarray points_end: set of ending points.
 
-	:return: AffineTrasformation: class containing the affine transformation object
-			 and its method to evaluate the transformation.
-	:rtype: AffineTransformation
+	:return: transform_vector: function that transforms a vector according to the
+			 affine map. It takes a source vector and return a vector transformed
+			 by the reduced row echelon form of the map.
+	:rtype: function
+
+	:Example:
+
+	>>> import pygem.affine_trans as at
+	>>> # Example of a rotation
+	>>> p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
+	>>> p_end = np.array([[0,1,0], [-1,0,0], [0,0,1], [0,0,0]])
+	>>> v_test = np.array([1., 2., 3.])
+	>>> transformation = at.affine_points_fit(p_start, p_end)
+	>>> v_trans = transformation(v_test)
 	"""
 	if len(points_start) != len(points_end):
 		raise RuntimeError("points_start and points_end must be of same size.")
@@ -90,26 +101,25 @@ def affine_points_fit(points_start, points_end):
 	else:
 		raise RuntimeError("Error: singular matrix. Points are probably coplanar.")
 
-	# Make a result object
-	class AffineTransformation(object):
-		"""
-		Result object that represents the transformation from affine fitter.
-		"""
-		def transform_vector(self, vector):
-			"""
-			Transform a vector according to the affine map.
 
-			:param numpy.ndarray vector: vector to be transformed.
+	def transform_vector(source):
+		"""
+		Transform a vector according to the affine map.
 
-			:rtype: numpy.ndarray
-			"""
-			res = np.zeros(dim)
+		:param numpy.ndarray source: vector to be transformed.
+
+		:return destination: numpy.ndarray representing the transformed vector.
+		:rtype: float
+		"""
+		destination = np.zeros(dim)
+		for i in range(dim):
 			for j in range(dim):
-				for i in range(dim):
-					res[j] += vector[i] * M[i][j+dim+1]
-				res[j] += M[dim][j+dim+1]
-			return res
+				destination[j] += source[i] * M[i][j+dim+1]
+			# Add the last line of the rref
+			destination[i] += M[dim][i+dim+1]
+		return destination
 
-	return AffineTransformation()
+
+	return transform_vector
 
 

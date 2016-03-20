@@ -15,6 +15,8 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 
 <p align="center">
 <img src="readme/DTMB_ffd.png" alt>
+</p>
+<p align="center">
 <em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
 </p>
 

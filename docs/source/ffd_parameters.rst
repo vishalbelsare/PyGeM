@@ -1,4 +1,4 @@
-FFDParameters 
+FFD Parameters 
 =================
 
 .. automodule:: pygem.ffd_parameters

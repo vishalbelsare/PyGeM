@@ -4,7 +4,6 @@ Utilities for the affine transformations of the bounding box of the Free Form De
 import math
 import sys
 import numpy as np
-import sympy as syp
 
 
 def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
@@ -75,7 +74,7 @@ def affine_points_fit(points_start, points_end):
 	if len(points_start) < dim:
 		raise RuntimeError("Too few starting points => under-determined system.")
 
-    # Fill an an empty (dim+1) x (dim) matrix
+	# Fill an an empty (dim+1) x (dim) matrix
 	c = [[0.0 for a in range(dim)] for i in range(dim+1)]
 	for j in range(dim):
 		for k in range(dim+1):
@@ -91,46 +90,52 @@ def affine_points_fit(points_start, points_end):
 			for j in range(dim+1):
 				Q[i][j] += qt[i] * qt[j]
 
-	
-	# Ultra simple linear system solver.
-	def gauss_jordan(m, eps = 1.0/(10**10)):
+
+	def to_reduced_row_echelon_form(matrix):
 		"""
-		TO DOC
+		This method computes the reduced row echelon form (a.k.a. row canonical form) of a matrix.
+		The code is taken from https://rosettacode.org/wiki/Reduced_row_echelon_form#Python and
+		edited with minor changes.
 
-		Puts given matrix (2D array) into the Reduced Row Echelon Form.
-		Returns True if successful, False if 'm' is singular.
-		NOTE: make sure all the matrix items support fractions! Int matrix will NOT work!
-		Written by Jarno Elonen in April 2005, released into Public Domain"""
-		(h, w) = (len(m), len(m[0]))
-		
-		for y in range(0,h):
-			maxrow = y
-			for y2 in range(y+1, h):    # Find max pivot
-				if abs(m[y2][y]) > abs(m[maxrow][y]):
-					maxrow = y2
-			(m[y], m[maxrow]) = (m[maxrow], m[y])
-			if abs(m[y][y]) <= eps:     # Singular?
-				raise RuntimeError("Error: singular matrix. Points are probably coplanar.")
-			
-			for y2 in range(y+1, h):    # Eliminate column y
-				c = m[y2][y] / m[y][y]
-				for x in range(y, w):
-					m[y2][x] -= m[y][x] * c
-		
-		for y in range(h-1, 0-1, -1): # Backsubstitute
-			c  = m[y][y]
-			for y2 in range(0,y):
-				for x in range(w-1, y-1, -1):
-					m[y2][x] -=  m[y][x] * m[y2][y] / c
-			m[y][y] /= c
-			for x in range(h, w):       # Normalize row y
-				m[y][x] /= c
-		return m
+		:param matrix matrix: matrix to be reduced.
 
-	
+		:return matrix: the reduced matrix.
+		:rtype: float
+		"""
+		lead = 0
+		row_count = len(matrix)
+		column_count = len(matrix[0])
+		for r in range(row_count):
+			if lead >= column_count:
+				return matrix
+			i = r
+			while matrix[i][lead] == 0:
+				i += 1
+				if i == row_count:
+					i = r
+					lead += 1
+					if column_count == lead:
+						return matrix
+			matrix[i], matrix[r] = matrix[r], matrix[i]
+			lv = matrix[r][lead]
+			matrix[r] = [mrx / float(lv) for mrx in matrix[r]]
+			for i in range(row_count):
+				if i != r:
+					lv = matrix[i][lead]
+					matrix[i] = [iv - lv*rv for rv, iv in zip(matrix[r], matrix[i])]
+			lead += 1
+		return matrix
+
+
 	# Augement Q with c and solve Q * a' = c by Gauss-Jordan
-	M = [ Q[i] + c[i] for i in range(dim+1)]
-	rref_M = gauss_jordan(M)
+	M = [Q[i] + c[i] for i in range(dim+1)]
+
+	if np.linalg.cond(M) < 1/sys.float_info.epsilon:
+		rref_M = to_reduced_row_echelon_form(M)
+		rref_M = np.array(rref_M)
+	else:
+		raise RuntimeError("Error: singular matrix. Points are probably coplanar.")
+
 
 	def transform_vector(source):
 		"""
@@ -149,7 +154,4 @@ def affine_points_fit(points_start, points_end):
 			destination[i] += rref_M[dim][i+dim+1]
 		return destination
 
-
 	return transform_vector
-	
-

@@ -30,6 +30,18 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 If you find this collection useful, feel free to download, use it and suggest pull requests!
 
 
+## Prerequisites and installation
+**PyGeM** requires:
+- **numpy**;
+- **numpy-stl**;
+- **matplotlib**;
+
+
+The official distribution is on GitHub, and you can clone the repository using
+
+	git clone https://github.com/mathLab/PyGeM
+
+
 ## Documentation
 **PyGeM** uses [Sphinx](http://www.sphinx-doc.org/en/stable/) for code documentation. To build the html versions of the docs simply:
 
@@ -38,7 +50,8 @@ If you find this collection useful, feel free to download, use it and suggest pu
 > make html
 ```
 
-The generated html can be found in `docs/build/html`. Open up the `index.html` you find there to browse
+The generated html can be found in `docs/build/html`. Open up the `index.html` you find there to browse.
+
 
 ## Testing
 We are using Travis CI for continuous intergration testing. You can check out the current status [here](https://travis-ci.org/mathLab/PyGeM).
@@ -48,18 +61,6 @@ To run tests locally:
 ```bash
 > python test.py
 ```
-
-## Prerequisites and Installation
-**PyGeM** requires:
-- **numpy**;
-- **numpy-stl**;
-- **matplotlib**;
-- **sympy**;
-
-
-The official distribution is on GitHub, and you can clone the repository using
-
-	git clone https://github.com/mathLab/PyGeM
 
 
 ## Authors and contributors

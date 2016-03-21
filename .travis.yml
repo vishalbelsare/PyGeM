@@ -15,10 +15,9 @@ before_install:
 install:
  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
  - source activate test
- - conda install --yes numpy pip nose
+ - conda install --yes numpy scipy matplotlib pip nose
  - pip install setuptools
  - pip install numpy-stl
- - pip install matplotlib
  - pip install sympy
  - pip install coveralls
  - pip install coverage

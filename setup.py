@@ -24,6 +24,7 @@ setup(name='pygem',
 	  install_requires=[
 	  		'numpy',
 	  		'numpy-stl',
+	  		'scipy',
 	  		'matplotlib',
 	  		'sympy'
 	  ],

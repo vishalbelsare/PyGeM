@@ -25,8 +25,7 @@ setup(name='pygem',
 	  		'numpy',
 	  		'numpy-stl',
 	  		'scipy',
-	  		'matplotlib',
-	  		'sympy'
+	  		'matplotlib'
 	  ],
 	  test_suite='nose.collector',
 	  tests_require=['nose'],

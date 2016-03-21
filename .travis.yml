@@ -18,7 +18,6 @@ install:
  - conda install --yes numpy scipy matplotlib pip nose
  - pip install setuptools
  - pip install numpy-stl
- - pip install sympy
  - pip install coveralls
  - pip install coverage
  - python setup.py install

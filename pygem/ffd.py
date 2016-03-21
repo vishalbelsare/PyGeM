@@ -21,75 +21,73 @@ class FFD(object):
 		"""
 		DOCS
 		"""
-		(cm, cn) = self.original_mesh_points.shape
+		(n_rows_mesh, n_cols_mesh) = self.original_mesh_points.shape
 
 		## translation and then affine transformation
 		translation = np.array([self.parameters.origin_box_x, self.parameters.origin_box_y, self.parameters.origin_box_z])
 
-		v0 = np.array([self.parameters.position_vertex_1 - translation, \
+		fisical_frame = np.array([self.parameters.position_vertex_1 - translation, \
 			  self.parameters.position_vertex_2 - translation, \
 			  self.parameters.position_vertex_3 - translation, \
 			  [0,0,0]])
-		v1 = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
+		reference_frame = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
 
-		transformation = at.affine_points_fit(v0, v1)
-		inverse_transformation = at.affine_points_fit(v1, v0)
+		transformation = at.affine_points_fit(fisical_frame, reference_frame)
+		inverse_transformation = at.affine_points_fit(reference_frame, fisical_frame)
 	
 		##
-		(n, m, t) = self.parameters.array_mu_x.shape
-		bx = np.zeros((cm, n))
-		by = np.zeros((cm, m))
-		bz = np.zeros((cm, t))
-		Cp_tilde = np.zeros((cm, cn))
+		(dim_n_mu, dim_m_mu, dim_t_mu) = self.parameters.array_mu_x.shape
+		bernstein_x = np.zeros((n_rows_mesh, dim_n_mu))
+		bernstein_y = np.zeros((n_rows_mesh, dim_m_mu))
+		bernstein_z = np.zeros((n_rows_mesh, dim_t_mu))
+		shift_mesh_points = np.zeros((n_rows_mesh, n_cols_mesh))
 
-		mesh_points_mod = self.original_mesh_points - translation	
+		reference_frame_mesh_points = self._transform_points(self.original_mesh_points - translation, transformation)
 
-		Cp0 = self._transform_points(mesh_points_mod, transformation)
+		for i in range  (0, dim_n_mu):
+			aux1 = np.power((1-reference_frame_mesh_points[:,0]),dim_n_mu-1-i)
+			aux2 = np.power(reference_frame_mesh_points[:,0],i)
+			bernstein_x[:,i] = special.binom(dim_n_mu-1,i) * np.multiply(aux1, aux2)
 
-		for i in range  (0, n):
-			aux1 = np.power((1-Cp0[:,0]),n-1-i)
-			aux2 = np.power(Cp0[:,0],i)
-			bx[:,i] = special.binom(n-1,i) * np.multiply(aux1, aux2)
+		for i in range  (0, dim_m_mu):
+			aux1 = np.power((1-reference_frame_mesh_points[:,1]),dim_m_mu-1-i)
+			aux2 = np.power(reference_frame_mesh_points[:,1],i)
+			bernstein_y[:,i] = special.binom(dim_m_mu-1,i) * np.multiply(aux1, aux2)
 
-		for i in range  (0, m):
-			aux1 = np.power((1-Cp0[:,1]),m-1-i)
-			aux2 = np.power(Cp0[:,1],i)
-			by[:,i] = special.binom(m-1,i) * np.multiply(aux1, aux2)
+		for i in range  (0, dim_t_mu):
+			aux1 = np.power((1-reference_frame_mesh_points[:,2]),dim_t_mu-1-i)
+			aux2 = np.power(reference_frame_mesh_points[:,2],i)
+			bernstein_z[:,i] = special.binom(dim_t_mu-1,i) * np.multiply(aux1, aux2)
 
-		for i in range  (0, t):
-			aux1 = np.power((1-Cp0[:,2]),t-1-i)
-			aux2 = np.power(Cp0[:,2],i)
-			bz[:,i] = special.binom(t-1,i) * np.multiply(aux1, aux2)
-
-		for i in range (0, n):
-			for j in range (0, m):
-				for k in range (0, t):
-					aux = np.multiply(bx[:,i], np.multiply(by[:,j], bz[:,k]))
+		for i in range (0, dim_n_mu):
+			for j in range (0, dim_m_mu):
+				for k in range (0, dim_t_mu):
+					aux = np.multiply(bernstein_x[:,i], np.multiply(bernstein_y[:,j], bernstein_z[:,k]))
 					aux_x = aux * self.parameters.array_mu_x[i, j, k]
 					aux_y = aux * self.parameters.array_mu_y[i, j, k]
 					aux_z = aux * self.parameters.array_mu_z[i, j, k]
-					Cp_tilde[:,0] += aux_x
-					Cp_tilde[:,1] += aux_y
-					Cp_tilde[:,2] += aux_z
+					shift_mesh_points[:,0] += aux_x
+					shift_mesh_points[:,1] += aux_y
+					shift_mesh_points[:,2] += aux_z
 
 		# Splitting points inside and outside the lattice: TODO not very efficient
-		for i in range (0, cm):
-			if (Cp0[i,0] < 0) or (Cp0[i,1] < 0) or (Cp0[i,2] < 0) or \
-				(Cp0[i,0] > 1) or (Cp0[i,1] > 1) or (Cp0[i,2] > 1):
-				Cp_tilde[i,:] = 0
+		for i in range (0, n_rows_mesh):
+			if (reference_frame_mesh_points[i,0] < 0) or (reference_frame_mesh_points[i,1] < 0) or (reference_frame_mesh_points[i,2] < 0) or \
+				(reference_frame_mesh_points[i,0] > 1) or (reference_frame_mesh_points[i,1] > 1) or (reference_frame_mesh_points[i,2] > 1):
+				shift_mesh_points[i,:] = 0
 
-		return self._transform_points(Cp_tilde + Cp0, inverse_transformation) + translation
+		return self._transform_points(shift_mesh_points + reference_frame_mesh_points, inverse_transformation) + translation
 
 
-	def _transform_points(self, mesh_points, transformation):
+	def _transform_points(self, original_points, transformation):
 		"""
 		DOCS
 		"""
-		n, m = mesh_points.shape
-		Cp = np.zeros((n, m))
+		n_rows_mesh, n_cols_mesh = original_points.shape
+		modified_points = np.zeros((n_rows_mesh, n_cols_mesh))
 
-		for i in range(0, n):
-			fp = mesh_points[i]
-			Cp[i,:] = transformation(fp)
+		for i in range(0, n_rows_mesh):
+			single_point = original_points[i]
+			modified_points[i,:] = transformation(single_point)
 
-		return Cp
+		return modified_points

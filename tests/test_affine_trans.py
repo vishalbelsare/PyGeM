@@ -89,6 +89,20 @@ class TestAffineTrans(TestCase):
 		rref_matrix_exact = [[1.0, 2.0, 3.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
 		assert rref_matrix == rref_matrix_exact
 
+
+	def test_to_reduced_row_echelon_form_6(self):
+		matrix = [[0., 0., 0.], [0., 0., 0.], [2., 4., 6.], [1., 0., 0.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, 0.0, 0.0], [-0.0, 1.0, 1.5], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+		assert rref_matrix == rref_matrix_exact
+
+
+	def test_to_reduced_row_echelon_form_7(self):
+		matrix = [[0., 0., 0., 4], [0., 0., -3., 2], [2., 4., 6., 0]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, 2.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]]
+		assert rref_matrix == rref_matrix_exact
+
 		
 	def test_affine_points_fit_identity_1(self):
 		p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])

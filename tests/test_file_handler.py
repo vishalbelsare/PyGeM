@@ -10,9 +10,13 @@ import os
 class TestFileHandler(TestCase):
 
 
-	def test_base_class_members(self):
+	def test_base_class_filename(self):
 		file_handler = fh.FileHandler()
 		assert file_handler.filename == None
+
+
+	def test_base_class_extension(self):
+		file_handler = fh.FileHandler()
 		assert file_handler.extension == None
 
 	

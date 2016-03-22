@@ -8,7 +8,13 @@ import pygem.affine_trans as at
 
 class FFD(object):
 	"""
-	DOCS
+	Class that handles the Free Form Deformation on the mesh points.
+
+	:param class ffd_parameters: parameters of the Free Form Deformation.
+	:param numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.
+
+	:return: modified_mesh_points: coordinates of the modified points of the mesh.
+	:rtype: numpy.ndarray
     """
 
 	def __init__(self, ffd_parameters, original_mesh_points):
@@ -77,8 +83,10 @@ class FFD(object):
 			or (reference_frame_mesh_points[i, 1] > 1) or (reference_frame_mesh_points[i, 2] > 1):
 				shift_mesh_points[i, :] = 0
 
-		return self._transform_points(shift_mesh_points + reference_frame_mesh_points, \
+		modified_mesh_points = self._transform_points(shift_mesh_points + reference_frame_mesh_points, \
 									  inverse_transformation) + translation
+
+		return modified_mesh_points
 
 
 	def _transform_points(self, original_points, transformation):

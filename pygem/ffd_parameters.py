@@ -100,7 +100,7 @@ class FFDParameters(object):
 		self.position_vertex_3 = np.array([0., 0., 1.])
 
 
-	def read_parameters_file(self, filename=None):
+	def read_parameters_file(self, filename='parameters.prm'):
 		"""
 		Reads in the parameters file and fill the self structure.
 
@@ -109,9 +109,6 @@ class FFDParameters(object):
 		"""
 		if not isinstance(filename, basestring):
 			raise TypeError("filename must be a string")
-
-		if filename is None:
-			filename = 'parameters.prm'
 
 		# Checks if the parameters file exists. If not it writes the default class into filename.
 		if not os.path.isfile(filename):
@@ -186,7 +183,7 @@ class FFDParameters(object):
 			self.inv_psi_mapping = np.diag([self.lenght_box_x, self.lenght_box_y, self.lenght_box_z])
 
 
-	def write_parameters_file(self, filename=None):
+	def write_parameters_file(self, filename='parameters.prm'):
 		"""
 		This method writes a parameters file (.prm) called `filename` and fills it with all
 		the parameters class members.
@@ -195,8 +192,8 @@ class FFDParameters(object):
 			document better
 
 		"""
-		if filename is None:
-			filename = 'parameters.prm'
+		if not isinstance(filename, basestring):
+			raise TypeError("filename must be a string")
 
 		with open(filename, 'w') as output_file:
 			output_file.write('\nn_control_points_x: ' + str(self.n_control_points[0]) + '\n')

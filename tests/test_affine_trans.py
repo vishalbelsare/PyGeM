@@ -53,7 +53,42 @@ class TestAffineTrans(TestCase):
 		
 		mat_test = at.angles2matrix(rotz, roty, rotx)
 		np.testing.assert_array_almost_equal(mat_exact, mat_test)
-		
+
+
+	def test_to_reduced_row_echelon_form_1(self):
+		matrix = [[1., 1., 1.], [1., 1., 1.], [1., 1., 1.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, 1.0, 1.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+		assert rref_matrix == rref_matrix_exact
+
+
+	def test_to_reduced_row_echelon_form_2(self):
+		matrix = [[1., -1., 1.], [-1., 1., -1.], [3., 4., 5.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, 0.0, 1.2857142857142856], [0.0, 1.0, 0.2857142857142857], [0.0, 0.0, 0.0]]
+		assert rref_matrix == rref_matrix_exact
+
+
+	def test_to_reduced_row_echelon_form_3(self):
+		matrix = [[0., 0., 0.], [0., 0., 0.], [0., 0., 0.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[0., 0., 0.], [0., 0., 0.], [0., 0., 0.]]
+		assert rref_matrix == rref_matrix_exact
+
+
+	def test_to_reduced_row_echelon_form_4(self):
+		matrix = [[0., 0., 0.], [-3., 6., -3.], [0., 0., 0.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, -2.0, 1.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+		assert rref_matrix == rref_matrix_exact
+
+
+	def test_to_reduced_row_echelon_form_5(self):
+		matrix = [[0., 0., 0.], [0., 0., 0.], [2., 4., 6.]]
+		rref_matrix = at.to_reduced_row_echelon_form(matrix)
+		rref_matrix_exact = [[1.0, 2.0, 3.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+		assert rref_matrix == rref_matrix_exact
+
 		
 	def test_affine_points_fit_identity_1(self):
 		p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])

@@ -44,6 +44,45 @@ def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 	return np.eye(3)
 
 
+def to_reduced_row_echelon_form(matrix):
+	"""
+	This method computes the reduced row echelon form (a.k.a. row canonical form) of a matrix.
+	The code is taken from https://rosettacode.org/wiki/Reduced_row_echelon_form#Python and
+	edited with minor changes.
+
+	:param matrix matrix: matrix to be reduced.
+
+	:return matrix: the reduced matrix.
+	:rtype: matrix
+
+	.. note::
+		`matrix` will change after calling this function.
+	"""
+	lead = 0
+	row_count = len(matrix)
+	column_count = len(matrix[0])
+	for r in range(row_count):
+		if lead >= column_count:
+			return matrix
+		i = r
+		while matrix[i][lead] == 0:
+			i += 1
+			if i == row_count:
+				i = r
+				lead += 1
+				if column_count == lead:
+					return matrix
+		matrix[i], matrix[r] = matrix[r], matrix[i]
+		lv = matrix[r][lead]
+		matrix[r] = [mrx / float(lv) for mrx in matrix[r]]
+		for i in range(row_count):
+			if i != r:
+				lv = matrix[i][lead]
+				matrix[i] = [iv - lv*rv for rv, iv in zip(matrix[r], matrix[i])]
+		lead += 1
+	return matrix
+
+
 def affine_points_fit(points_start, points_end):
 	"""
 	Fit an affine transformation from starting points to ending points through a
@@ -60,7 +99,7 @@ def affine_points_fit(points_start, points_end):
 	:Example:
 
 	>>> import pygem.affine_trans as at
-	
+
 	>>> # Example of a rotation
 	>>> p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
 	>>> p_end = np.array([[0,1,0], [-1,0,0], [0,0,1], [0,0,0]])
@@ -92,43 +131,7 @@ def affine_points_fit(points_start, points_end):
 				Q[i][j] += qt[i] * qt[j]
 
 
-	def to_reduced_row_echelon_form(matrix):
-		"""
-		This method computes the reduced row echelon form (a.k.a. row canonical form) of a matrix.
-		The code is taken from https://rosettacode.org/wiki/Reduced_row_echelon_form#Python and
-		edited with minor changes.
-
-		:param matrix matrix: matrix to be reduced.
-
-		:return matrix: the reduced matrix.
-		:rtype: float
-		"""
-		lead = 0
-		row_count = len(matrix)
-		column_count = len(matrix[0])
-		for r in range(row_count):
-			if lead >= column_count:
-				return matrix
-			i = r
-			while matrix[i][lead] == 0:
-				i += 1
-				if i == row_count:
-					i = r
-					lead += 1
-					if column_count == lead:
-						return matrix
-			matrix[i], matrix[r] = matrix[r], matrix[i]
-			lv = matrix[r][lead]
-			matrix[r] = [mrx / float(lv) for mrx in matrix[r]]
-			for i in range(row_count):
-				if i != r:
-					lv = matrix[i][lead]
-					matrix[i] = [iv - lv*rv for rv, iv in zip(matrix[r], matrix[i])]
-			lead += 1
-		return matrix
-
-
-	# Augement Q with c and solve Q * a' = c by Gauss-Jordan
+	# Augement Q with c and get the reduced row echelon form of the result
 	M = [Q[i] + c[i] for i in range(dim+1)]
 
 	if np.linalg.cond(M) < 1/sys.float_info.epsilon:

@@ -60,6 +60,7 @@ def affine_points_fit(points_start, points_end):
 	:Example:
 
 	>>> import pygem.affine_trans as at
+	
 	>>> # Example of a rotation
 	>>> p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
 	>>> p_end = np.array([[0,1,0], [-1,0,0], [0,0,1], [0,0,0]])

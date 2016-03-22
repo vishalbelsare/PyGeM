@@ -10,19 +10,9 @@ import os
 class TestFFDParameters(TestCase):
 
 
-	def test_class_members_default_n_control_points_x(self):
+	def test_class_members_default_n_control_points(self):
 		params = ffdp.FFDParameters()
-		assert params.n_control_points_x == 1
-
-
-	def test_class_members_default_n_control_points_y(self):
-		params = ffdp.FFDParameters()
-		assert params.n_control_points_y == 1
-
-
-	def test_class_members_default_n_control_points_z(self):
-		params = ffdp.FFDParameters()
-		assert params.n_control_points_z == 1
+		assert params.n_control_points == [1, 1, 1]
 
 
 	def test_class_members_default_conversion_unit(self):
@@ -45,19 +35,9 @@ class TestFFDParameters(TestCase):
 		assert params.lenght_box_z == 1.
 
 
-	def test_class_members_default_origin_box_x(self):
+	def test_class_members_default_origin_box(self):
 		params = ffdp.FFDParameters()
-		assert params.origin_box_x == 0.
-
-
-	def test_class_members_default_origin_box_y(self):
-		params = ffdp.FFDParameters()
-		assert params.origin_box_y == 0.
-
-
-	def test_class_members_default_origin_box_z(self):
-		params = ffdp.FFDParameters()
-		assert params.origin_box_z == 0.
+		np.testing.assert_array_almost_equal(params.origin_box, np.zeros(3))
 
 
 	def test_class_members_default_rot_angle_x(self):
@@ -112,32 +92,22 @@ class TestFFDParameters(TestCase):
 
 	def test_class_members_default_position_vertex_1(self):
 		params = ffdp.FFDParameters()
-		np.testing.assert_array_almost_equal(params.position_vertex_1, np.zeros(3))
+		np.testing.assert_array_almost_equal(params.position_vertex_1, np.array([1., 0., 0.]))
 
 
 	def test_class_members_default_position_vertex_2(self):
 		params = ffdp.FFDParameters()
-		np.testing.assert_array_almost_equal(params.position_vertex_2, np.zeros(3))
+		np.testing.assert_array_almost_equal(params.position_vertex_2, np.array([0., 1., 0.]))
 
 
 	def test_class_members_default_position_vertex_3(self):
 		params = ffdp.FFDParameters()
-		np.testing.assert_array_almost_equal(params.position_vertex_3, np.zeros(3))
+		np.testing.assert_array_almost_equal(params.position_vertex_3, np.array([0., 0., 1.]))
 
 
-	def test_class_members_generic_n_control_points_x(self):
+	def test_class_members_generic_n_control_points(self):
 		params = ffdp.FFDParameters([2, 3, 5])
-		assert params.n_control_points_x == 2
-
-
-	def test_class_members_generic_n_control_points_y(self):
-		params = ffdp.FFDParameters([2, 3, 5])
-		assert params.n_control_points_y == 3
-
-
-	def test_class_members_generic_n_control_points_z(self):
-		params = ffdp.FFDParameters([2, 3, 5])
-		assert params.n_control_points_z == 5
+		assert params.n_control_points == [2, 3, 5]
 
 
 	def test_class_members_generic_array_mu_x(self):
@@ -161,22 +131,10 @@ class TestFFDParameters(TestCase):
 		assert params.conversion_unit == 1.
 
 
-	def test_read_parameters_file_n_control_points_x(self):
+	def test_read_parameters_file_n_control_points(self):
 		params = ffdp.FFDParameters([2, 1, 1])
 		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')
-		assert params.n_control_points_x == 2
-
-
-	def test_read_parameters_file_n_control_points_y(self):
-		params = ffdp.FFDParameters([2, 1, 1])
-		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')
-		assert params.n_control_points_y == 1
-
-
-	def test_read_parameters_file_n_control_points_z(self):
-		params = ffdp.FFDParameters([2, 1, 1])
-		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')				
-		assert params.n_control_points_z == 1
+		assert params.n_control_points == [2, 1, 1]
 
 
 	def test_read_parameters_file_lenght_box_x(self):
@@ -197,22 +155,11 @@ class TestFFDParameters(TestCase):
 		assert params.lenght_box_z == 90.0
 
 
-	def test_read_parameters_file_origin_box_x(self):
+	def test_read_parameters_file_origin_box(self):
 		params = ffdp.FFDParameters([2, 1, 1])
 		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')
-		assert params.origin_box_x == -20.0
-
-
-	def test_read_parameters_file_origin_box_y(self):
-		params = ffdp.FFDParameters([2, 1, 1])
-		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')
-		assert params.origin_box_y == -55.0
-
-
-	def test_read_parameters_file_origin_box_z(self):
-		params = ffdp.FFDParameters([2, 1, 1])
-		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')				
-		assert params.origin_box_z == -45.0
+		origin_box_exact = np.array([-20.0, -55.0, -45.0])
+		np.testing.assert_array_almost_equal(params.origin_box, origin_box_exact)
 
 
 	def test_read_parameters_file_rot_angle_x(self):
@@ -274,6 +221,12 @@ class TestFFDParameters(TestCase):
 		rotation_matrix_exact = np.array([0.98162718, 0., 0.190809, 0.06619844, 0.93788893, \
 			-0.34056147, -0.17895765, 0.34693565, 0.92065727]).reshape((3,3))
 		np.testing.assert_array_almost_equal(params.rotation_matrix, rotation_matrix_exact)
+
+
+	def test_read_parameters_file_position_vertex_0_origin(self):
+		params = ffdp.FFDParameters([2, 1, 1])
+		params.read_parameters_file('tests/test_datasets/parameters_sphere.prm')
+		np.testing.assert_array_almost_equal(params.position_vertex_0, params.origin_box)
 
 
 	def test_read_parameters_file_position_vertex_0(self):

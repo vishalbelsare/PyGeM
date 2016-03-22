@@ -7,7 +7,7 @@ Code Documentation
 
 
    affine_trans
-   ffd
+   free_form
    ffd_parameters
    file_handler
 

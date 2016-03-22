@@ -8,7 +8,7 @@ import pygem.affine_trans as at
 
 class FFDParameters(object):
 	"""
-	Class that handle the Free Form Deformation parameters in terms of FFD bounding box and
+	Class that handles the Free Form Deformation parameters in terms of FFD bounding box and
 	weight of the FFD control points.
 
 	:param list n_control_points: number of control points in the x, y, and z direction.
@@ -102,9 +102,10 @@ class FFDParameters(object):
 
 	def read_parameters_file(self, filename=None):
 		"""
+		Reads in the parameters file and fill the self structure.
 
-		.. todo::
-			DOCS
+		:param string filename: parameters file to be read in.
+
 		"""
 		if not isinstance(filename, basestring):
 			raise TypeError("filename must be a string")

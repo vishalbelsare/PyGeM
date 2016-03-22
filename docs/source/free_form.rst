@@ -1,5 +1,5 @@
 Free Form Deformation
-=================
+=====================
 
 .. automodule:: pygem.free_form
 

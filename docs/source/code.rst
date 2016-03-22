@@ -5,9 +5,11 @@ Code Documentation
 .. toctree::
    :maxdepth: 2
 
-   file_handler
-   ffd_parameters
    affine_trans
+   ffd
+   ffd_parameters
+   file_handler
+
 
 .. automodule:: pygem
     :members:

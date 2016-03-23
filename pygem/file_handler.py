@@ -257,14 +257,14 @@ class StlHandler(FileHandler):
 		pyplot.show()
 		
 		
-class openFoamHandler(FileHandler):
+class OpenFoamHandler(FileHandler):
 	"""
 	OpenFOAM mesh file handler class.
 
 	.. todo:: DOCS
 	"""
 	def __init__(self, filename):
-		super(openFoamHandler, self).__init__()
+		super(OpenFoamHandler, self).__init__()
 
 		if not isinstance(filename, basestring):
 			raise TypeError("filename must be a string")

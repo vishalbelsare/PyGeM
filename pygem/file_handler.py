@@ -5,6 +5,7 @@ import numpy as np
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 from stl import mesh
+#import os
 
 
 class FileHandler(object):
@@ -141,6 +142,7 @@ class UnvHandler(FileHandler):
 
 		:param ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
+		:param string outfile: name of the output file.
 
 		.. todo:: DOCS
 		"""
@@ -206,7 +208,8 @@ class StlHandler(FileHandler):
 		write in the unv file.
 
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
-			the coordinates of the points of the mesh
+			the coordinates of the points of the mesh.
+		:param string outfile: name of the output file.
 
 		.. todo:: DOCS
 		"""
@@ -252,3 +255,82 @@ class StlHandler(FileHandler):
 
 		# Show the plot to the screen
 		pyplot.show()
+		
+		
+class OpenFoamHandler(FileHandler):
+	"""
+	OpenFOAM mesh file handler class.
+
+	.. todo:: DOCS
+	"""
+	def __init__(self, filename):
+		super(OpenFoamHandler, self).__init__()
+
+		if not isinstance(filename, basestring):
+			raise TypeError("filename must be a string")
+
+		self.filename = filename
+
+
+	def parse(self):
+		"""
+		Method to parse the `filename`. It returns a matrix with all the coordinates.
+
+		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
+			the points of the mesh
+		:rtype: numpy.ndarray
+
+		.. todo::
+
+			- specify when it works
+		"""
+		
+		nrow = 0
+		i = 0
+		with open(self.filename, 'r') as input_file:
+			for line in input_file:
+				nrow += 1
+				if nrow == 19:
+					n_points = int(line)
+					mesh_points = np.zeros(shape=(n_points,3))
+				if nrow > 20 and nrow < 21 + n_points:
+					line = line[line.index("(") + 1:line.rindex(")")]
+					j = 0
+					for number in line.split():
+						mesh_points[i][j] = float(number)
+						j += 1
+					i += 1
+
+		return mesh_points
+
+
+
+	def write(self, mesh_points, outfile):
+		"""
+		Writes a openFOAM file, called outfile, copying all the lines from self.filename but
+		the coordinates. mesh_points is a matrix that contains the new coordinates to
+		write in the openFOAM file.
+
+		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
+			the coordinates of the points of the mesh.
+		:param string outfile: name of the output file.
+		
+		.. todo:: DOCS
+		"""
+		if not isinstance(outfile, basestring):
+			raise TypeError("outfile must be a string")
+
+		n_points = mesh_points.shape[0]
+		nrow = 0
+		i = 0
+		with open(self.filename, 'r') as input_file, open(outfile, 'w') as output_file:
+			for line in input_file:
+				nrow += 1
+				if nrow > 20 and nrow < 21 + n_points:
+					output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(mesh_points[i][1]) + ' ' + str(mesh_points[i][2]) +')')
+					output_file.write('\n')
+					i += 1
+				else:
+					output_file.write(line)
+					
+					

@@ -85,7 +85,13 @@ class TestFileHandler(TestCase):
 	def test_unv_parse_coords_4(self):
 		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
 		mesh_points = unv_handler.parse()
-		np.testing.assert_almost_equal(mesh_points[0][0], 0.0)		
+		np.testing.assert_almost_equal(mesh_points[0][0], 0.0)
+		
+		
+	def test_unv_parse_coords_5(self):
+		unv_handler = fh.UnvHandler('tests/test_datasets/test_square.unv')
+		mesh_points = unv_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[-1][2], 0.0)		
 
 
 	def test_unv_write_failing_outfile_type(self):
@@ -171,7 +177,7 @@ class TestFileHandler(TestCase):
 	def test_stl_parse_coords_5(self):
 		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
 		mesh_points = stl_handler.parse()
-		np.testing.assert_almost_equal(mesh_points[7199][2], -39.05963898)		
+		np.testing.assert_almost_equal(mesh_points[-1][2], -39.05963898)		
 
 
 	def test_stl_write_failing_outfile_type(self):
@@ -206,5 +212,84 @@ class TestFileHandler(TestCase):
 		stl_handler = fh.StlHandler('tests/test_datasets/test_sphere.stl')
 		with self.assertRaises(TypeError):
 			stl_handler.plot(plot_file=3)
+			
+	
+	# openFOAM tests
+	def test_open_foam_filename_member(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		assert open_foam_handler.filename == 'tests/test_datasets/test_openFOAM'
+
+
+	def test_open_foam_failing_filename_type(self):
+		with self.assertRaises(TypeError):
+			open_foam_handler = fh.openFoamHandler(3)
+
+
+	def test_open_foam_instantiation(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+
+
+	def test_open_foam_parse_shape(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		assert mesh_points.shape == (21812, 3)
+
+
+	def test_open_foam_parse_coords_1(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[33][0], 1.42254)
+
+
+	def test_open_foam_parse_coords_2(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[1708][1], -3.13059)
+
+
+	def test_open_foam_parse_coords_3(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[3527][2], .0)
+
+
+	def test_open_foam_parse_coords_4(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[0][0], -17.5492)	
+
+
+	def test_open_foam_parse_coords_5(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		np.testing.assert_almost_equal(mesh_points[-1][2], 0.05)		
+
+
+	def test_open_foam_write_failing_outfile_type(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		with self.assertRaises(TypeError):
+			open_foam_handler.write(mesh_points, 3)
+ 
+
+	def test_open_foam_write_outfile(self):
+		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		mesh_points = open_foam_handler.parse()
+		mesh_points[0] = [-14.,  1.55, 0.2]
+		mesh_points[1] = [-14.3, 2.55, 0.3]
+		mesh_points[2] = [-14.3, 2.55, 0.3]
+		mesh_points[2000] = [7.8, -42.8, .0]
+		mesh_points[2001] = [8.8, -41.8, .1]
+		mesh_points[2002] = [9.8, -40.8, .0]
+		mesh_points[-3] = [236.3, 183.7, 0.06]
+		mesh_points[-2] = [237.3, 183.7, 0.06]
+		mesh_points[-1] = [236.3, 185.7, 0.06]
+
+		outfilename = 'tests/test_datasets/test_openFOAM_out'
+		outfilename_expected = 'tests/test_datasets/test_openFOAM_out_true'
+
+		open_foam_handler.write(mesh_points, outfilename)
+		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)
 
 

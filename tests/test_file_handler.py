@@ -216,64 +216,64 @@ class TestFileHandler(TestCase):
 	
 	# openFOAM tests
 	def test_open_foam_filename_member(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		assert open_foam_handler.filename == 'tests/test_datasets/test_openFOAM'
 
 
 	def test_open_foam_failing_filename_type(self):
 		with self.assertRaises(TypeError):
-			open_foam_handler = fh.openFoamHandler(3)
+			open_foam_handler = fh.OpenFoamHandler(3)
 
 
 	def test_open_foam_instantiation(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 
 
 	def test_open_foam_parse_shape(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		assert mesh_points.shape == (21812, 3)
 
 
 	def test_open_foam_parse_coords_1(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		np.testing.assert_almost_equal(mesh_points[33][0], 1.42254)
 
 
 	def test_open_foam_parse_coords_2(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		np.testing.assert_almost_equal(mesh_points[1708][1], -3.13059)
 
 
 	def test_open_foam_parse_coords_3(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		np.testing.assert_almost_equal(mesh_points[3527][2], .0)
 
 
 	def test_open_foam_parse_coords_4(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		np.testing.assert_almost_equal(mesh_points[0][0], -17.5492)	
 
 
 	def test_open_foam_parse_coords_5(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		np.testing.assert_almost_equal(mesh_points[-1][2], 0.05)		
 
 
 	def test_open_foam_write_failing_outfile_type(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		with self.assertRaises(TypeError):
 			open_foam_handler.write(mesh_points, 3)
  
 
 	def test_open_foam_write_outfile(self):
-		open_foam_handler = fh.openFoamHandler('tests/test_datasets/test_openFOAM')
+		open_foam_handler = fh.OpenFoamHandler('tests/test_datasets/test_openFOAM')
 		mesh_points = open_foam_handler.parse()
 		mesh_points[0] = [-14.,  1.55, 0.2]
 		mesh_points[1] = [-14.3, 2.55, 0.3]

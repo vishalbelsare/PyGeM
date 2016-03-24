@@ -8,7 +8,7 @@ import numpy as np
 
 def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 	"""
-	Returns matrix for given rotations around z, y and x axes. The output rotation matrix is
+	This method returns the rotation matrix for given rotations around z, y and x axes. The output rotation matrix is
 	equal to the composition of the	individual rotations. Rotations are counter-clockwise.
 	The default value of the three rotations is zero.
 
@@ -17,8 +17,19 @@ def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 	:param float rot_x: rotation angle (in radians) around x-axis.
 
 	:return: rot_matrix: rotation matrix for the given angles. The matrix shape is always (3, 3).
-	:rtype: float
+	:rtype: numpy.ndarray		  
+		
+	:Example:
 
+	>>> import pygem.affine_trans as at
+	>>> import numpy as np
+
+	>>> # Example of a rotation around x, y, z axis 
+	>>> rotz = 10*np.pi/180
+	>>> roty = 20*np.pi/180
+	>>> rotx = 30*np.pi/180
+	>>> rot_matrix = at.angles2matrix(rotz, roty, rotx)
+	
 	.. note::
 
 		- The direction of rotation is given by the right-hand rule.
@@ -54,9 +65,18 @@ def to_reduced_row_echelon_form(matrix):
 
 	:return matrix: the reduced matrix.
 	:rtype: matrix
+		
+		
+	:Example:
 
+	>>> import pygem.affine_trans as at
+
+	>>> matrix = [[1., 1., 1.], [1., 1., 1.], [1., 1., 1.]]
+	>>> rref_matrix = at.to_reduced_row_echelon_form(matrix)
+	
 	.. note::
 		`matrix` will change after calling this function.
+
 	"""
 	lead = 0
 	row_count = len(matrix)
@@ -100,7 +120,7 @@ def affine_points_fit(points_start, points_end):
 
 	>>> import pygem.affine_trans as at
 
-	>>> # Example of a rotation
+	>>> # Example of a rotation (affine transformation)
 	>>> p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])
 	>>> p_end = np.array([[0,1,0], [-1,0,0], [0,0,1], [0,0,0]])
 	>>> v_test = np.array([1., 2., 3.])

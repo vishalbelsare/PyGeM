@@ -3,7 +3,6 @@ from unittest import TestCase
 import unittest
 import pygem.free_form as ffd
 import pygem.ffd_parameters as ffdp
-import pygem.file_handler as fh
 import numpy as np
 
 

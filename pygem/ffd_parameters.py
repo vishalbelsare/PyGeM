@@ -47,11 +47,6 @@ class FFDParameters(object):
 	:cvar numpy.ndarray position_vertex_2: position of the third vertex of the FFD bounding box.
 	:cvar numpy.ndarray position_vertex_3: position of the fourth vertex of the FFD bounding box.
 
-	.. note::
-		Four vertex (non coplanar) are sufficient to uniquely identify a parallelepiped.
-		If the four vertex are coplanar, an assert is thrown when affine_points_fit is used.
-
-
 	:Example:
 
 	>>> import pygem.ffd_parameters as ffdp
@@ -64,6 +59,11 @@ class FFDParameters(object):
 	>>> # it is created with that name). So it is possible to manually edit it and read it again.
 	>>> params2 = ffdp.FFDParameters(n_control_points=[2, 3, 2])
 	>>> params2.read_parameters_file(filename='parameters_test.prm')
+	
+	.. note::
+		Four vertex (non coplanar) are sufficient to uniquely identify a parallelepiped.
+		If the four vertex are coplanar, an assert is thrown when affine_points_fit is used.
+
     """
 
 	def __init__(self, n_control_points=None):
@@ -187,9 +187,8 @@ class FFDParameters(object):
 		"""
 		This method writes a parameters file (.prm) called `filename` and fills it with all
 		the parameters class members.
-
-		.. todo::
-			document better
+		
+		:param string filename: paramters file to be written out.
 
 		"""
 		if not isinstance(filename, basestring):

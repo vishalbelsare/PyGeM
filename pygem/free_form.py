@@ -12,9 +12,10 @@ class FFD(object):
 
 	:param class ffd_parameters: parameters of the Free Form Deformation.
 	:param numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.
+	
+	:cvar class parameters: parameters of the Free Form Deformation.
+	:cvar numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.
 
-	:return: modified_mesh_points: coordinates of the modified points of the mesh.
-	:rtype: numpy.ndarray
     """
 
 	def __init__(self, ffd_parameters, original_mesh_points):
@@ -24,7 +25,26 @@ class FFD(object):
 
 	def perform(self):
 		"""
-		DOCS
+		This method performs the deformation on the mesh points.
+
+		:return: modified_mesh_points: coordinates of the modified points of the mesh.
+		:rtype: numpy.ndarray
+		
+		:Example:
+		
+		>>> import pygem.free_form as ffd
+		>>> import pygem.ffd_parameters as ffdp
+		>>> import numpy as np
+		
+		>>> ffd_parameters = ffdp.FFDParameters()
+		>>> ffd_parameters.read_parameters_file(filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+		>>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
+		>>> free_form = ffd.FFD(ffd_parameters, original_mesh_points)
+		>>> modified_mesh_points = free_form.perform()
+		
+		.. todo::
+			In order to improve the performances, we need to perform the FFD only on the points inside the lattice.
+			
 		"""
 		(n_rows_mesh, n_cols_mesh) = self.original_mesh_points.shape
 
@@ -91,7 +111,14 @@ class FFD(object):
 
 	def _transform_points(self, original_points, transformation):
 		"""
-		DOCS
+		This method transforms the points according to the affine transformation taken from affine_points_fit method.
+		
+		:param numpy.ndarray original_points: coordinates of the original points.
+		:param function transformation: affine transformation taken from affine_points_fit method.
+		
+		:return: modified_points: coordinates of the modified points.
+		:rtype: numpy.ndarray
+		
 		"""
 		n_rows_mesh, n_cols_mesh = original_points.shape
 		modified_points = np.zeros((n_rows_mesh, n_cols_mesh))

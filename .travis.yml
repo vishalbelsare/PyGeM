@@ -17,6 +17,7 @@ install:
  - source activate test
  - conda install --yes numpy scipy matplotlib pip nose
  - pip install setuptools
+ - pip install enum34
  - pip install numpy-stl
  - pip install coveralls
  - pip install coverage

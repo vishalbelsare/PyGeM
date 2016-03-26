@@ -12,38 +12,18 @@ class FileHandler(object):
 	"""
 	A base class for file handling.
 
-	:cvar string filename: name of the file to be processed
-	:cvar string extension: extension of the file to be processed
+	:cvar string infile: name of the input file to be processed
+	:cvar string outfile: name of the output file where to write in
+	:cvar string extension: extension of the input/output files. It is specific for each
+		subclass
 	"""
 	def __init__(self):
-		self.filename = None
+		self.infile = None
+		self.outfile = None
 		self.extension = None
 
 
-	def _extract_extension(self):
-		"""
-		It is used in child classes.
-
-		.. todo:: DOCS
-		"""
-		ext = self.filename.split('.')[-1].lower()
-		return ext
-
-
-	def _check_extension(self, extension):
-		"""
-		Internal function that checks that the member extension is equal to
-		a given extension.
-		It is used in child classes.
-
-		:param string extension: file extension to check.
-		"""
-		if not self.extension == extension:
-			raise ValueError('The input file does not have the proper extension. \
-				It should be %s.' % extension)
-
-
-	def parse(self):
+	def parse(self, infile):
 		"""
 		Abstract method to parse a specific file.
 
@@ -70,20 +50,14 @@ class UnvHandler(FileHandler):
 
 	.. todo:: DOCS
 	"""
-	def __init__(self, filename):
+	def __init__(self):
 		super(UnvHandler, self).__init__()
-
-		if not isinstance(filename, basestring):
-			raise TypeError("filename must be a string")
-
-		self.filename = filename
-		self.extension = self._extract_extension()
-		self._check_extension('unv')
+		self.extension = 'unv'
 
 
-	def parse(self):
+	def parse(self, filename):
 		"""
-		Method to parse the `filename`. It returns a matrix with all the coordinates.
+		Method to parse the file `filename`. It returns a matrix with all the coordinates.
 
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
@@ -93,7 +67,12 @@ class UnvHandler(FileHandler):
 
 			- specify when it works
 		"""
-		input_file = open(self.filename, 'r')
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+
+		self.infile = filename
+
+		input_file = open(self.infile, 'r')
 		nline = 0
 		while True:
 			line = input_file.readline()
@@ -120,7 +99,7 @@ class UnvHandler(FileHandler):
 
 		nline = 0
 		i = 0
-		with open(self.filename, 'r') as input_file:
+		with open(self.infile, 'r') as input_file:
 			for line in input_file:
 				nline += 1
 				if nline % 2 == 1 and nline > start_line and nline < last_line:
@@ -134,25 +113,28 @@ class UnvHandler(FileHandler):
 		return mesh_points
 
 
-	def write(self, mesh_points, outfile):
+	def write(self, mesh_points, filename):
 		"""
-		Writes a unv file, called outfile, copying all the lines from self.filename but
+		Writes a unv file, called filename, copying all the lines from self.filename but
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
 		write in the unv file.
 
 		:param ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
-		:param string outfile: name of the output file.
+		:param string filename: name of the output file.
 
 		.. todo:: DOCS
 		"""
-		if not isinstance(outfile, basestring):
-			raise TypeError("outfile must be a string")
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+		_check_infile_instantiation(self.infile)
+
+		self.outfile = filename
 
 		n_points = mesh_points.shape[0]
 		nrow = 0
 		i = 0
-		with open(self.filename, 'r') as input_file, open(outfile, 'w') as output_file:
+		with open(self.infile, 'r') as input_file, open(self.outfile, 'w') as output_file:
 			for line in input_file:
 				nrow += 1
 				if nrow % 2 == 1 and nrow > 20 and nrow <= (20 + n_points * 2):
@@ -171,18 +153,12 @@ class StlHandler(FileHandler):
 
 	.. todo:: DOCS
 	"""
-	def __init__(self, filename):
+	def __init__(self):
 		super(StlHandler, self).__init__()
-
-		if not isinstance(filename, basestring):
-			raise TypeError("filename must be a string")
-
-		self.filename = filename
-		self.extension = self._extract_extension()
-		self._check_extension('stl')
+		self.extension = 'stl'
 
 
-	def parse(self):
+	def parse(self, filename):
 		"""
 		Method to parse the `filename`. It returns a matrix with all the coordinates.
 
@@ -194,27 +170,35 @@ class StlHandler(FileHandler):
 
 			- specify when it works
 		"""
-		stl_mesh = mesh.Mesh.from_file(self.filename)
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+
+		self.infile = filename
+
+		stl_mesh = mesh.Mesh.from_file(self.infile)
 		mesh_points = np.array([stl_mesh.x.ravel(), stl_mesh.y.ravel(), stl_mesh.z.ravel()])
 		mesh_points = mesh_points.T
 
 		return mesh_points
 
 
-	def write(self, mesh_points, outfile):
+	def write(self, mesh_points, filename):
 		"""
-		Writes a unv file, called outfile, copying all the lines from self.filename but
+		Writes a unv file, called filename, copying all the lines from self.filename but
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
 		write in the unv file.
 
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh.
-		:param string outfile: name of the output file.
+		:param string filename: name of the output file.
 
 		.. todo:: DOCS
 		"""
-		if not isinstance(outfile, basestring):
-			raise TypeError("outfile must be a string")
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+		_check_infile_instantiation(self.infile)
+
+		self.outfile = filename
 
 		n_vertices = mesh_points.shape[0]
 		# number of triplets of vertices
@@ -226,20 +210,19 @@ class StlHandler(FileHandler):
 			for j in range(0, 3):
 				data['vectors'][i][j] = mesh_points[3*i + j]
 
-		stl_mesh.save(outfile, mode=1, update_normals=True)
+		stl_mesh.save(self.outfile, mode=1, update_normals=True)
 
 
 	def plot(self, plot_file=None):
 		"""
-		Method to plot an stl file. If `plot_file` is not given it plots `self.filename`.
+		Method to plot an stl file. If `plot_file` is not given it plots `self.infile`.
 
 		:param string plot_file: the stl filename you want to plot.
 		"""
 		if plot_file is None:
-			plot_file = self.filename
+			plot_file = self.infile
 		else:
-			if not isinstance(plot_file, basestring):
-				raise TypeError("plot_file must be a string")
+			_check_filename_type(plot_file)
 
 		# Create a new plot
 		figure = pyplot.figure()
@@ -255,24 +238,21 @@ class StlHandler(FileHandler):
 
 		# Show the plot to the screen
 		pyplot.show()
-		
-		
+
+
+
 class OpenFoamHandler(FileHandler):
 	"""
 	OpenFOAM mesh file handler class.
 
 	.. todo:: DOCS
 	"""
-	def __init__(self, filename):
+	def __init__(self):
 		super(OpenFoamHandler, self).__init__()
-
-		if not isinstance(filename, basestring):
-			raise TypeError("filename must be a string")
-
-		self.filename = filename
+		self.extension = ''
 
 
-	def parse(self):
+	def parse(self, filename):
 		"""
 		Method to parse the `filename`. It returns a matrix with all the coordinates.
 
@@ -284,15 +264,19 @@ class OpenFoamHandler(FileHandler):
 
 			- specify when it works
 		"""
-		
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+
+		self.infile = filename
+
 		nrow = 0
 		i = 0
-		with open(self.filename, 'r') as input_file:
+		with open(self.infile, 'r') as input_file:
 			for line in input_file:
 				nrow += 1
 				if nrow == 19:
 					n_points = int(line)
-					mesh_points = np.zeros(shape=(n_points,3))
+					mesh_points = np.zeros(shape=(n_points, 3))
 				if nrow > 20 and nrow < 21 + n_points:
 					line = line[line.index("(") + 1:line.rindex(")")]
 					j = 0
@@ -305,32 +289,74 @@ class OpenFoamHandler(FileHandler):
 
 
 
-	def write(self, mesh_points, outfile):
+	def write(self, mesh_points, filename):
 		"""
-		Writes a openFOAM file, called outfile, copying all the lines from self.filename but
+		Writes a openFOAM file, called filename, copying all the lines from self.filename but
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
 		write in the openFOAM file.
 
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh.
-		:param string outfile: name of the output file.
-		
+		:param string filename: name of the output file.
+
 		.. todo:: DOCS
 		"""
-		if not isinstance(outfile, basestring):
-			raise TypeError("outfile must be a string")
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+		_check_infile_instantiation(self.infile)
+
+		self.outfile = filename
 
 		n_points = mesh_points.shape[0]
 		nrow = 0
 		i = 0
-		with open(self.filename, 'r') as input_file, open(outfile, 'w') as output_file:
+		with open(self.infile, 'r') as input_file, open(self.outfile, 'w') as output_file:
 			for line in input_file:
 				nrow += 1
 				if nrow > 20 and nrow < 21 + n_points:
-					output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(mesh_points[i][1]) + ' ' + str(mesh_points[i][2]) +')')
+					output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(mesh_points[i][1]) + \
+									  ' ' + str(mesh_points[i][2]) +')')
 					output_file.write('\n')
 					i += 1
 				else:
 					output_file.write(line)
-					
-					
+
+
+
+def _check_extension(filename, extension):
+	"""
+	This private method checks if the given `filename` has the proper `extension`.
+	If not it raises a ValueError.
+
+	:param string filename: file to check.
+	:param string extension: file extension to check.
+	"""
+	file_ext = filename.split('.')[-1].lower()
+	# to manage the case of open foam (no extension) the following check is needed
+	if file_ext == filename.lower():
+		pass
+	elif not file_ext == extension:
+		raise ValueError('The input file does not have the proper extension. \
+			It should be %s.' % extension)
+
+
+def _check_filename_type(filename):
+	"""
+	This private method checks if `filename` is a string. If not it raises a TypeError.
+
+	:param string filename: file to check.
+	"""
+	if not isinstance(filename, basestring):
+		raise TypeError('The given filename (%s) must be a string' % filename)
+
+
+def _check_infile_instantiation(infile):
+	"""
+	This private method checks if the input file `infile` is instantiated. If not it means
+	that nobody called the parse method, i.e. `self.infile` is None. If the check fails
+	it raises a RuntimeError.
+
+	:param string infile: file to check.
+	"""
+	if not infile:
+		raise RuntimeError("You can not write a file without having parsed one.")

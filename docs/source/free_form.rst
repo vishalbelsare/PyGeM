@@ -5,3 +5,4 @@ Free Form Deformation
 
 .. autoclass:: FFD
     :members:
+    :private-members:

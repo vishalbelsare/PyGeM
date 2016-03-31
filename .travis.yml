@@ -7,8 +7,6 @@ virtualenv:
     system_site_packages: true
 
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq python-vtk
     - travis_retry wget http://repo.continuum.io/miniconda/Miniconda-3.8.3-Linux-x86_64.sh -O miniconda.sh
     - chmod +x miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
@@ -18,7 +16,7 @@ before_install:
 install:
     - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
     - source activate test
-    - conda install --yes numpy scipy matplotlib pip nose
+    - conda install --yes numpy scipy matplotlib pip nose vtk
     - pip install setuptools
     - pip install enum34
     - pip install numpy-stl

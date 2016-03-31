@@ -61,7 +61,7 @@ class UnvHandler(FileHandler):
 
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
-		:rtype: float numpy.ndarray
+		:rtype: numpy.ndarray
 
 		.. todo::
 
@@ -119,7 +119,7 @@ class UnvHandler(FileHandler):
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
 		write in the unv file.
 
-		:param ndarray mesh_points: it is a `n_points`-by-3 matrix containing
+		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
 		:param string filename: name of the output file.
 
@@ -164,7 +164,7 @@ class VtkHandler(FileHandler):
 
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
-		:rtype: float numpy.ndarray
+		:rtype: numpy.ndarray
 
 		.. todo::
 
@@ -197,7 +197,7 @@ class VtkHandler(FileHandler):
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
 		write in the vtk file.
 
-		:param ndarray mesh_points: it is a `n_points`-by-3 matrix containing
+		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
 		:param string filename: name of the output file.
 
@@ -226,13 +226,11 @@ class VtkHandler(FileHandler):
 		writer = vtk.vtkDataSetWriter()
 		writer.SetFileName(self.outfile)
 		
-
 		if vtk.VTK_MAJOR_VERSION <= 5:
 			writer.SetInput(data)
 		else:
 			writer.SetInputData(data)
 		
-		#writer.SetInputData(data)
 		writer.Write()
 
 
@@ -302,11 +300,13 @@ class StlHandler(FileHandler):
 		stl_mesh.save(self.outfile, mode=1, update_normals=True)
 
 
-	def plot(self, plot_file=None):
+	def plot(self, plot_file=None, save_fig=False):
 		"""
 		Method to plot an stl file. If `plot_file` is not given it plots `self.infile`.
 
 		:param string plot_file: the stl filename you want to plot.
+		:param bool save_fig: a flag to save the figure in png or not. If True the
+			plot is not shown.
 		"""
 		if plot_file is None:
 			plot_file = self.infile
@@ -326,7 +326,10 @@ class StlHandler(FileHandler):
 		axes.auto_scale_xyz(scale, scale, scale)
 
 		# Show the plot to the screen
-		pyplot.show()
+		if not save_fig:
+			pyplot.show()
+		else:
+			figure.savefig(plot_file.split('.')[0] + '.png')
 
 
 

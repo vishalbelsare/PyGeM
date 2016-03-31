@@ -35,6 +35,7 @@ If you find this collection useful, feel free to download, use it and suggest pu
 - **numpy**;
 - **numpy-stl**;
 - **matplotlib**;
+- **vtk**;
 
 
 The official distribution is on GitHub, and you can clone the repository using

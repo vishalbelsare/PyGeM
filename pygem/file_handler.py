@@ -5,6 +5,7 @@ import numpy as np
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 from stl import mesh
+import vtk
 
 
 class FileHandler(object):
@@ -144,6 +145,88 @@ class UnvHandler(FileHandler):
 				elif nrow > 17:
 					output_file.write(line)
 
+
+
+class VtkHandler(FileHandler):
+	"""
+	Vtk file handler class
+
+	.. todo:: DOCS
+	"""
+	def __init__(self):
+		super(VtkHandler, self).__init__()
+		self.extension = 'vtk'
+
+
+	def parse(self, filename):
+		"""
+		Method to parse the file `filename`. It returns a matrix with all the coordinates.
+
+		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
+			the points of the mesh
+		:rtype: float numpy.ndarray
+
+		.. todo::
+
+			- specify when it works
+		"""
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+
+		self.infile = filename
+
+		reader = vtk.vtkDataSetReader()
+		reader.SetFileName(self.infile)
+		reader.ReadAllVectorsOn()
+		reader.ReadAllScalarsOn()
+		reader.Update()
+		data = reader.GetOutput()
+
+		mesh_points = np.zeros([data.GetNumberOfPoints(),3])
+
+		for i in range(data.GetNumberOfPoints()):
+			mesh_points[i,0],mesh_points[i,1],mesh_points[i,2] = data.GetPoint(i)
+
+		return mesh_points
+
+
+	def write(self, mesh_points, filename):
+		"""
+		Writes a vtk file, called filename, copying all the structures from self.filename but
+		the coordinates. mesh_points is a matrix that contains the new coordinates to
+		write in the vtk file.
+
+		:param ndarray mesh_points: it is a `n_points`-by-3 matrix containing
+			the coordinates of the points of the mesh
+		:param string filename: name of the output file.
+
+		.. todo:: DOCS
+		"""
+		_check_filename_type(filename)
+		_check_extension(filename, self.extension)
+		_check_infile_instantiation(self.infile)
+
+		self.outfile = filename
+
+		reader = vtk.vtkDataSetReader()
+		reader.SetFileName(self.infile)
+		reader.ReadAllVectorsOn()
+		reader.ReadAllScalarsOn()
+		reader.Update()
+		data = reader.GetOutput()
+	
+		points = vtk.vtkPoints()
+	
+		for i in range(data.GetNumberOfPoints()):
+			points.InsertNextPoint(mesh_points[i,:])
+		
+		data.SetPoints(points)
+		
+		writer = vtk.vtkDataSetWriter()
+		writer.SetFileName(self.outfile)
+		writer.SetInput(data)
+	
+		writer.Write()
 
 
 class StlHandler(FileHandler):

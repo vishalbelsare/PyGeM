@@ -1,5 +1,3 @@
-cache: apt
-sudo: false
 
 language: python
 python:

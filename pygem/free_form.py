@@ -10,10 +10,10 @@ class FFD(object):
 	"""
 	Class that handles the Free Form Deformation on the mesh points.
 
-	:param class ffd_parameters: parameters of the Free Form Deformation.
+	:param FFDParameters ffd_parameters: parameters of the Free Form Deformation.
 	:param numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.
 
-	:cvar class parameters: parameters of the Free Form Deformation.
+	:cvar FFDParameters parameters: parameters of the Free Form Deformation.
 	:cvar numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.
 		The shape is `n_points`-by-3.
 	:cvar numpy.ndarray modified_mesh_points: coordinates of the points of the deformed mesh.

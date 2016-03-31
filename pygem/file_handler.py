@@ -182,10 +182,11 @@ class VtkHandler(FileHandler):
 		reader.Update()
 		data = reader.GetOutput()
 
-		mesh_points = np.zeros([data.GetNumberOfPoints(),3])
+		n_points = data.GetNumberOfPoints()
+		mesh_points = np.zeros([n_points, 3])
 
-		for i in range(data.GetNumberOfPoints()):
-			mesh_points[i,0],mesh_points[i,1],mesh_points[i,2] = data.GetPoint(i)
+		for i in range(n_points):
+			mesh_points[i, 0], mesh_points[i, 1], mesh_points[i, 2] = data.GetPoint(i)
 
 		return mesh_points
 
@@ -224,8 +225,14 @@ class VtkHandler(FileHandler):
 		
 		writer = vtk.vtkDataSetWriter()
 		writer.SetFileName(self.outfile)
-		writer.SetInput(data)
-	
+		
+
+		if vtk.VTK_MAJOR_VERSION <= 5:
+			writer.SetInput(data)
+		else:
+			writer.SetInputData(data)
+		
+		#writer.SetInputData(data)
 		writer.Write()
 
 

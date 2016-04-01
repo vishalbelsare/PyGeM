@@ -1,7 +1,11 @@
 
-__all__ = ['affine', 'params', 'filehandler', 'freeform']
+__all__ = ['affine', 'filehandler', 'freeform', 'openfhandler', 'params', 'stlhandler', 'unvhandler', 'vtkhandler']
 
 from . import affine
-from . import params
-from . import filehandler
 from . import freeform
+from . import filehandler
+from . import openfhandler
+from . import params
+from . import stlhandler
+from . import unvhandler
+from . import vtkhandler

@@ -65,7 +65,6 @@ class FFDParameters(object):
 		If the four vertex are coplanar, an assert is thrown when affine_points_fit is used.
 
     """
-
 	def __init__(self, n_control_points=None):
 		self.conversion_unit = 1.
 

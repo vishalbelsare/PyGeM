@@ -1,7 +1,7 @@
-FFD Parameters 
+Params 
 =================
 
-.. automodule:: pygem.ffd_parameters
+.. automodule:: pygem.params
 
 .. autoclass:: FFDParameters
     :members:

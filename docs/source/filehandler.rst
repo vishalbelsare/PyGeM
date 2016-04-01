@@ -1,7 +1,7 @@
-File Handler
+Filehandler
 =================
 
-.. automodule:: pygem.file_handler
+.. automodule:: pygem.filehandler
 
 .. autoclass:: FileHandler
     :members:

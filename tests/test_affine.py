@@ -1,11 +1,11 @@
 
 from unittest import TestCase
 import unittest
-import pygem.affine_trans as at
+import pygem.affine as at
 import numpy as np
 
 
-class TestAffineTrans(TestCase):
+class TestAffine(TestCase):
 
 
 	def test_angles2matrix_rot_default(self):

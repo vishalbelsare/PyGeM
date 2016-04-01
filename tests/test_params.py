@@ -1,7 +1,7 @@
 
 from unittest import TestCase
 import unittest
-import pygem.ffd_parameters as ffdp
+import pygem.params as ffdp
 import numpy as np
 import filecmp
 import os

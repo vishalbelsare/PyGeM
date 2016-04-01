@@ -3,7 +3,7 @@ Utilities for performing Free Form Deformation (FFD)
 """
 import numpy as np
 from scipy import special
-import pygem.affine_trans as at
+import pygem.affine as at
 
 
 class FFD(object):
@@ -21,8 +21,8 @@ class FFD(object):
 
 	:Example:
 
-	>>> import pygem.free_form as ffd
-	>>> import pygem.ffd_parameters as ffdp
+	>>> import pygem.freeform as ffd
+	>>> import pygem.params as ffdp
 	>>> import numpy as np
 
 	>>> ffd_parameters = ffdp.FFDParameters()

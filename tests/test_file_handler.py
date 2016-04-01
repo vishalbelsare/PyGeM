@@ -407,6 +407,16 @@ class TestFileHandler(TestCase):
 		os.remove(outfilename)
 
 
+	def test_stl_plot_save_fig(self):
+		stl_handler = fh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere.stl')
+		stl_handler.plot(save_fig=True)
+		if not os.path.isfile('tests/test_datasets/test_sphere.png'):
+			assert False
+		else:
+			os.remove('tests/test_datasets/test_sphere.png')
+
+
 	def test_stl_plot_failing_outfile_type(self):
 		stl_handler = fh.StlHandler()
 		with self.assertRaises(TypeError):

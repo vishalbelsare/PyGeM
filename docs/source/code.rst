@@ -11,6 +11,3 @@ Code Documentation
    ffd_parameters
    file_handler
 
-
-.. automodule:: pygem
-    :members:

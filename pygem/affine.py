@@ -69,7 +69,7 @@ def to_reduced_row_echelon_form(matrix):
 		
 	:Example:
 
-	>>> import pygem.affine_trans as at
+	>>> import pygem.affine as at
 
 	>>> matrix = [[1., 1., 1.], [1., 1., 1.], [1., 1., 1.]]
 	>>> rref_matrix = at.to_reduced_row_echelon_form(matrix)
@@ -168,7 +168,7 @@ def affine_points_fit(points_start, points_end):
 		:param numpy.ndarray source: vector to be transformed.
 
 		:return destination: numpy.ndarray representing the transformed vector.
-		:rtype: float
+		:rtype: numpy.ndarray
 		"""
 		destination = np.zeros(dim)
 		for i in range(dim):

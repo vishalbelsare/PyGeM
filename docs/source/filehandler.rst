@@ -12,6 +12,11 @@ Filehandler
     :private-members:
     :special-members:
 
+.. autoclass:: VtkHandler
+    :members:
+    :private-members:
+    :special-members:
+
 .. autoclass:: StlHandler
     :members:
     :private-members:

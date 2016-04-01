@@ -3,6 +3,7 @@ from unittest import TestCase
 import unittest
 import pkgutil
 from os import walk
+from os import path
 
 
 class TestPackage(TestCase):
@@ -14,9 +15,17 @@ class TestPackage(TestCase):
 		mod = ['__init__.py']
 		for __, modname, __ in pkgutil.iter_modules(package.__path__):
 			mod.append(modname + '.py')
-		f = []
+		
+		f_aux = []
 		for (__, __, filenames) in walk('pygem'):
-			f.extend(filenames)
+			f_aux.extend(filenames)
+
+		f = []
+		for i in f_aux:
+			__, file_ext = path.splitext(i)
+			if file_ext == '.py':
+				f.append(i)
+					
 		self.assertItemsEqual(mod, f)
 
 

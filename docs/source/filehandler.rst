@@ -1,13 +1,18 @@
-File Handler
+Filehandler
 =================
 
-.. automodule:: pygem.file_handler
+.. automodule:: pygem.filehandler
 
 .. autoclass:: FileHandler
     :members:
     :private-members:
 
 .. autoclass:: UnvHandler
+    :members:
+    :private-members:
+    :special-members:
+
+.. autoclass:: VtkHandler
     :members:
     :private-members:
     :special-members:

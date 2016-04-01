@@ -9,26 +9,6 @@ from os import path
 class TestPackage(TestCase):
 
 
-	def test_modules_name(self):
-		import pygem
-		package = pygem
-		mod = ['__init__.py']
-		for __, modname, __ in pkgutil.iter_modules(package.__path__):
-			mod.append(modname + '.py')
-		
-		f_aux = []
-		for (__, __, filenames) in walk('pygem'):
-			f_aux.extend(filenames)
-
-		f = []
-		for i in f_aux:
-			__, file_ext = path.splitext(i)
-			if file_ext == '.py':
-				f.append(i)
-					
-		self.assertItemsEqual(mod, f)
-
-
 	def test_import_pg_1(self):
 		import pygem as pg
 		params = pg.params.FFDParameters()
@@ -37,3 +17,45 @@ class TestPackage(TestCase):
 	def test_import_pg_2(self):
 		import pygem as pg
 		mat = pg.affine.angles2matrix(2)
+
+
+	def test_import_pg_3(self):
+		import pygem as pg
+		fh = pg.filehandler.FileHandler()
+
+
+	def test_import_pg_4(self):
+		import pygem as pg
+		unvh = pg.unvhandler.UnvHandler()
+
+
+	def test_import_pg_5(self):
+		import pygem as pg
+		stlh = pg.stlhandler.StlHandler()
+
+
+	def test_import_pg_6(self):
+		import pygem as pg
+		opfh = pg.openfhandler.OpenFoamHandler()
+
+
+	def test_import_pg_7(self):
+		import pygem as pg
+		vtkh = pg.vtkhandler.VtkHandler()
+
+
+	def test_modules_name(self):
+		import pygem
+		package = pygem
+		
+		f_aux = []
+		for (__, __, filenames) in walk('pygem'):
+			f_aux.extend(filenames)
+
+		f = []
+		for i in f_aux:
+			file_name, file_ext = path.splitext(i)
+			if file_name != '__init__' and file_ext == '.py':
+				f.append(file_name)
+		
+		self.assertItemsEqual(package.__all__, f)

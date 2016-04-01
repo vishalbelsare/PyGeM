@@ -3,7 +3,7 @@ Utilities for reading and writing parameters files to perform the Free Form Defo
 """
 import os
 import numpy as np
-import pygem.affine_trans as at
+import pygem.affine as at
 
 
 class FFDParameters(object):
@@ -49,7 +49,7 @@ class FFDParameters(object):
 
 	:Example:
 
-	>>> import pygem.ffd_parameters as ffdp
+	>>> import pygem.params as ffdp
 
 	>>> # Reading an existing file
 	>>> params1 = ffdp.FFDParameters()

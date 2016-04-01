@@ -1,6 +1,7 @@
 """
 Utilities for reading and writing different CAD files.
 """
+import os
 import numpy as np
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
@@ -52,7 +53,7 @@ class UnvHandler(FileHandler):
 	"""
 	def __init__(self):
 		super(UnvHandler, self).__init__()
-		self.extension = 'unv'
+		self.extension = '.unv'
 
 
 	def parse(self, filename):
@@ -155,7 +156,7 @@ class VtkHandler(FileHandler):
 	"""
 	def __init__(self):
 		super(VtkHandler, self).__init__()
-		self.extension = 'vtk'
+		self.extension = '.vtk'
 
 
 	def parse(self, filename):
@@ -215,22 +216,22 @@ class VtkHandler(FileHandler):
 		reader.ReadAllScalarsOn()
 		reader.Update()
 		data = reader.GetOutput()
-	
+
 		points = vtk.vtkPoints()
-	
+
 		for i in range(data.GetNumberOfPoints()):
-			points.InsertNextPoint(mesh_points[i,:])
-		
+			points.InsertNextPoint(mesh_points[i, :])
+
 		data.SetPoints(points)
-		
+
 		writer = vtk.vtkDataSetWriter()
 		writer.SetFileName(self.outfile)
-		
+
 		if vtk.VTK_MAJOR_VERSION <= 5:
 			writer.SetInput(data)
 		else:
 			writer.SetInputData(data)
-		
+
 		writer.Write()
 
 
@@ -242,7 +243,7 @@ class StlHandler(FileHandler):
 	"""
 	def __init__(self):
 		super(StlHandler, self).__init__()
-		self.extension = 'stl'
+		self.extension = '.stl'
 
 
 	def parse(self, filename):
@@ -423,13 +424,10 @@ def _check_extension(filename, extension):
 	:param string filename: file to check.
 	:param string extension: file extension to check.
 	"""
-	file_ext = filename.split('.')[-1].lower()
-	# to manage the case of open foam (no extension) the following check is needed
-	if file_ext == filename.lower():
-		pass
-	elif not file_ext == extension:
+	__, file_ext = os.path.splitext(filename)
+	if not file_ext == extension:
 		raise ValueError('The input file does not have the proper extension. \
-			It should be %s.' % extension)
+			It is %s, instead of %s.' % (file_ext, extension))
 
 
 def _check_filename_type(filename):

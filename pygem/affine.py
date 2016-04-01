@@ -21,7 +21,7 @@ def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 		
 	:Example:
 
-	>>> import pygem.affine_trans as at
+	>>> import pygem.affine as at
 	>>> import numpy as np
 
 	>>> # Example of a rotation around x, y, z axis 
@@ -118,7 +118,7 @@ def affine_points_fit(points_start, points_end):
 
 	:Example:
 
-	>>> import pygem.affine_trans as at
+	>>> import pygem.affine as at
 
 	>>> # Example of a rotation (affine transformation)
 	>>> p_start = np.array([[1,0,0], [0,1,0], [0,0,1], [0,0,0]])

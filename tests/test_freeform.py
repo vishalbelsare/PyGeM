@@ -1,13 +1,13 @@
 
 from unittest import TestCase
 import unittest
-import pygem.free_form as ffd
-import pygem.ffd_parameters as ffdp
+import pygem.freeform as ffd
+import pygem.params as ffdp
 import numpy as np
 
 
 
-class TestFFD(TestCase):
+class TestFreeform(TestCase):
 
 
 	def test_ffd_parameters_member(self):

@@ -1,1 +1,7 @@
-__all__ = ["affine_trans", "ffd_parameters", "file_handler", "free_form"]
+
+__all__ = ['affine', 'params', 'filehandler', 'freeform']
+
+from . import affine
+from . import params
+from . import filehandler
+from . import freeform

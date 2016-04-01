@@ -1,13 +1,13 @@
 
 from unittest import TestCase
 import unittest
-import pygem.file_handler as fh
+import pygem.filehandler as fh
 import numpy as np
 import filecmp
 import os
 
 
-class TestFileHandler(TestCase):
+class TestFilehandler(TestCase):
 
 
 	def test_base_class_infile(self):
@@ -38,7 +38,10 @@ class TestFileHandler(TestCase):
 			file_handler.write(mesh_points, 'output')
 
 
-	# UNV tests
+
+class TestUnvHandler(TestCase):
+
+
 	def test_unv_instantiation(self):
 		unv_handler = fh.UnvHandler()
 	
@@ -55,7 +58,7 @@ class TestFileHandler(TestCase):
 
 	def test_unv_default_extension_member(self):
 		unv_handler = fh.UnvHandler()
-		assert unv_handler.extension == 'unv'
+		assert unv_handler.extension == '.unv'
 	
 
 	def test_unv_parse_failing_filename_type(self):
@@ -159,8 +162,11 @@ class TestFileHandler(TestCase):
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
 		
-		
-	# VTK tests
+
+
+class TestVtkHandler(TestCase):
+
+
 	def test_vtk_instantiation(self):
 		vtk_handler = fh.VtkHandler()
 	
@@ -177,7 +183,7 @@ class TestFileHandler(TestCase):
 
 	def test_vtk_default_extension_member(self):
 		vtk_handler = fh.VtkHandler()
-		assert vtk_handler.extension == 'vtk'
+		assert vtk_handler.extension == '.vtk'
 	
 
 	def test_vtk_parse_failing_filename_type(self):
@@ -286,7 +292,10 @@ class TestFileHandler(TestCase):
 		os.remove(outfilename)
 
 
-	# STL tests
+
+class TestStlHandler(TestCase):
+
+
 	def test_stl_instantiation(self):
 		stl_handler = fh.StlHandler()
 	
@@ -303,7 +312,7 @@ class TestFileHandler(TestCase):
 
 	def test_stl_default_extension_member(self):
 		stl_handler = fh.StlHandler()
-		assert stl_handler.extension == 'stl'
+		assert stl_handler.extension == '.stl'
 	
 
 	def test_stl_parse_failing_filename_type(self):
@@ -427,7 +436,10 @@ class TestFileHandler(TestCase):
 			stl_handler.plot(plot_file=3)
 			
 	
-	# openFOAM tests
+
+class TestOpenFoamHandler(TestCase):
+
+
 	def test_open_foam_instantiation(self):
 		open_foam_handler = fh.OpenFoamHandler()
 	

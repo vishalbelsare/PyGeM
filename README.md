@@ -8,6 +8,7 @@ Python Geometrical Morphing.
 
 - Computer Aided Design files (in .iges and .stl formats)
 - Mesh files (in .unv and OpenFOAM formats)
+- Output files (in .vtk format)
 
 By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
 

@@ -265,6 +265,7 @@ class TestFileHandler(TestCase):
 
 
 	def test_vtk_write_comparison(self):
+		import vtk
 		vtk_handler = fh.VtkHandler()
 		mesh_points = vtk_handler.parse('tests/test_datasets/test_red_blood_cell.vtk')
 		mesh_points[0][0] = 2.2
@@ -275,8 +276,11 @@ class TestFileHandler(TestCase):
 		mesh_points[255][2] = -3.6
 
 		outfilename = 'tests/test_datasets/test_red_blood_cell_out.vtk'
-		outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true.vtk'
-
+		if vtk.VTK_MAJOR_VERSION <= 5:
+			outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true_version5.vtk'
+		else:
+			outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true_version6.vtk'
+		
 		vtk_handler.write(mesh_points, outfilename)
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)

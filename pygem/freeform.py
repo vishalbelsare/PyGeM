@@ -26,7 +26,7 @@ class FFD(object):
 	>>> import numpy as np
 
 	>>> ffd_parameters = ffdp.FFDParameters()
-	>>> ffd_parameters.read_parameters_file('tests/test_datasets/parameters_test_ffd_sphere.prm')
+	>>> ffd_parameters.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
 	>>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
 	>>> free_form = ffd.FFD(ffd_parameters, original_mesh_points)
 	>>> free_form.perform()

@@ -32,6 +32,15 @@ Guide
    LICENSE
 
 
+Tutorials
+^^^^^^^^^^
+
+We made some tutorial examples:
+
+- `Tutorial 1 <tutorial1stl.html>`_ shows how to deal with stl files
+
+
+
 Indices and tables
 ^^^^^^^^^^^^^^^^^^^^^^^^
 

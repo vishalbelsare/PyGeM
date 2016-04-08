@@ -80,7 +80,13 @@ class TestStlHandler(TestCase):
 	def test_stl_parse_coords_5(self):
 		stl_handler = sh.StlHandler()
 		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere.stl')
-		np.testing.assert_almost_equal(mesh_points[-1][2], -39.05963898)		
+		np.testing.assert_almost_equal(mesh_points[-1][2], -39.05963898)
+		
+	
+	def test_stl_parse_coords_5_bin(self):
+		stl_handler = sh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere_bin.stl')
+		np.testing.assert_almost_equal(mesh_points[-1][2], -39.05963898)	
 
 
 	def test_stl_write_failing_filename_type(self):
@@ -132,7 +138,66 @@ class TestStlHandler(TestCase):
 		stl_handler.write(mesh_points, outfilename)
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
+		
+	
+	def test_stl_write_binary_from_binary(self):
+		stl_handler = sh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere_bin.stl')
+		mesh_points[0] = [-40.2, -20.5, 60.9]
+		mesh_points[1] = [-40.2, -10.5, 60.9]
+		mesh_points[2] = [-40.2, -10.5, 60.9]
+		mesh_points[2000] = [-40.2, -20.5, 60.9]
+		mesh_points[2001] = [-40.2, -10.5, 60.9]
+		mesh_points[2002] = [-40.2, -10.5, 60.9]
+		mesh_points[6100] = [-40.2, -20.5, 60.9]
+		mesh_points[6101] = [-40.2, -10.5, 60.9]
+		mesh_points[6102] = [-40.2, -10.5, 60.9]
 
+		outfilename = 'tests/test_datasets/test_sphere_out.stl'
+
+		stl_handler.write(mesh_points, outfilename, write_bin=True)
+		os.remove(outfilename)
+		
+		
+	def test_stl_write_binary_from_ascii(self):
+		stl_handler = sh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere.stl')
+		mesh_points[0] = [-40.2, -20.5, 60.9]
+		mesh_points[1] = [-40.2, -10.5, 60.9]
+		mesh_points[2] = [-40.2, -10.5, 60.9]
+		mesh_points[2000] = [-40.2, -20.5, 60.9]
+		mesh_points[2001] = [-40.2, -10.5, 60.9]
+		mesh_points[2002] = [-40.2, -10.5, 60.9]
+		mesh_points[6100] = [-40.2, -20.5, 60.9]
+		mesh_points[6101] = [-40.2, -10.5, 60.9]
+		mesh_points[6102] = [-40.2, -10.5, 60.9]
+
+		outfilename = 'tests/test_datasets/test_sphere_out.stl'
+
+		stl_handler.write(mesh_points, outfilename, write_bin=True)
+		os.remove(outfilename)
+		
+		
+	def test_stl_write_ascii_from_binary(self):
+		stl_handler = sh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere_bin.stl')
+		mesh_points[0] = [-40.2, -20.5, 60.9]
+		mesh_points[1] = [-40.2, -10.5, 60.9]
+		mesh_points[2] = [-40.2, -10.5, 60.9]
+		mesh_points[2000] = [-40.2, -20.5, 60.9]
+		mesh_points[2001] = [-40.2, -10.5, 60.9]
+		mesh_points[2002] = [-40.2, -10.5, 60.9]
+		mesh_points[6100] = [-40.2, -20.5, 60.9]
+		mesh_points[6101] = [-40.2, -10.5, 60.9]
+		mesh_points[6102] = [-40.2, -10.5, 60.9]
+
+		outfilename = 'tests/test_datasets/test_sphere_out.stl'
+		outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
+
+		stl_handler.write(mesh_points, outfilename, write_bin=False)
+		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)
+		
 
 	def test_stl_plot_save_fig(self):
 		stl_handler = sh.StlHandler()
@@ -142,6 +207,16 @@ class TestStlHandler(TestCase):
 			assert False
 		else:
 			os.remove('tests/test_datasets/test_sphere.png')
+			
+			
+	def test_stl_plot_save_fig_bin(self):
+		stl_handler = sh.StlHandler()
+		mesh_points = stl_handler.parse('tests/test_datasets/test_sphere_bin.stl')
+		stl_handler.plot(save_fig=True)
+		if not os.path.isfile('tests/test_datasets/test_sphere_bin.png'):
+			assert False
+		else:
+			os.remove('tests/test_datasets/test_sphere_bin.png')
 
 
 	def test_stl_plot_failing_outfile_type(self):

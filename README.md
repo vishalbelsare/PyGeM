@@ -10,33 +10,19 @@ Python Geometrical Morphing.
 - Mesh files (in .unv and OpenFOAM formats)
 - Output files (in .vtk format)
 
-By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
-
-Here two applications are shown, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
-
-<p align="center">
-<img src="readme/DTMB_ffd.png" alt>
-</p>
-<p align="center">
-<em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
-</p>
-
-<p align="center">
-<img src="readme/drivAer_ffd.png" alt>
-</p>
-<p align="center">
-<em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
-</p>
-
-If you find this collection useful, feel free to download, use it and suggest pull requests!
+By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! 
+See the **Examples** section below to have an idea of the potential of this package.
 
 
-## Prerequisites and installation
-**PyGeM** requires:
-- **numpy**;
-- **numpy-stl**;
-- **scipy**;
-- **matplotlib**;
+## Dependencies and installation
+**PyGeM** requires `numpy`, `numpy-stl`, `scipy` and `matplotlib`. They can be easily installed via `pip`. 
+Moreover **PyGeM** depends on `OCC` >= 0.16 and `vtk`. These requirements cannot be satisfied through `pip`.
+Please see the table below for instructions on how to satisfy the requirements.
+
+| Package | Version  | Comment                                                                    |
+|---------|----------|----------------------------------------------------------------------------|
+| OCC     | >= 0.16  | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core` |
+| vtk     | >= 5.0   | Simplest solution is `conda install vtk`                                   |
 
 
 The official distribution is on GitHub, and you can clone the repository using
@@ -88,6 +74,23 @@ To run tests locally:
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it).
 
 Contact us by email for further information or questions about **PyGeM**, or suggest pull requests. **PyGeM** is at an early development stage, so contributions improving either the code or the documentation are welcome!
+
+
+## Examples
+You can find useful tutorials on how to use the package in the `tutorials` folder.
+Here we show two applications, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
+<p align="center">
+<img src="readme/DTMB_ffd.png" alt>
+</p>
+<p align="center">
+<em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
+</p>
+<p align="center">
+<img src="readme/drivAer_ffd.png" alt>
+</p>
+<p align="center">
+<em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
+</p>
 
 
 ## How to contribute

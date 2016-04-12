@@ -93,3 +93,52 @@ class VtkHandler(fh.FileHandler):
 			writer.SetInputData(data)
 
 		writer.Write()
+
+
+	def plot(self, plot_file=None):
+		"""
+		Method to plot an stl file. If `plot_file` is not given it plots `self.infile`.
+
+		:param string plot_file: the stl filename you want to plot.
+		"""
+		if plot_file is None:
+			plot_file = self.infile
+		else:
+			self._check_filename_type(plot_file)
+
+		# Read the source file.
+		reader = vtk.vtkUnstructuredGridReader()
+		reader.SetFileName(plot_file)
+		reader.Update() # Needed because of GetScalarRange
+		output = reader.GetOutput()
+		scalar_range = output.GetScalarRange()
+		 
+		# Create the mapper that corresponds the objects of the vtk file
+		# into graphics elements
+		mapper = vtk.vtkDataSetMapper()
+		if vtk.VTK_MAJOR_VERSION <= 5:
+			mapper.SetInput(output)
+		else:
+			mapper.SetInputData(output)
+		mapper.SetScalarRange(scalar_range)
+		 
+		# Create the Actor
+		actor = vtk.vtkActor()
+		actor.SetMapper(mapper)
+		 
+		# Create the Renderer
+		renderer = vtk.vtkRenderer()
+		renderer.AddActor(actor)
+		renderer.SetBackground(20, 20, 20) # Set background color (white is 1, 1, 1)
+		 
+		# Create the RendererWindow
+		renderer_window = vtk.vtkRenderWindow()
+		renderer_window.AddRenderer(renderer)
+		 
+		# Create the RendererWindowInteractor and display the vtk_file
+		interactor = vtk.vtkRenderWindowInteractor()
+		interactor.SetRenderWindow(renderer_window)
+		interactor.Initialize()
+		interactor.Start()
+
+		

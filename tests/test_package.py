@@ -50,6 +50,7 @@ class TestPackage(TestCase):
 	
 
 	def test_modules_name(self):
+		# it checks that __all__ includes all the .py files in pygem folder
 		import pygem
 		package = pygem
 		

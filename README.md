@@ -31,12 +31,15 @@ Here two applications are shown, taken from the **naval** and **automotive** eng
 If you find this collection useful, feel free to download, use it and suggest pull requests!
 
 
-## Prerequisites and installation
-**PyGeM** requires:
-- **numpy**;
-- **numpy-stl**;
-- **scipy**;
-- **matplotlib**;
+## Dependencies and installation
+**PyGeM** requires `numpy`, `numpy-stl`, `scipy` and `matplotlib`. They can be easily installed via `pip`. 
+Moreover **PyGeM** depends on `OCC` >= 0.16 and `vtk`. These requirements cannot be satisfied through `pip`.
+Please see the table below for instructions on how to satisfy the requirements.
+
+| Package | Version  | Comment                                                                    |
+|---------|----------|----------------------------------------------------------------------------|
+| OCC     | >= 0.16  | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core` |
+| vtk     | >= 5.0   | Simplest solution is `conda install vtk`                                   |
 
 
 The official distribution is on GitHub, and you can clone the repository using

@@ -10,25 +10,8 @@ Python Geometrical Morphing.
 - Mesh files (in .unv and OpenFOAM formats)
 - Output files (in .vtk format)
 
-By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
-
-Here two applications are shown, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
-
-<p align="center">
-<img src="readme/DTMB_ffd.png" alt>
-</p>
-<p align="center">
-<em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
-</p>
-
-<p align="center">
-<img src="readme/drivAer_ffd.png" alt>
-</p>
-<p align="center">
-<em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
-</p>
-
-If you find this collection useful, feel free to download, use it and suggest pull requests!
+By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! 
+See the **Examples** section below to have an idea of the potential of this package.
 
 
 ## Dependencies and installation
@@ -91,6 +74,23 @@ To run tests locally:
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it).
 
 Contact us by email for further information or questions about **PyGeM**, or suggest pull requests. **PyGeM** is at an early development stage, so contributions improving either the code or the documentation are welcome!
+
+
+## Examples
+You can find useful tutorials on how to use the package in the `tutorials` folder.
+Here we show two applications, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
+<p align="center">
+<img src="readme/DTMB_ffd.png" alt>
+</p>
+<p align="center">
+<em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
+</p>
+<p align="center">
+<img src="readme/drivAer_ffd.png" alt>
+</p>
+<p align="center">
+<em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
+</p>
 
 
 ## How to contribute

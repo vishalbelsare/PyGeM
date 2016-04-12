@@ -133,3 +133,10 @@ class TestVtkHandler(TestCase):
 		vtk_handler.write(mesh_points, outfilename)
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
+
+
+	def test_vtk_plot_failing_outfile_type(self):
+		vtk_handler = vh.VtkHandler()
+		with self.assertRaises(TypeError):
+			vtk_handler.plot(plot_file=1.1)
+

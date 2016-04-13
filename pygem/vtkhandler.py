@@ -2,6 +2,8 @@
 Utilities for reading and writing different CAD files.
 """
 import numpy as np
+import matplotlib.pyplot as plt
+import mpl_toolkits.mplot3d as a3
 import vtk
 import pygem.filehandler as fh
 
@@ -47,7 +49,7 @@ class VtkHandler(fh.FileHandler):
 		mesh_points = np.zeros([n_points, 3])
 
 		for i in range(n_points):
-			mesh_points[i, 0], mesh_points[i, 1], mesh_points[i, 2] = data.GetPoint(i)
+			mesh_points[i][0], mesh_points[i][1], mesh_points[i][2] = data.GetPoint(i)
 
 		return mesh_points
 
@@ -95,11 +97,13 @@ class VtkHandler(fh.FileHandler):
 		writer.Write()
 
 
-	def plot(self, plot_file=None):
+	def plot(self, plot_file=None, save_fig=False):
 		"""
 		Method to plot an stl file. If `plot_file` is not given it plots `self.infile`.
 
 		:param string plot_file: the stl filename you want to plot.
+		:param bool save_fig: a flag to save the figure in png or not. If True the
+			plot is not shown.
 		"""
 		if plot_file is None:
 			plot_file = self.infile
@@ -109,36 +113,37 @@ class VtkHandler(fh.FileHandler):
 		# Read the source file.
 		reader = vtk.vtkUnstructuredGridReader()
 		reader.SetFileName(plot_file)
-		reader.Update() # Needed because of GetScalarRange
-		output = reader.GetOutput()
-		scalar_range = output.GetScalarRange()
-		 
-		# Create the mapper that corresponds the objects of the vtk file
-		# into graphics elements
-		mapper = vtk.vtkDataSetMapper()
-		if vtk.VTK_MAJOR_VERSION <= 5:
-			mapper.SetInput(output)
-		else:
-			mapper.SetInputData(output)
-		mapper.SetScalarRange(scalar_range)
-		 
-		# Create the Actor
-		actor = vtk.vtkActor()
-		actor.SetMapper(mapper)
-		 
-		# Create the Renderer
-		renderer = vtk.vtkRenderer()
-		renderer.AddActor(actor)
-		renderer.SetBackground(20, 20, 20) # Set background color (white is 1, 1, 1)
-		 
-		# Create the RendererWindow
-		renderer_window = vtk.vtkRenderWindow()
-		renderer_window.AddRenderer(renderer)
-		 
-		# Create the RendererWindowInteractor and display the vtk_file
-		interactor = vtk.vtkRenderWindowInteractor()
-		interactor.SetRenderWindow(renderer_window)
-		interactor.Initialize()
-		interactor.Start()
+		reader.Update()
 
-		
+		data = reader.GetOutput()
+		points = data.GetPoints()
+		ncells = data.GetCells().GetNumberOfCells()
+
+		# for each cell it contains the indeces of the points that define the cell
+		cells = np.zeros((ncells, 3))
+
+		for i in range(0, ncells):
+			for j in range(0, 3):
+				cells[i][j] = data.GetCell(i).GetPointId(j)
+
+		figure = plt.figure()
+		axes = a3.Axes3D(figure)
+		vtx = np.zeros((ncells, 3, 3))
+		for i in range(0, ncells):
+			for j in range(0, 3):
+				vtx[i][j][0], vtx[i][j][1], vtx[i][j][2] = points.GetPoint(int(cells[i][j]))
+			tri = a3.art3d.Poly3DCollection([vtx[i]])
+			tri.set_color('b')
+			tri.set_edgecolor('k')
+			axes.add_collection3d(tri)
+
+		scale = vtx.flatten(-1)
+		axes.auto_scale_xyz(scale, scale, scale)
+
+		# Show the plot to the screen
+		if not save_fig:
+			plt.show()
+		else:
+			figure.savefig(plot_file.split('.')[0] + '.png')
+
+

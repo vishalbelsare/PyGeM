@@ -140,3 +140,11 @@ class TestVtkHandler(TestCase):
 		with self.assertRaises(TypeError):
 			vtk_handler.plot(plot_file=1.1)
 
+
+	def test_vtk_plot_save_fig(self):
+		vtk_handler = vh.VtkHandler()
+		mesh_points = vtk_handler.parse('tests/test_datasets/test_red_blood_cell.vtk')
+		vtk_handler.plot(save_fig=True)
+		self.assertTrue(os.path.isfile('tests/test_datasets/test_red_blood_cell.png'))
+		os.remove('tests/test_datasets/test_red_blood_cell.png')
+

@@ -2,15 +2,15 @@
 Utilities for reading and writing different CAD files.
 """
 import numpy as np
+import sys
 import pygem.filehandler as fh
 from OCC.IGESControl import (IGESControl_Reader, IGESControl_Writer)
-from OCC.BRep import BRep_Tool
+from OCC.BRep import (BRep_Tool, BRep_Builder)
 from OCC.BRepBuilderAPI import (BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace)
 from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface
 import OCC.TopoDS
 from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE)
 from OCC.TopExp import TopExp_Explorer
-from OCC.Geom import Geom_BSplineSurface
 from OCC.gp import (gp_Pnt, gp_XYZ)
 from OCC.Display.SimpleGui import init_display
 from OCC.ShapeFix import ShapeFix_ShapeTolerance
@@ -84,7 +84,6 @@ class IgesHandler(fh.FileHandler):
 			for pole_u_direction in xrange(n_poles_u):
 				for pole_v_direction in xrange(n_poles_v):
 					control_point_coordinates = occ_face.Pole(pole_u_direction+1,pole_v_direction+1)
-					weight = occ_face.Weight(pole_u_direction+1,pole_v_direction+1)
 					control_polygon_coordinates[i,:] = [control_point_coordinates.X(), control_point_coordinates.Y(), control_point_coordinates.Z()]
 					i += 1	
 
@@ -94,8 +93,6 @@ class IgesHandler(fh.FileHandler):
 
 			n_faces += 1
 			faces_explorer.Next()
-			
-		print control_point_position
 
 		self._control_point_position = control_point_position
 
@@ -133,6 +130,10 @@ class IgesHandler(fh.FileHandler):
 		n_faces = 0
 		control_point_position = self._control_point_position
 
+		compound_builder = BRep_Builder()
+		compound = OCC.TopoDS.TopoDS_Compound()
+		compound_builder.MakeCompound(compound)
+		
 		while faces_explorer.More():
 	
 			# similar to the parser method
@@ -158,7 +159,7 @@ class IgesHandler(fh.FileHandler):
 					i += 1
 
 			## construct the deformed wire for the trimmed surfaces
-			wireMaker = BRepBuilderAPI_MakeWire()
+			wire_maker = BRepBuilderAPI_MakeWire()
 			tol = ShapeFix_ShapeTolerance()
 			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), 1e-4).Face()
 			brep_face = BRep_Tool.Surface(brep)
@@ -173,22 +174,20 @@ class IgesHandler(fh.FileHandler):
 				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(edge_uv_coordinates[0], brep_face)
 				edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
 				tol.SetTolerance(edge_phis_coordinates, 1e-4)
-				wireMaker.Add(edge_phis_coordinates)
+				wire_maker.Add(edge_phis_coordinates)
 				edge_explorer.Next()
 
 			#grouping the edges in a wire
-			wire = wireMaker.Wire()
+			wire = wire_maker.Wire()
 
 			## trimming the surfaces
-			brep_surf = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), wire).Face()
-			writer.AddShape(brep_surf)
-			
-			#print writer
-
+			brep_surf = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), wire).Shape()
+			compound_builder.Add(compound, brep_surf)
 			n_faces += 1
-			faces_explorer.Next()	
+			faces_explorer.Next()
 
-		## write out the iges file
+		writer.AddShape(compound)
+
 		writer.Write(self.outfile)
 		
 		
@@ -212,15 +211,42 @@ class IgesHandler(fh.FileHandler):
 		reader = IGESControl_Reader()
 		reader.ReadFile(plot_file)
 		reader.TransferRoots()
-		shape = reader.Shape()
+		shape = reader.Shape()		
 		
 		display, start_display, add_menu, add_function_to_menu = init_display()
 		display.FitAll()
 		display.DisplayShape(shape, update=True)
 		
+		def export_to_BMP(event=None):
+			display.View.Dump('./capture_bmp.bmp')
+
+
+		def export_to_PNG(event=None):
+			display.View.Dump('./capture_png.png')
+
+
+		def export_to_JPEG(event=None):
+			display.View.Dump('./capture_jpeg.jpeg')
+
+
+		def export_to_TIFF(event=None):
+			display.View.Dump('./capture_tiff.tiff')
+
+
+		def exit(event=None):
+			sys.exit()
+		
+		add_menu('screencapture')
+		add_function_to_menu('screencapture', export_to_BMP)
+		add_function_to_menu('screencapture', export_to_PNG)
+		add_function_to_menu('screencapture', export_to_JPEG)
+		add_function_to_menu('screencapture', export_to_TIFF)
+		add_function_to_menu('screencapture', exit)
+		
 		# Show the plot to the screen
 		if not save_fig:
 			start_display()
 		else:
+			f = display.View.View().GetObject()
 			display.View.Dump(plot_file.split('.')[0] + '.ppm')
 

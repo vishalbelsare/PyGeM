@@ -11,7 +11,6 @@ from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface
 import OCC.TopoDS
 from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE)
 from OCC.TopExp import TopExp_Explorer
-from OCC.Geom import Geom_BSplineSurface
 from OCC.gp import (gp_Pnt, gp_XYZ)
 from OCC.Display.SimpleGui import init_display
 from OCC.ShapeFix import ShapeFix_ShapeTolerance
@@ -85,7 +84,6 @@ class IgesHandler(fh.FileHandler):
 			for pole_u_direction in xrange(n_poles_u):
 				for pole_v_direction in xrange(n_poles_v):
 					control_point_coordinates = occ_face.Pole(pole_u_direction+1,pole_v_direction+1)
-					weight = occ_face.Weight(pole_u_direction+1,pole_v_direction+1)
 					control_polygon_coordinates[i,:] = [control_point_coordinates.X(), control_point_coordinates.Y(), control_point_coordinates.Z()]
 					i += 1	
 
@@ -175,7 +173,6 @@ class IgesHandler(fh.FileHandler):
 				# evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
 				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(edge_uv_coordinates[0], brep_face)
 				edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
-				#print edge_phis_coordinates
 				tol.SetTolerance(edge_phis_coordinates, 1e-4)
 				wire_maker.Add(edge_phis_coordinates)
 				edge_explorer.Next()
@@ -251,5 +248,5 @@ class IgesHandler(fh.FileHandler):
 			start_display()
 		else:
 			f = display.View.View().GetObject()
-			display.View.Dump(plot_file.split('.')[0] + '.jpg')
+			display.View.Dump(plot_file.split('.')[0] + '.ppm')
 

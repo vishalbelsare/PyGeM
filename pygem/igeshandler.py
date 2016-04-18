@@ -27,13 +27,14 @@ class IgesHandler(fh.FileHandler):
 
 	:cvar string infile: name of the input file to be processed.
 	:cvar string outfile: name of the output file where to write in.
-	:cvar string extension: extension of the input/output files. It is equal to '.iges'.
+	:cvar list extension: list of extensions of the input/output files.
+		It is equal to ['.iges', '.igs'].
 	:cvar list control_point_position: index of the first NURBS control point (or pole)
 		of each face of the iges file.
 	"""
 	def __init__(self):
 		super(IgesHandler, self).__init__()
-		self.extension = '.iges'	# TODO: also igs could be accepted
+		self.extension = ['.iges', '.igs']
 		self._control_point_position = None
 
 

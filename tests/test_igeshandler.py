@@ -31,7 +31,7 @@ class TestIgesHandler(TestCase):
 
 	def test_iges_default_extension_member(self):
 		iges_handler = ih.IgesHandler()
-		assert iges_handler.extension == '.iges'
+		assert iges_handler.extension == ['.iges', '.igs']
 	
 
 	def test_iges_parse_failing_filename_type(self):
@@ -62,6 +62,12 @@ class TestIgesHandler(TestCase):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		assert mesh_points.shape == (32, 3)
+
+
+	def test_iges_parse_shape_igs(self):
+		iges_handler = ih.IgesHandler()
+		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.igs')
+		assert mesh_points.shape == (32, 3)
 		
 
 	def test_iges_parse_coords_1(self):
@@ -91,6 +97,12 @@ class TestIgesHandler(TestCase):
 	def test_iges_parse_coords_5(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
+		np.testing.assert_almost_equal(mesh_points[-1][2], 10000.0)
+
+
+	def test_iges_parse_coords_5_igs(self):
+		iges_handler = ih.IgesHandler()
+		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.igs')
 		np.testing.assert_almost_equal(mesh_points[-1][2], 10000.0)		
 
 
@@ -124,7 +136,7 @@ class TestIgesHandler(TestCase):
 		os.remove(outfilename)
 
 
-	def test_iges_write_comparison(self):
+	def test_iges_write_comparison_iges(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		mesh_points[0][0] = 2.2
@@ -135,8 +147,34 @@ class TestIgesHandler(TestCase):
 		mesh_points[31][2] = -3.6
 
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
+		outfilename_expected = 'tests/test_datasets/test_pipe_out_true.iges'
 		
 		iges_handler.write(mesh_points, outfilename)
+
+		mesh_points = iges_handler.parse(outfilename)
+		mesh_points_expected = iges_handler.parse(outfilename_expected)
+		np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
+		os.remove(outfilename)
+
+
+	def test_iges_write_comparison_igs(self):
+		iges_handler = ih.IgesHandler()
+		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.igs')
+		mesh_points[0][0] = 2.2
+		mesh_points[5][1] = 4.3
+		mesh_points[9][2] = 0.5
+		mesh_points[12][0] = 7.2
+		mesh_points[16][1] = -1.2
+		mesh_points[31][2] = -3.6
+
+		outfilename = 'tests/test_datasets/test_pipe_out.igs'
+		outfilename_expected = 'tests/test_datasets/test_pipe_out_true.igs'
+		
+		iges_handler.write(mesh_points, outfilename)
+
+		mesh_points = iges_handler.parse(outfilename)
+		mesh_points_expected = iges_handler.parse(outfilename_expected)
+		np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
 		os.remove(outfilename)
 		
 		
@@ -158,3 +196,4 @@ class TestIgesHandler(TestCase):
 		iges_handler = ih.IgesHandler()
 		with self.assertRaises(TypeError):
 			iges_handler.show(show_file=1.1)
+

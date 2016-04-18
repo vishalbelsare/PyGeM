@@ -46,7 +46,7 @@ class FileHandler(object):
 		:param string filename: file to check.
 		"""
 		__, file_ext = os.path.splitext(filename)
-		if not file_ext == self.extension:
+		if not file_ext in self.extension:
 			raise ValueError('The input file does not have the proper extension. \
 				It is %s, instead of %s.' % (file_ext, self.extension))
 

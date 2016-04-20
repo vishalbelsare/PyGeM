@@ -48,7 +48,7 @@ class FileHandler(object):
 		__, file_ext = os.path.splitext(filename)
 		if not file_ext in self.extension:
 			raise ValueError('The input file does not have the proper extension. \
-				It is %s, instead of %s.' % (file_ext, self.extension))
+				It is {0!s}, instead of {1!s}.'.format(file_ext, self.extension))
 
 
 	def _check_filename_type(self, filename):
@@ -58,7 +58,7 @@ class FileHandler(object):
 		:param string filename: file to check.
 		"""
 		if not isinstance(filename, basestring):
-			raise TypeError('The given filename (%s) must be a string' % filename)
+			raise TypeError('The given filename ({0!s}) must be a string'.format(filename))
 
 
 	def _check_infile_instantiation(self, infile):

@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.4'
 if needs_sphinx > sphinx.__display_version__:
-    message = 'This project needs at least Sphinx v%s' % needs_sphinx
+    message = 'This project needs at least Sphinx v{0!s}'.format(needs_sphinx)
     raise VersionRequirementError(message)
 
 # Add any Sphinx extension module names here, as strings. They can be

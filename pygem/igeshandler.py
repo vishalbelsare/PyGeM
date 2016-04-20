@@ -31,11 +31,21 @@ class IgesHandler(fh.FileHandler):
 		It is equal to ['.iges', '.igs'].
 	:cvar list control_point_position: index of the first NURBS control point (or pole)
 		of each face of the iges file.
+	:cvar float tolerance: tolerance for the construction of the faces and wires 
+		in the write function. Default value is 1e-6.
+		
+	.. warning::
+
+			- For non trivial geometries it could be necessary to increase the tolerance.
+			  Linking edges into a single wire and then trimming the surface with the wire
+			  can be hard for the software, especially when the starting CAD has not been 
+			  made for analysis but for design purposes.
 	"""
 	def __init__(self):
 		super(IgesHandler, self).__init__()
 		self.extension = ['.iges', '.igs']
 		self._control_point_position = None
+		self.tolerance = 1e-6
 
 
 	def parse(self, filename):
@@ -46,9 +56,6 @@ class IgesHandler(fh.FileHandler):
 			the points of the mesh
 		:rtype: numpy.ndarray
 
-		.. todo::
-
-			- specify when it works
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)
@@ -106,7 +113,7 @@ class IgesHandler(fh.FileHandler):
 		return mesh_points
 
 
-	def write(self, mesh_points, filename):
+	def write(self, mesh_points, filename, tolerance=None):
 		"""
 		Writes a iges file, called filename, copying all the structures from self.filename but
 		the coordinates. mesh_points is a matrix that contains the new coordinates to
@@ -121,6 +128,9 @@ class IgesHandler(fh.FileHandler):
 		self._check_infile_instantiation(self.infile)
 
 		self.outfile = filename
+		
+		if tolerance is not None:
+			self.tolerance = tolerance
 
 		# init the ouput file writer
 		writer = IGESControl_Writer()
@@ -168,7 +178,7 @@ class IgesHandler(fh.FileHandler):
 			# construct the deformed wire for the trimmed surfaces
 			wire_maker = BRepBuilderAPI_MakeWire()
 			tol = ShapeFix_ShapeTolerance()
-			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), 1e-4).Face()
+			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), self.tolerance).Face()
 			brep_face = BRep_Tool.Surface(brep)
 
 			# cycle on the edges
@@ -180,7 +190,7 @@ class IgesHandler(fh.FileHandler):
 				# evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
 				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(edge_uv_coordinates[0], brep_face)
 				edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
-				tol.SetTolerance(edge_phis_coordinates, 1e-4)
+				tol.SetTolerance(edge_phis_coordinates, self.tolerance)
 				wire_maker.Add(edge_phis_coordinates)
 				edge_explorer.Next()
 

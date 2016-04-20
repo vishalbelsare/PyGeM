@@ -131,6 +131,8 @@ class IgesHandler(fh.FileHandler):
 		
 		if tolerance is None:
 			tolerance = self.tolerance
+		else:
+			self.tolerance = tolerance
 
 		# init the ouput file writer
 		writer = IGESControl_Writer()

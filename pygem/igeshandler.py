@@ -32,7 +32,7 @@ class IgesHandler(fh.FileHandler):
 	:cvar list control_point_position: index of the first NURBS control point (or pole)
 		of each face of the iges file.
 	:cvar float tolerance: tolerance for the construction of the faces and wires 
-		in the write function.
+		in the write function. Default value is 1e-6.
 		
 	.. warning::
 
@@ -129,9 +129,7 @@ class IgesHandler(fh.FileHandler):
 
 		self.outfile = filename
 		
-		if tolerance is None:
-			tolerance = self.tolerance
-		else:
+		if tolerance is not None:
 			self.tolerance = tolerance
 
 		# init the ouput file writer
@@ -180,7 +178,7 @@ class IgesHandler(fh.FileHandler):
 			# construct the deformed wire for the trimmed surfaces
 			wire_maker = BRepBuilderAPI_MakeWire()
 			tol = ShapeFix_ShapeTolerance()
-			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), tolerance).Face()
+			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), self.tolerance).Face()
 			brep_face = BRep_Tool.Surface(brep)
 
 			# cycle on the edges
@@ -192,7 +190,7 @@ class IgesHandler(fh.FileHandler):
 				# evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
 				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(edge_uv_coordinates[0], brep_face)
 				edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
-				tol.SetTolerance(edge_phis_coordinates, tolerance)
+				tol.SetTolerance(edge_phis_coordinates, self.tolerance)
 				wire_maker.Add(edge_phis_coordinates)
 				edge_explorer.Next()
 

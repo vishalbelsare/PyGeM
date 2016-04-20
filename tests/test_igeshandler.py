@@ -145,8 +145,8 @@ class TestIgesHandler(TestCase):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
-		iges_handler.write(mesh_points, outfilename, 1e-4)
-		assert iges_handler.tolerance == 1e-4
+		iges_handler.write(mesh_points, outfilename, 1e-3)
+		assert iges_handler.tolerance == 1e-3
 		os.remove(outfilename)
 
 
@@ -154,7 +154,7 @@ class TestIgesHandler(TestCase):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
-		iges_handler.write(mesh_points, outfilename, 1e-4)
+		iges_handler.write(mesh_points, outfilename, 1e-3)
 		assert iges_handler.outfile == outfilename
 		os.remove(outfilename)
 

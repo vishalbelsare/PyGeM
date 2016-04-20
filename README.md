@@ -1,4 +1,4 @@
-# PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM) [![Coverage Status](https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master)](https://coveralls.io/github/mathLab/PyGeM?branch=master)
+# PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM) [![Coverage Status](https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master)](https://coveralls.io/github/mathLab/PyGeM?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/41f0acdbcba84e26a47ede5c57d62910/badge.svg)](https://www.quantifiedcode.com/app/project/41f0acdbcba84e26a47ede5c57d62910)
 Python Geometrical Morphing.
 
 ![Python Geometrical Morphing](readme/logo_PyGeM_small.png)

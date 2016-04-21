@@ -29,6 +29,7 @@ Guide
 
    code
    contact
+   contributing
    LICENSE
 
 
@@ -38,6 +39,7 @@ Tutorials
 We made some tutorial examples:
 
 - `Tutorial 1 <tutorial1stl.html>`_ shows how to deal with stl files
+- `Turorial 2 <tutorial2iges.html>`_ show how to deal with iges files
 
 
 

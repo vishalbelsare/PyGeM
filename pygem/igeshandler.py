@@ -122,6 +122,8 @@ class IgesHandler(fh.FileHandler):
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
 		:param string filename: name of the output file.
+		:param float tolerance: tolerance for the construction of the faces and wires
+			in the write function. If not given it uses `self.tolerance`.
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)

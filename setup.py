@@ -8,19 +8,19 @@ def readme():
 		return f.read()
 
 setup(name='pygem',
-	  version='0.1',
+	  version='0.2',
 	  description='Tools to apply FFD.',
 	  long_description=readme(),
 	  classifiers=[
-	  	'Development Status :: 3 - Alpha',
+	  	'Development Status :: 4 - Beta',
 	  	'License :: OSI Approved :: MIT License',
 	  	'Programming Language :: Python :: 2.7',
 	  	'Intended Audience :: Science/Research',
 	  	'Topic :: Scientific/Engineering :: Mathematics'
 	  ],
-	  keywords='dimension reduction mathematics ffd',
+	  keywords='dimension_reduction mathematics ffd morphing iges stl vtk openfoam',
 	  url='https://github.com/mathLab/PyGeM',
-	  authors='Filippo Salmoiraghi, Marco Tezzele',
+	  author='Filippo Salmoiraghi, Marco Tezzele',
 	  author_email='filippo.salmoiraghi@gmail.com, marcotez@gmail.com',
 	  license='MIT',
 	  packages=['pygem'],
@@ -29,7 +29,9 @@ setup(name='pygem',
 	  		'numpy-stl',
 	  		'scipy',
 	  		'matplotlib',
-	  		'enum34'
+	  		'enum34',
+	  		'Sphinx>=1.4',
+	  		'sphinx_rtd_theme'
 	  ],
 	  test_suite='nose.collector',
 	  tests_require=['nose'],

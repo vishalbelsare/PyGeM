@@ -18,7 +18,7 @@ class FileHandler(object):
 		self.extension = None
 
 
-	def parse(self, infile):
+	def parse(self, *args):
 		"""
 		Abstract method to parse a specific file.
 
@@ -28,7 +28,7 @@ class FileHandler(object):
 			+ self.__class__.__name__ + ".parse")
 
 
-	def write(self, mesh_points, outfile):
+	def write(self, *args):
 		"""
 		Abstract method to write a specific file.
 
@@ -51,9 +51,10 @@ class FileHandler(object):
 				It is {0!s}, instead of {1!s}.'.format(file_ext, self.extension))
 
 
-	def _check_filename_type(self, filename):
+	@staticmethod
+	def _check_filename_type(filename):
 		"""
-		This private method checks if `filename` is a string. If not it raises a TypeError.
+		This private static method checks if `filename` is a string. If not it raises a TypeError.
 
 		:param string filename: file to check.
 		"""
@@ -61,9 +62,10 @@ class FileHandler(object):
 			raise TypeError('The given filename ({0!s}) must be a string'.format(filename))
 
 
-	def _check_infile_instantiation(self, infile):
+	@staticmethod
+	def _check_infile_instantiation(infile):
 		"""
-		This private method checks if the input file `infile` is instantiated. If not it means
+		This private static method checks if the input file `infile` is instantiated. If not it means
 		that nobody called the parse method, i.e. `self.infile` is None. If the check fails
 		it raises a RuntimeError.
 

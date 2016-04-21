@@ -35,27 +35,25 @@ class UnvHandler(fh.FileHandler):
 
 		self.infile = filename
 
-		input_file = open(self.infile, 'r')
-		nline = 0
-		while True:
-			line = input_file.readline()
-			nline += 1
-			if len(line) == 0:
-				break
-			if line.startswith('    -1'):
-				section_id = input_file.readline().strip()
+		with open(self.infile, 'r') as input_file:
+			nline = 0
+			while True:
+				line = input_file.readline()
 				nline += 1
-				if section_id == '2411':
-					count = 0
-					while not input_file.readline().startswith('    -1'):
-						count += 1
-					start_line = nline + 2
-					last_line = start_line + count
-				else:
-					while not input_file.readline().startswith('    -1'):
-						nline += 1
-
-		input_file.close()
+				if not line:
+					break
+				if line.startswith('    -1'):
+					section_id = input_file.readline().strip()
+					nline += 1
+					if section_id == '2411':
+						count = 0
+						while not input_file.readline().startswith('    -1'):
+							count += 1
+						start_line = nline + 2
+						last_line = start_line + count
+					else:
+						while not input_file.readline().startswith('    -1'):
+							nline += 1
 
 		n_points = count/2
 		mesh_points = np.zeros(shape=(n_points, 3))
@@ -65,7 +63,7 @@ class UnvHandler(fh.FileHandler):
 		with open(self.infile, 'r') as input_file:
 			for line in input_file:
 				nline += 1
-				if nline % 2 == 1 and nline > start_line and nline < last_line:
+				if nline % 2 == 1 and start_line < nline < last_line:
 					line = line.strip()
 					j = 0
 					for number in line.split():
@@ -100,7 +98,7 @@ class UnvHandler(fh.FileHandler):
 		with open(self.infile, 'r') as input_file, open(self.outfile, 'w') as output_file:
 			for line in input_file:
 				nrow += 1
-				if nrow % 2 == 1 and nrow > 20 and nrow <= (20 + n_points * 2):
+				if nrow % 2 == 1 and 20 < nrow <= (20 + n_points * 2):
 					for j in range(0, 3):
 						output_file.write('   ' + str(mesh_points[i][j]))
 					output_file.write('\n')

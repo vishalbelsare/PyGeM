@@ -67,8 +67,7 @@ class FFD(object):
 	>>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
 	>>> free_form = ffd.FFD(ffd_parameters, original_mesh_points)
 	>>> free_form.perform()
-	>>> new_mesh_points = free_form.modified_mesh_points
-			
+	>>> new_mesh_points = free_form.modified_mesh_points		
     """
 	def __init__(self, ffd_parameters, original_mesh_points):
 		self.parameters = ffd_parameters
@@ -152,9 +151,10 @@ class FFD(object):
 									reference_frame_mesh_points, inverse_transformation) + translation
 
 
-	def _transform_points(self, original_points, transformation):
+	@staticmethod
+	def _transform_points(original_points, transformation):
 		"""
-		This method transforms the points according to the affine transformation taken from
+		This private static method transforms the points according to the affine transformation taken from
 		affine_points_fit method.
 
 		:param numpy.ndarray original_points: coordinates of the original points.

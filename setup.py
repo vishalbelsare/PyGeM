@@ -1,6 +1,9 @@
 from setuptools import setup
 
 def readme():
+	"""
+	This function just return the content of README.md
+	"""
 	with open('README.md') as f:
 		return f.read()
 

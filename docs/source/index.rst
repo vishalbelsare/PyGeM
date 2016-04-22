@@ -39,7 +39,8 @@ Tutorials
 We made some tutorial examples:
 
 - `Tutorial 1 <tutorial1stl.html>`_ shows how to deal with stl files
-- `Turorial 2 <tutorial2iges.html>`_ show how to deal with iges files
+- `Turorial 2 <tutorial2iges.html>`_ shows how to deal with iges files
+- `Turorial 3 <tutorial3unv.html>`_ shows how to deal with unv files and how to set the desired continuity to the geometry
 
 
 

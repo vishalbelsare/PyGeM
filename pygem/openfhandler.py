@@ -44,7 +44,7 @@ class OpenFoamHandler(fh.FileHandler):
 				if nrow == 19:
 					n_points = int(line)
 					mesh_points = np.zeros(shape=(n_points, 3))
-				if nrow > 20 and nrow < 21 + n_points:
+				if 20 < nrow < 21 + n_points:
 					line = line[line.index("(") + 1:line.rindex(")")]
 					j = 0
 					for number in line.split():
@@ -80,7 +80,7 @@ class OpenFoamHandler(fh.FileHandler):
 		with open(self.infile, 'r') as input_file, open(self.outfile, 'w') as output_file:
 			for line in input_file:
 				nrow += 1
-				if nrow > 20 and nrow < 21 + n_points:
+				if 20 < nrow < 21 + n_points:
 					output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(mesh_points[i][1]) + \
 									  ' ' + str(mesh_points[i][2]) +')')
 					output_file.write('\n')

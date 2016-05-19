@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing different CAD files.
+Base module with the base class for reading and writing different CAD files.
 """
 import os
 

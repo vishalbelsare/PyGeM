@@ -4,8 +4,6 @@ Auxiliary utilities for PyGeM.
 import vtk
 import numpy as np
 
-# TODO: add the connectivity to the ffd control points to visualize the lattice.
-
 def write_bounding_box(parameters, outfile, write_deformed=True):
 	"""
 	Method that writes a vtk file containing the FFD lattice. This method
@@ -31,7 +29,7 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 	aux_x = np.linspace(0, parameters.lenght_box_x, parameters.n_control_points[0])
 	aux_y = np.linspace(0, parameters.lenght_box_y, parameters.n_control_points[1])
 	aux_z = np.linspace(0, parameters.lenght_box_z, parameters.n_control_points[2])
-	lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(aux_y, aux_x, aux_z)
+	lattice_z_coords, lattice_y_coords, lattice_x_coords = np.meshgrid(aux_z, aux_y, aux_x)
 
 	if write_deformed:
 		box_points = np.array([lattice_x_coords.ravel() + parameters.array_mu_x.ravel() * parameters.lenght_box_x,\
@@ -40,43 +38,43 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 	else:
 		box_points = np.array([lattice_x_coords.ravel(), lattice_y_coords.ravel(), \
 			lattice_z_coords.ravel()])
-
+		
 	n_rows = box_points.shape[1]
+
 	box_points = np.dot(parameters.rotation_matrix, box_points) + \
 		np.transpose(np.tile(parameters.origin_box, (n_rows, 1)))
-
-	_write_vtk_box(box_points, outfile)
-
-
-def _write_vtk_box(box_points, filename):
+	
+	_write_vtk_box(box_points, outfile, parameters.n_control_points)
+	
+	
+def _write_vtk_box(box_points, filename, dimensions):
 	"""
 	Private method that writes a vtk file containing FFD control points.
-
+	
 	:param numpy.ndarray box_points: coordinates of the FFD control points.
 	:param string filename: name of the output file.
+	:param list dimensions: dimension of the lattice in (x, y, z) directions.
 	"""
 	# setup points and vertices
 	points = vtk.vtkPoints()
-	vertices = vtk.vtkCellArray()
-
+	
 	for index in range(0, box_points.shape[1]):
 		ind = points.InsertNextPoint(box_points[0, index], box_points[1, index], box_points[2, index])
-		vertices.InsertNextCell(1)
-		vertices.InsertCellPoint(ind)
-
-	polydata = vtk.vtkPolyData()
-	polydata.SetPoints(points)
-	polydata.SetVerts(vertices)
-	polydata.Modified()
-
-	writer = vtk.vtkDataSetWriter()
+		
+	grid = vtk.vtkStructuredGrid()
+	
+	grid.SetPoints(points)
+	grid.SetDimensions(dimensions)
+	grid.Modified()
+	
+	writer = vtk.vtkStructuredGridWriter()
 	writer.SetFileName(filename)
-
+	
 	if vtk.VTK_MAJOR_VERSION <= 5:
-		polydata.Update()
-		writer.SetInput(polydata)
+		grid.Update()
+		writer.SetInput(grid)
 	else:
-		writer.SetInputData(polydata)
-
+		writer.SetInputData(grid)
+		
 	writer.Write()
 

@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing different CAD files.
+Derived module from filehandler.py to handle iges and igs files.
 """
 import os
 import numpy as np
@@ -51,6 +51,8 @@ class IgesHandler(fh.FileHandler):
 	def parse(self, filename):
 		"""
 		Method to parse the file `filename`. It returns a matrix with all the coordinates.
+
+		:param string filename: name of the input file.
 
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh

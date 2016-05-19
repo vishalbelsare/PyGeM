@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing different CAD files.
+Derived module from filehandler.py to handle Universal (unv) files.
 """
 import numpy as np
 import pygem.filehandler as fh
@@ -21,14 +21,13 @@ class UnvHandler(fh.FileHandler):
 	def parse(self, filename):
 		"""
 		Method to parse the file `filename`. It returns a matrix with all the coordinates.
+		It reads only the section 2411 of the unv files and it assumes there are only triangles.
 
+		:param string filename: name of the input file.
+		
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
-			the points of the mesh
+			the points of the mesh.
 		:rtype: numpy.ndarray
-
-		.. todo::
-
-			- specify when it works
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)
@@ -83,8 +82,6 @@ class UnvHandler(fh.FileHandler):
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
 		:param string filename: name of the output file.
-
-		.. todo:: DOCS
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)

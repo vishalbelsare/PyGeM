@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing different CAD files.
+Derived module from filehandler.py to handle OpenFOAM files.
 """
 import numpy as np
 import pygem.filehandler as fh
@@ -23,6 +23,8 @@ class OpenFoamHandler(fh.FileHandler):
 		"""
 		Method to parse the `filename`. It returns a matrix with all the coordinates.
 
+		:param string filename: name of the input file.
+		
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
 		:rtype: numpy.ndarray

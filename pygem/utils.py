@@ -31,23 +31,25 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 	aux_z = np.linspace(0, parameters.lenght_box_z, parameters.n_control_points[2])
 	lattice_z_coords, lattice_y_coords, lattice_x_coords = np.meshgrid(aux_z, aux_y, aux_x)
 
-	if write_deformed == False:
-		box_points = np.array([lattice_x_coords.ravel(), lattice_y_coords.ravel(), lattice_z_coords.ravel()])
-	if write_deformed == True:
-		box_points = np.array([lattice_x_coords.ravel() + parameters.array_mu_x.ravel()*parameters.lenght_box_x, \
-		lattice_y_coords.ravel()  + parameters.array_mu_y.ravel()*parameters.lenght_box_y, \
-		lattice_z_coords.ravel()  + parameters.array_mu_z.ravel()*parameters.lenght_box_z])
+	if write_deformed:
+		box_points = np.array([lattice_x_coords.ravel() + parameters.array_mu_x.ravel() * parameters.lenght_box_x,\
+			lattice_y_coords.ravel() + parameters.array_mu_y.ravel() * parameters.lenght_box_y, \
+			lattice_z_coords.ravel() + parameters.array_mu_z.ravel() * parameters.lenght_box_z])
+	else:
+		box_points = np.array([lattice_x_coords.ravel(), lattice_y_coords.ravel(), \
+			lattice_z_coords.ravel()])
 		
 	n_rows = box_points.shape[1]
 
-	box_points = np.dot(parameters.rotation_matrix,box_points) + np.transpose(np.tile(parameters.origin_box, (n_rows,1)))
+	box_points = np.dot(parameters.rotation_matrix, box_points) + \
+		np.transpose(np.tile(parameters.origin_box, (n_rows, 1)))
 	
 	_write_vtk_box(box_points, outfile, parameters.n_control_points)
 	
 	
 def _write_vtk_box(box_points, filename, dimensions):
 	"""
-	Method that writes a vtk file containing FFD control points.
+	Private method that writes a vtk file containing FFD control points.
 	
 	:param numpy.ndarray box_points: coordinates of the FFD control points.
 	:param string filename: name of the output file.
@@ -57,7 +59,7 @@ def _write_vtk_box(box_points, filename, dimensions):
 	points = vtk.vtkPoints()
 	
 	for index in range(0, box_points.shape[1]):
-		id = points.InsertNextPoint(box_points[0, index], box_points[1, index], box_points[2, index])
+		ind = points.InsertNextPoint(box_points[0, index], box_points[1, index], box_points[2, index])
 		
 	grid = vtk.vtkStructuredGrid()
 	

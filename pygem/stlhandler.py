@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing different CAD files.
+Derived module from filehandler.py to handle STereoLithography files.
 """
 import numpy as np
 from mpl_toolkits import mplot3d
@@ -25,6 +25,8 @@ class StlHandler(fh.FileHandler):
 		"""
 		Method to parse the `filename`. It returns a matrix with all the coordinates.
 
+		:param string filename: name of the input file.
+		
 		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
 			the points of the mesh
 		:rtype: numpy.ndarray
@@ -55,8 +57,6 @@ class StlHandler(fh.FileHandler):
 			the coordinates of the points of the mesh.
 		:param string filename: name of the output file.
 		:param boolean write_bin: flag to write in the binary format. Default is False.
-
-		.. todo:: DOCS
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)

@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing parameters files to perform the Free Form Deformation (FFD)
+Utilities for reading and writing parameters files to perform the desired geometrical morphing.
 """
 import os
 import ConfigParser
@@ -268,13 +268,11 @@ class FFDParameters(object):
 		"""
 		print 'conversion_unit = ' + str(self.conversion_unit) + '\n'
 		print '(lenght_box_x, lenght_box_y, lenght_box_z) = (' + str(self.lenght_box_x) + \
-			', ' + str(self.lenght_box_y) + ', ' + \
-		str(self.lenght_box_z) + ')'
+			', ' + str(self.lenght_box_y) + ', ' + str(self.lenght_box_z) + ')'
 		print 'origin_box = ' + str(self.origin_box)
 		print 'n_control_points = ' + str(self.n_control_points)
 		print '(rot_angle_x, rot_angle_y, rot_angle_z) = (' + str(self.rot_angle_x) + \
-			', ' + str(self.rot_angle_y) + ', ' + \
-		str(self.rot_angle_z) + ')'
+			', ' + str(self.rot_angle_y) + ', ' + str(self.rot_angle_z) + ')'
 		print '\narray_mu_x ='
 		print self.array_mu_x
 		print '\narray_mu_y ='
@@ -296,4 +294,95 @@ class FFDParameters(object):
 		print '\nposition_vertex_3 ='
 		print self.position_vertex_3
 
+
+
+class RBFParameters(object):
+	"""
+	Class that handles the Radial Basis Functions parameters in terms of RBF control points and
+	basis functions.
+
+	:cvar string basis: name of the basis functions to use in the transformation. The functions
+		implemented so far are: gaussian spline, multi quadratic biharmonic spline,
+		inv multi quadratic biharmonic spline, thin plate spline, beckert wendland c2 basis.
+		For a comprehensive list with details see the class :class:`~pygem.radialbasis.RBF`.
+		The default value is None.
+	:cvar float radius: is the scaling parameter r that affects the shape of the basis functions.
+		For details see the class :class:`~pygem.radialbasis.RBF`. The default value is None.
+	:cvar int n_control_points: total number of control points.
+	:cvar numpy.ndarray original_control_points: it is an `n_control_points`-by-3 array with the
+		coordinates of the original interpolation control points before the deformation. The
+		default value is None.
+	:cvar numpy.ndarray deformed_control_points: it is an `n_control_points`-by-3 array with the
+		coordinates of the interpolation control points after the deformation. The default value
+		is None.
+	"""
+	def __init__(self):
+		self.basis = None
+		self.radius = None
+		self.n_control_points = None
+		self.original_control_points = None
+		self.deformed_control_points = None
+
+
+	def read_parameters(self, filename='parameters.prm'):
+		"""
+		Reads in the parameters file and fill the self structure.
+
+		:param string filename: parameters file to be read in.
+		"""
+		if not isinstance(filename, basestring):
+			raise TypeError('filename must be a string')
+
+		# Checks if the parameters file exists. If not it writes the default class into filename.
+		# It consists in the vetices of a cube of side one with a vertex in (0, 0, 0) and opposite one
+		# in (1, 1, 1).
+		if not os.path.isfile(filename):
+			self.basis = 'gaussian_spline'
+			self.radius = 0.5
+			self.n_control_points = 8
+			self.original_control_points = np.array([0., 0., 0., 0., 0., 1., 0., 1., 0., 1., 0., 0., \
+				0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1., 1.]).reshape((8, 3))
+			self.deformed_control_points = np.array([0., 0., 0., 0., 0., 1., 0., 1., 0., 1., 0., 0., \
+				0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1., 1.]).reshape((8, 3))
+			#self.write_parameters(filename)
+			return
+		
+		config = ConfigParser.RawConfigParser()
+		config.read(filename)
+
+		self.basis = config.get('Radial Basis Functions', 'basis function')
+		self.radius = config.getfloat('Radial Basis Functions', 'radius')
+
+		ctrl_points = config.get('Control points', 'original control points')
+		lines = ctrl_points.split('\n')
+		self.n_control_points = len(lines)
+		self.original_control_points = np.zeros((self.n_control_points, 3))
+		for line, i in zip(lines, range(0, self.n_control_points)):
+			values = line.split()
+			self.original_control_points[i] = np.array([float(values[0]), float(values[1]), float(values[2])])
+
+		mod_points = config.get('Control points', 'deformed control points')
+		lines = mod_points.split('\n')
+
+		if len(lines) != self.n_control_points:
+			raise TypeError("The number of control points must be equal both in the 'original control points'" + \
+				" and in the 'deformed control points' section of the parameters file ({0!s})".format(filename))
+
+		self.deformed_control_points = np.zeros((self.n_control_points, 3))
+		for line, i in zip(lines, range(0, self.n_control_points)):
+			values = line.split()
+			self.deformed_control_points[i] = np.array([float(values[0]), float(values[1]), float(values[2])])
+
+
+	def print_info(self):
+		"""
+		This method prints all the RBF parameters on the screen. Its purpose is for debugging.
+		"""
+		print 'basis function = ' + str(self.basis)
+		print 'radius = ' + str(self.radius)
+		print 'n_control_points = ' + str(self.n_control_points)
+		print '\noriginal_control_points ='
+		print self.original_control_points
+		print '\ndeformed_control_points ='
+		print self.deformed_control_points
 

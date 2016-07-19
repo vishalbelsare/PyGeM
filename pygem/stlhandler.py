@@ -4,7 +4,7 @@ Derived module from filehandler.py to handle STereoLithography files.
 import numpy as np
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
-from stl import mesh
+from stl import mesh, Mode
 import pygem.filehandler as fh
 
 
@@ -75,7 +75,7 @@ class StlHandler(fh.FileHandler):
 				data['vectors'][i][j] = mesh_points[3*i + j]
 
 		if not write_bin:
-			stl_mesh.save(self.outfile, mode=1, update_normals=True)
+			stl_mesh.save(self.outfile, mode=Mode.ASCII, update_normals=True)
 		else:
 			stl_mesh.save(self.outfile, update_normals=True)
 

@@ -15,10 +15,10 @@ By now, it has been used with meshes with up to 14 milions of cells. Try with mo
 See the **Examples** section below to have an idea of the potential of this package.
 
 
-## Graphic Unit Interface
-**PyGeM** is now provided with a very basic Graphic Unit Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Up to now, PyGeM GUI works on linux and Mac OS X computers.
+## Graphical User Interface
+**PyGeM** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Up to now, PyGeM GUI works on linux and Mac OS X computers.
 
-Pick the geometry, the parameters file, set the name of the output and decide whether dump the FFD lattices or not. Now just click on the `Run PyGeM` button and that is it.
+Pick the geometry, the parameters file, set the name of the output and decide whether dump the FFD lattices or not. Now just click on the `Run PyGeM` button and that is it. For a demonstration, see the [video tutorial on YouTube](https://youtu.be/iAjGEhXs_ys).
 
 <p align="center">
 <img src="readme/gui_PyGeM.png" alt>
@@ -92,13 +92,21 @@ Contact us by email for further information or questions about **PyGeM**, or sug
 
 ## Examples
 You can find useful tutorials on how to use the package in the `tutorials` folder.
-Here we show two applications, taken from the **naval** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
+Here we show three applications, taken from the **naval**, **nautical** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
 <p align="center">
 <img src="readme/DTMB_ffd.png" alt>
 </p>
 <p align="center">
 <em>DTMB-5415 hull: morphing of the bulbous bow starting from an industrial .iges CAD file.</em>
 </p>
+
+<p align="center">
+<img src="readme/scafoYZshift.gif" alt>
+</p>
+<p align="center">
+<em>MCY hull: morphing of the exhaust gasses devices starting from an industrial .stl file.</em>
+</p>
+
 <p align="center">
 <img src="readme/drivAer_ffd.png" alt>
 </p>

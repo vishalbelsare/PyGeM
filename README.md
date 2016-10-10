@@ -35,7 +35,7 @@ Please see the table below for instructions on how to satisfy the requirements.
 
 | Package | Version  | Comment                                                                    |
 |---------|----------|----------------------------------------------------------------------------|
-| OCC     | >= 0.16  | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core` |
+| OCC     | == 0.17  | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core` |
 | vtk     | >= 5.0   | Simplest solution is `conda install vtk`                                   |
 
 
@@ -133,7 +133,8 @@ just a few small guidelines you need to follow.
      commits related to that bug or feature.
 
   3. To ensure properly formatted code, please make sure to use a tab of 4
-     spaces to indent the code. You should also run [pylint][] over your code.
+     spaces to indent the code. The easy way is to run on your bash the provided
+     script: ./code_formatter.sh. You should also run [pylint][] over your code.
      It's not strictly necessary that your code be completely "lint-free",
      but this will help you find common style issues.
 

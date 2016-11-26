@@ -1,34 +1,20 @@
-from unittest import TestCase
-import unittest
-import pygem.igeshandler as ih
-import numpy as np
-import filecmp
 import os
+from unittest import TestCase
+
+import numpy as np
+from OCC.TopoDS import TopoDS_Shape
+from OCC.BRepPrimAPI import BRepPrimAPI_MakeBox
+
+import pygem.igeshandler as ih
 
 
 class TestIgesHandler(TestCase):
 	def test_iges_instantiation(self):
 		iges_handler = ih.IgesHandler()
 
-	def test_iges_default_infile_member(self):
-		iges_handler = ih.IgesHandler()
-		assert iges_handler.infile == None
-
-	def test_iges_default_control_point_position_member(self):
-		iges_handler = ih.IgesHandler()
-		assert iges_handler._control_point_position == None
-
-	def test_iges_default_outfile_member(self):
-		iges_handler = ih.IgesHandler()
-		assert iges_handler.outfile == None
-
-	def test_iges_default_tolerance(self):
-		iges_handler = ih.IgesHandler()
-		assert iges_handler.tolerance == 1e-6
-
 	def test_iges_default_extension_member(self):
 		iges_handler = ih.IgesHandler()
-		assert iges_handler.extension == ['.iges', '.igs']
+		self.assertListEqual(iges_handler.extensions, ['.iges', '.igs'])
 
 	def test_iges_parse_failing_filename_type(self):
 		iges_handler = ih.IgesHandler()
@@ -45,24 +31,25 @@ class TestIgesHandler(TestCase):
 	def test_iges_parse_infile(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
-		assert iges_handler.infile == 'tests/test_datasets/test_pipe.iges'
+		self.assertEqual(iges_handler.infile, 'tests/test_datasets/test_pipe.iges')
 
 	def test_iges_parse_control_point_position_member(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
-		assert iges_handler._control_point_position == [
-			0, 6, 12, 18, 24, 28, 32
-		]
+		self.assertListEqual(
+			iges_handler._control_point_position,
+			[0, 6, 12, 18, 24, 28, 32]
+		)
 
 	def test_iges_parse_shape(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
-		assert mesh_points.shape == (32, 3)
+		self.assertTupleEqual(mesh_points.shape, (32, 3))
 
 	def test_iges_parse_shape_igs(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.igs')
-		assert mesh_points.shape == (32, 3)
+		self.assertTupleEqual(mesh_points.shape, (32, 3))
 
 	def test_iges_parse_coords_1(self):
 		iges_handler = ih.IgesHandler()
@@ -121,24 +108,24 @@ class TestIgesHandler(TestCase):
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
 		iges_handler.write(mesh_points, outfilename)
-		assert iges_handler.outfile == outfilename
-		os.remove(outfilename)
+		self.assertEqual(iges_handler.outfile, outfilename)
+		self.addCleanup(os.remove, outfilename)
 
 	def test_iges_write_outfile_tolerance(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
 		iges_handler.write(mesh_points, outfilename, 1e-3)
-		assert iges_handler.tolerance == 1e-3
-		os.remove(outfilename)
+		self.assertEqual(iges_handler.tolerance, 1e-3)
+		self.addCleanup(os.remove, outfilename)
 
 	def test_iges_write_modified_tolerance(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		outfilename = 'tests/test_datasets/test_pipe_out.iges'
 		iges_handler.write(mesh_points, outfilename, 1e-3)
-		assert iges_handler.outfile == outfilename
-		os.remove(outfilename)
+		self.assertEqual(iges_handler.outfile, outfilename)
+		self.addCleanup(os.remove, outfilename)
 
 	def test_iges_write_comparison_iges(self):
 		iges_handler = ih.IgesHandler()
@@ -158,7 +145,7 @@ class TestIgesHandler(TestCase):
 		mesh_points = iges_handler.parse(outfilename)
 		mesh_points_expected = iges_handler.parse(outfilename_expected)
 		np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
-		os.remove(outfilename)
+		self.addCleanup(os.remove, outfilename)
 
 	def test_iges_write_comparison_igs(self):
 		iges_handler = ih.IgesHandler()
@@ -178,21 +165,73 @@ class TestIgesHandler(TestCase):
 		mesh_points = iges_handler.parse(outfilename)
 		mesh_points_expected = iges_handler.parse(outfilename_expected)
 		np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
-		os.remove(outfilename)
+		self.addCleanup(os.remove, outfilename)
 
 	def test_iges_plot_save_fig(self):
 		iges_handler = ih.IgesHandler()
 		mesh_points = iges_handler.parse('tests/test_datasets/test_pipe.iges')
 		iges_handler.plot(save_fig=True)
 		self.assertTrue(os.path.isfile('tests/test_datasets/test_pipe.png'))
-		os.remove('tests/test_datasets/test_pipe.png')
+		self.addCleanup(os.remove, 'tests/test_datasets/test_pipe.png')
 
 	def test_iges_plot_failing_outfile_type(self):
 		iges_handler = ih.IgesHandler()
 		with self.assertRaises(TypeError):
 			iges_handler.plot(plot_file=3)
 
-	def test_iges_show_failing_outfile_type(self):
+	def test_iges_ihow_failing_outfile_type(self):
 		iges_handler = ih.IgesHandler()
 		with self.assertRaises(TypeError):
-			iges_handler.show(show_file=1.1)
+			iges_handler.show(ihow_file=1.1)
+
+	def test_iges_load_shape_from_file_raises_wrong_type(self):
+		iges_handler = ih.IgesHandler()
+		with self.assertRaises(TypeError):
+			iges_handler.load_shape_from_file(None)
+
+	def test_iges_load_shape_from_file_raises_wrong_extension(self):
+		iges_handler = ih.IgesHandler()
+		with self.assertRaises(ValueError):
+			iges_handler.load_shape_from_file(
+				'tests/test_datasets/test_pipe.stp'
+			)
+
+	def test_iges_load_shape_correct_iges(self):
+		iges_handler = ih.IgesHandler()
+		shape = iges_handler.load_shape_from_file(
+			'tests/test_datasets/test_pipe.iges'
+		)
+		self.assertEqual(type(shape), TopoDS_Shape)
+
+	def test_iges_load_shape_correct_igs(self):
+		iges_handler = ih.IgesHandler()
+		shape = iges_handler.load_shape_from_file(
+			'tests/test_datasets/test_pipe.igs'
+		)
+		self.assertEqual(type(shape), TopoDS_Shape)
+
+	def test_iges_write_shape_to_file_raises_wrong_type(self):
+		iges_handler = ih.IgesHandler()
+		with self.assertRaises(TypeError):
+			iges_handler.write_shape_to_file(None, None)
+
+	def test_iges_write_shape_to_file_raises_wrong_extension(self):
+		iges_handler = ih.IgesHandler()
+		with self.assertRaises(ValueError):
+			iges_handler.load_shape_from_file('tests/test_datasets/x.stp')
+
+	def test_iges_write_shape_to_file_iges(self):
+		ihp = BRepPrimAPI_MakeBox(1., 1., 1.).Shape()
+		path = 'tests/test_datasets/x.iges'
+		iges_handler = ih.IgesHandler()
+		iges_handler.write_shape_to_file(ihp, path)
+		self.assertTrue(os.path.exists(path))
+		self.addCleanup(os.remove, path)
+
+	def test_iges_write_shape_to_file_igs(self):
+		ihp = BRepPrimAPI_MakeBox(1., 1., 1.).Shape()
+		path = 'tests/test_datasets/x.igs'
+		iges_handler = ih.IgesHandler()
+		iges_handler.write_shape_to_file(ihp, path)
+		self.assertTrue(os.path.exists(path))
+		self.addCleanup(os.remove, path)

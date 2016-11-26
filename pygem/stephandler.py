@@ -1,51 +1,53 @@
 """
-Derived module from filehandler.py to handle iges and igs files.
+Derived module from nurbshandler.py to handle step and stp files.
 """
 
-from OCC.IGESControl import (IGESControl_Reader, IGESControl_Writer)
+from OCC.Interface import Interface_Static_SetCVal
+from OCC.STEPControl import STEPControl_Writer, STEPControl_Reader, STEPControl_AsIs
 
 from pygem.nurbshandler import NurbsHandler
 
 
-class IgesHandler(NurbsHandler):
+class StepHandler(NurbsHandler):
 	"""
-	Iges file handler class
+	Step file handler class
 
 	:cvar string infile: name of the input file to be processed.
 	:cvar string outfile: name of the output file where to write in.
 	:cvar list extensions: list of extensions of the input/output files.
-		It is equal to ['.iges', '.igs'].
+		It is equal to ['.step', '.stp'].
 	:cvar list control_point_position: index of the first NURBS control point (or pole)
 		of each face of the iges file.
-	:cvar float tolerance: tolerance for the construction of the faces and wires 
+	:cvar float tolerance: tolerance for the construction of the faces and wires
 		in the write function. Default value is 1e-6.
 	:cvar TopoDS_Shape shape: shape meant for modification.
-		
+
 	.. warning::
 
 			- For non trivial geometries it could be necessary to increase the tolerance.
 			  Linking edges into a single wire and then trimming the surface with the wire
-			  can be hard for the software, especially when the starting CAD has not been 
+			  can be hard for the software, especially when the starting CAD has not been
 			  made for analysis but for design purposes.
 	"""
 
 	def __init__(self):
-		super(IgesHandler, self).__init__()
-		self.extensions = ['.iges', '.igs']
+		super(StepHandler, self).__init__()
+		self._control_point_position = None
+		self.extensions = ['.step', '.stp']
 
 	def load_shape_from_file(self, filename):
 		"""
-		This class method loads a shape from the file `filename`.
+		This method loads a shape from the file `filename`.
 
 		:param string filename: name of the input file.
-			It should have proper extension (.iges or .igs)
+			It should have proper extension (.step or .stp)
 
 		:return: shape: loaded shape
 		:rtype: TopoDS_Shape
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)
-		reader = IGESControl_Reader()
+		reader = STEPControl_Reader()
 		reader.ReadFile(filename)
 		reader.TransferRoots()
 		shape = reader.Shape()
@@ -53,14 +55,18 @@ class IgesHandler(NurbsHandler):
 
 	def write_shape_to_file(self, shape, filename):
 		"""
-		This class method saves the `shape` to the file `filename`.
+		This method saves the `shape` to the file `filename`.
 
 		:param: TopoDS_Shape shape: loaded shape
 		:param string filename: name of the input file.
-			It should have proper extension (.iges or .igs)
+			It should have proper extension (.step or .stp)
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)
-		writer = IGESControl_Writer()
-		writer.AddShape(shape)
-		writer.Write(filename)
+		step_writer = STEPControl_Writer()
+		# Changes write schema to STEP standard AP203
+		# It is considered the most secure standard for STEP.
+		# *According to PythonOCC documentation (http://www.pythonocc.org/)
+		Interface_Static_SetCVal("write.step.schema", "AP203")
+		step_writer.Transfer(shape, STEPControl_AsIs)
+		step_writer.Write(filename)

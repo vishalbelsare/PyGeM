@@ -4,16 +4,11 @@ Implements all methods for parsing an object and applying FFD.
 File handling operations (reading/writing) must be implemented in derived classes.
 """
 import os
-
-import OCC.TopoDS
 import numpy as np
+import OCC.TopoDS
 from OCC.BRep import (BRep_Tool, BRep_Builder)
-from OCC.BRepBuilderAPI import (
-	BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace
-)
-from OCC.BRepBuilderAPI import (
-	BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire
-)
+from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace, \
+	BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire)
 from OCC.Display.SimpleGui import init_display
 from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface
 from OCC.ShapeFix import ShapeFix_ShapeTolerance
@@ -24,7 +19,6 @@ from OCC.gp import (gp_Pnt, gp_XYZ)
 from matplotlib import pyplot
 from mpl_toolkits import mplot3d
 from stl import mesh
-
 import pygem.filehandler as fh
 
 
@@ -62,9 +56,7 @@ class NurbsHandler(fh.FileHandler):
 
 		"""
 		if not self.shape or not self.infile:
-			raise RuntimeError(
-				"You can not write a file without having parsed one."
-			)
+			raise RuntimeError("You can not write a file without having parsed one.")
 
 	def load_shape_from_file(self, filename):
 		"""
@@ -72,10 +64,8 @@ class NurbsHandler(fh.FileHandler):
 
 		Not implemented, it has to be implemented in subclasses.
 		"""
-		raise NotImplementedError(
-			"Subclass must implement abstract method " +\
-			self.__class__.__name__ + ".load_shape_from_file"
-		)
+		raise NotImplementedError("Subclass must implement abstract method " +\
+			self.__class__.__name__ + ".load_shape_from_file")
 
 	def parse(self, filename):
 		"""
@@ -114,30 +104,22 @@ class NurbsHandler(fh.FileHandler):
 			# extract the Control Points of each face
 			n_poles_u = occ_face.NbUPoles()
 			n_poles_v = occ_face.NbVPoles()
-			control_polygon_coordinates = np.zeros(
-				shape=(n_poles_u * n_poles_v, 3)
-			)
+			control_polygon_coordinates = np.zeros(\
+				shape=(n_poles_u * n_poles_v, 3))
 
 			# cycle over the poles to get their coordinates
 			i = 0
 			for pole_u_direction in xrange(n_poles_u):
 				for pole_v_direction in xrange(n_poles_v):
-					control_point_coordinates = occ_face.Pole(
-						pole_u_direction + 1, pole_v_direction + 1
-					)
-					control_polygon_coordinates[i, :] = [
-						control_point_coordinates.X(),
-						control_point_coordinates.Y(),
-						control_point_coordinates.Z()
-					]
+					control_point_coordinates = occ_face.Pole(\
+						pole_u_direction + 1, pole_v_direction + 1)
+					control_polygon_coordinates[i, :] = [control_point_coordinates.X(),\
+						control_point_coordinates.Y(),\
+						control_point_coordinates.Z()]
 					i += 1
 			# pushing the control points coordinates to the mesh_points array (used for FFD)
-			mesh_points = np.append(
-				mesh_points, control_polygon_coordinates, axis=0
-			)
-			control_point_position.append(
-				control_point_position[-1] + n_poles_u * n_poles_v
-			)
+			mesh_points = np.append(mesh_points, control_polygon_coordinates, axis=0)
+			control_point_position.append(control_point_position[-1] + n_poles_u * n_poles_v)
 
 			n_faces += 1
 			faces_explorer.Next()
@@ -192,23 +174,17 @@ class NurbsHandler(fh.FileHandler):
 			i = 0
 			for pole_u_direction in xrange(n_poles_u):
 				for pole_v_direction in xrange(n_poles_v):
-					control_point_coordinates = mesh_points[
-												i + control_point_position[n_faces], :
-												]
+					control_point_coordinates = mesh_points[i + control_point_position[n_faces], :]
 					point_xyz = gp_XYZ(*control_point_coordinates)
 
 					gp_point = gp_Pnt(point_xyz)
-					occ_face.SetPole(
-						pole_u_direction + 1, pole_v_direction + 1, gp_point
-					)
+					occ_face.SetPole(pole_u_direction + 1, pole_v_direction + 1, gp_point)
 					i += 1
 
 			# construct the deformed wire for the trimmed surfaces
 			wire_maker = BRepBuilderAPI_MakeWire()
 			tol = ShapeFix_ShapeTolerance()
-			brep = BRepBuilderAPI_MakeFace(
-				occ_face.GetHandle(), self.tolerance
-			).Face()
+			brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), self.tolerance).Face()
 			brep_face = BRep_Tool.Surface(brep)
 
 			# cycle on the edges
@@ -218,9 +194,8 @@ class NurbsHandler(fh.FileHandler):
 				# edge in the (u,v) coordinates
 				edge_uv_coordinates = BRep_Tool.CurveOnSurface(edge, face_aux)
 				# evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
-				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(
-					edge_uv_coordinates[0], brep_face
-				)
+				edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(\
+					edge_uv_coordinates[0], brep_face)
 				edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
 				tol.SetTolerance(edge_phis_coordinates, self.tolerance)
 				wire_maker.Add(edge_phis_coordinates)
@@ -230,8 +205,7 @@ class NurbsHandler(fh.FileHandler):
 			wire = wire_maker.Wire()
 
 			# trimming the surfaces
-			brep_surf = BRepBuilderAPI_MakeFace(
-				occ_face.GetHandle(), wire).Shape()
+			brep_surf = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), wire).Shape()
 			compound_builder.Add(compound, brep_surf)
 			n_faces += 1
 			faces_explorer.Next()
@@ -243,10 +217,9 @@ class NurbsHandler(fh.FileHandler):
 
 		Not implemented, it has to be implemented in subclasses.
 		"""
-		raise NotImplementedError(
+		raise NotImplementedError(\
 			"Subclass must implement abstract method " +\
-			self.__class__.__name__ + ".write_shape_to_file"
-		)
+			self.__class__.__name__ + ".write_shape_to_file")
 
 	def plot(self, plot_file=None, save_fig=False):
 		"""
@@ -277,35 +250,28 @@ class NurbsHandler(fh.FileHandler):
 		# Load the STL files and add the vectors to the plot
 		stl_mesh = mesh.Mesh.from_file('aux_figure.stl')
 		os.remove('aux_figure.stl')
-		axes.add_collection3d(
-			mplot3d.art3d.Poly3DCollection(stl_mesh.vectors / 1000)
-		)
+		axes.add_collection3d(mplot3d.art3d.Poly3DCollection(stl_mesh.vectors / 1000))
 
 		# Get the limits of the axis and center the geometry
-		max_dim = np.array([
-			np.max(stl_mesh.vectors[:, :, 0]) / 1000,
-			np.max(stl_mesh.vectors[:, :, 1]) / 1000,
-			np.max(stl_mesh.vectors[:, :, 2]) / 1000
-		])
-		min_dim = np.array([
-			np.min(stl_mesh.vectors[:, :, 0]) / 1000,
-			np.min(stl_mesh.vectors[:, :, 1]) / 1000,
-			np.min(stl_mesh.vectors[:, :, 2]) / 1000
-		])
+		max_dim = np.array([\
+			np.max(stl_mesh.vectors[:, :, 0]) / 1000,\
+			np.max(stl_mesh.vectors[:, :, 1]) / 1000,\
+			np.max(stl_mesh.vectors[:, :, 2]) / 1000])
+		min_dim = np.array([\
+			np.min(stl_mesh.vectors[:, :, 0]) / 1000,\
+			np.min(stl_mesh.vectors[:, :, 1]) / 1000,\
+			np.min(stl_mesh.vectors[:, :, 2]) / 1000])
 
 		max_lenght = np.max(max_dim - min_dim)
-		axes.set_xlim(
-			-.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2,
-			.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2
-		)
-		axes.set_ylim(
-			-.6 * max_lenght + (max_dim[1] + min_dim[1]) / 2,
-			.6 * max_lenght + (max_dim[1] + min_dim[1]) / 2
-		)
-		axes.set_zlim(
-			-.6 * max_lenght + (max_dim[2] + min_dim[2]) / 2,
-			.6 * max_lenght + (max_dim[2] + min_dim[2]) / 2
-		)
+		axes.set_xlim(\
+			-.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2,\
+			.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2)
+		axes.set_ylim(\
+			-.6 * max_lenght + (max_dim[1] + min_dim[1]) / 2,\
+			.6 * max_lenght + (max_dim[1] + min_dim[1]) / 2)
+		axes.set_zlim(\
+			-.6 * max_lenght + (max_dim[2] + min_dim[2]) / 2,\
+			.6 * max_lenght + (max_dim[2] + min_dim[2]) / 2)
 
 		# Show the plot to the screen
 		if not save_fig:

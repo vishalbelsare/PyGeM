@@ -15,7 +15,9 @@ Code Documentation
    stlhandler
    vtkhandler
    unvhandler
+   nurbshandler
    igeshandler
+   stephandler
    utils
    gui
 

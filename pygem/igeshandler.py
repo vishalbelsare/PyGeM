@@ -2,8 +2,7 @@
 Derived module from filehandler.py to handle iges and igs files.
 """
 
-from OCC.IGESControl import (IGESControl_Reader, IGESControl_Writer)
-
+from OCC.IGESControl import (IGESControl_Reader, IGESControl_Writer, IGESControl_Controller_Init)
 from pygem.nurbshandler import NurbsHandler
 
 
@@ -17,15 +16,15 @@ class IgesHandler(NurbsHandler):
 		It is equal to ['.iges', '.igs'].
 	:cvar list control_point_position: index of the first NURBS control point (or pole)
 		of each face of the iges file.
-	:cvar float tolerance: tolerance for the construction of the faces and wires 
+	:cvar float tolerance: tolerance for the construction of the faces and wires
 		in the write function. Default value is 1e-6.
 	:cvar TopoDS_Shape shape: shape meant for modification.
-		
+
 	.. warning::
 
 			- For non trivial geometries it could be necessary to increase the tolerance.
 			  Linking edges into a single wire and then trimming the surface with the wire
-			  can be hard for the software, especially when the starting CAD has not been 
+			  can be hard for the software, especially when the starting CAD has not been
 			  made for analysis but for design purposes.
 	"""
 
@@ -61,6 +60,7 @@ class IgesHandler(NurbsHandler):
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)
+		IGESControl_Controller_Init()
 		writer = IGESControl_Writer()
 		writer.AddShape(shape)
 		writer.Write(filename)

@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
     'sphinx.ext.imgmath',
     'sphinx.ext.ifconfig',
 ]
@@ -129,6 +130,15 @@ keep_warnings = False
 todo_include_todos = True
 
 
+# -- Options for viewcode extension ---------------------------------------
+
+# Follow alias objects that are imported from another module such as functions,
+# classes and attributes. As side effects, this option ... ???
+# If false, ... ???.
+# The default is True.
+viewcode_import = True
+
+
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -172,7 +182,7 @@ html_extra_path = ['_tutorials']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.

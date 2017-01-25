@@ -66,8 +66,6 @@ class VtkHandler(fh.FileHandler):
 		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
 			the coordinates of the points of the mesh
 		:param string filename: name of the output file.
-
-		.. todo:: DOCS
 		"""
 		self._check_filename_type(filename)
 		self._check_extension(filename)

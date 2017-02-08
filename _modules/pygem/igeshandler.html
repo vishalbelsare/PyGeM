@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pygem.igeshandler &mdash; PyGeM 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">PyGeM</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>pygem.igeshandler</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pygem.igeshandler</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Derived module from filehandler.py to handle iges and igs files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">OCC.IGESControl</span> <span class="kn">import</span> <span class="p">(</span><span class="n">IGESControl_Reader</span><span class="p">,</span> <span class="n">IGESControl_Writer</span><span class="p">,</span> <span class="n">IGESControl_Controller_Init</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pygem.nurbshandler</span> <span class="kn">import</span> <span class="n">NurbsHandler</span>
+
+
+<div class="viewcode-block" id="IgesHandler"><a class="viewcode-back" href="../../igeshandler.html#pygem.igeshandler.IgesHandler">[docs]</a><span class="k">class</span> <span class="nc">IgesHandler</span><span class="p">(</span><span class="n">NurbsHandler</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Iges file handler class</span>
+
+<span class="sd">	:cvar string infile: name of the input file to be processed.</span>
+<span class="sd">	:cvar string outfile: name of the output file where to write in.</span>
+<span class="sd">	:cvar list extensions: list of extensions of the input/output files.</span>
+<span class="sd">		It is equal to [&#39;.iges&#39;, &#39;.igs&#39;].</span>
+<span class="sd">	:cvar list control_point_position: index of the first NURBS control point (or pole)</span>
+<span class="sd">		of each face of the iges file.</span>
+<span class="sd">	:cvar float tolerance: tolerance for the construction of the faces and wires</span>
+<span class="sd">		in the write function. Default value is 1e-6.</span>
+<span class="sd">	:cvar TopoDS_Shape shape: shape meant for modification.</span>
+
+<span class="sd">	.. warning::</span>
+
+<span class="sd">			- For non trivial geometries it could be necessary to increase the tolerance.</span>
+<span class="sd">			  Linking edges into a single wire and then trimming the surface with the wire</span>
+<span class="sd">			  can be hard for the software, especially when the starting CAD has not been</span>
+<span class="sd">			  made for analysis but for design purposes.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">IgesHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.iges&#39;</span><span class="p">,</span> <span class="s1">&#39;.igs&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="IgesHandler.load_shape_from_file"><a class="viewcode-back" href="../../igeshandler.html#pygem.igeshandler.IgesHandler.load_shape_from_file">[docs]</a>	<span class="k">def</span> <span class="nf">load_shape_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This class method loads a shape from the file `filename`.</span>
+
+<span class="sd">		:param string filename: name of the input file.</span>
+<span class="sd">			It should have proper extension (.iges or .igs)</span>
+
+<span class="sd">		:return: shape: loaded shape</span>
+<span class="sd">		:rtype: TopoDS_Shape</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">reader</span> <span class="o">=</span> <span class="n">IGESControl_Reader</span><span class="p">()</span>
+		<span class="n">reader</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">reader</span><span class="o">.</span><span class="n">TransferRoots</span><span class="p">()</span>
+		<span class="n">shape</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Shape</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">shape</span></div>
+
+<div class="viewcode-block" id="IgesHandler.write_shape_to_file"><a class="viewcode-back" href="../../igeshandler.html#pygem.igeshandler.IgesHandler.write_shape_to_file">[docs]</a>	<span class="k">def</span> <span class="nf">write_shape_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This class method saves the `shape` to the file `filename`.</span>
+
+<span class="sd">		:param: TopoDS_Shape shape: loaded shape</span>
+<span class="sd">		:param string filename: name of the input file.</span>
+<span class="sd">			It should have proper extension (.iges or .igs)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">IGESControl_Controller_Init</span><span class="p">()</span>
+		<span class="n">writer</span> <span class="o">=</span> <span class="n">IGESControl_Writer</span><span class="p">()</span>
+		<span class="n">writer</span><span class="o">.</span><span class="n">AddShape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+		<span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+      Last updated on Feb 08, 2017.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

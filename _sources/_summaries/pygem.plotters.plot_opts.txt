@@ -1,0 +1,6 @@
+pygem.plotters.plot_opts
+========================
+
+.. currentmodule:: pygem.plotters
+
+.. autofunction:: plot_opts

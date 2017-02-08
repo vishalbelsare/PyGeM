@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pygem.freeform &mdash; PyGeM 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">PyGeM</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>pygem.freeform</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pygem.freeform</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for performing Free Form Deformation (FFD)</span>
+
+<span class="sd">:Theoretical Insight:</span>
+
+<span class="sd">	Free Form Deformation is a technique for the efficient, smooth and accurate geometrical </span>
+<span class="sd">	parametrization. It has been proposed the first time in *Sederberg, Thomas W., and Scott </span>
+<span class="sd">	R. Parry. &quot;Free-form deformation of solid geometric models.&quot; ACM SIGGRAPH computer </span>
+<span class="sd">	graphics 20.4 (1986): 151-160*. It consists in three different step:</span>
+<span class="sd">	</span>
+<span class="sd">	- Mapping the physical domain to the reference one with map :math:`\\boldsymbol{\psi}`. </span>
+<span class="sd">	  In the code it is named *transformation*.</span>
+<span class="sd">	  </span>
+<span class="sd">	- Moving some control points to deform the lattice with :math:`\\hat{T}`.</span>
+<span class="sd">	  The movement of the control points is basically the weight (or displacement) </span>
+<span class="sd">	  :math:`\\boldsymbol{\mu}` we set in the *parameters file*.</span>
+<span class="sd">	  </span>
+<span class="sd">	- Mapping back to the physical domain with map :math:`\\boldsymbol{\psi}^-1`.</span>
+<span class="sd">	  In the code it is named *inverse_transformation*.</span>
+<span class="sd">	  </span>
+<span class="sd">	FFD map (:math:`T`) is the composition of the three maps, that is</span>
+<span class="sd">	</span>
+<span class="sd">	.. math::</span>
+<span class="sd">		T(\\cdot, \\boldsymbol{\\mu}) = (\\Psi^{-1} \\circ \\hat{T} \\circ \\Psi) </span>
+<span class="sd">		(\\cdot, \\boldsymbol{\\mu})</span>
+<span class="sd">			</span>
+<span class="sd">	In this way, every point inside the FFD box changes it position according to</span>
+<span class="sd">	</span>
+<span class="sd">	.. math::</span>
+<span class="sd">		\\boldsymbol{P} = \\boldsymbol{\psi}^-1 \\left( \\sum_{l=0} ^L \\sum_{m=0} ^M </span>
+<span class="sd">		\\sum_{n=0} ^N \\mathsf{b}_{lmn}(\\boldsymbol{\\psi}(\\boldsymbol{P}_0)) </span>
+<span class="sd">		\\boldsymbol{\\mu}_{lmn} \\right)</span>
+<span class="sd">		</span>
+<span class="sd">	where :math:`\\mathsf{b}_{lmn}` are Bernstein polynomials.</span>
+<span class="sd">	We improve the traditional version by allowing a rotation of the FFD lattice in order</span>
+<span class="sd">	to give more flexibility to the tool.</span>
+<span class="sd">	</span>
+<span class="sd">	You can try to add more shapes to the lattice to allow more and more involved transformations.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span>
+<span class="kn">import</span> <span class="nn">pygem.affine</span> <span class="kn">as</span> <span class="nn">at</span>
+
+
+<div class="viewcode-block" id="FFD"><a class="viewcode-back" href="../../freeform.html#pygem.freeform.FFD">[docs]</a><span class="k">class</span> <span class="nc">FFD</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class that handles the Free Form Deformation on the mesh points.</span>
+
+<span class="sd">	:param FFDParameters ffd_parameters: parameters of the Free Form Deformation.</span>
+<span class="sd">	:param numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.</span>
+
+<span class="sd">	:cvar FFDParameters parameters: parameters of the Free Form Deformation.</span>
+<span class="sd">	:cvar numpy.ndarray original_mesh_points: coordinates of the original points of the mesh.</span>
+<span class="sd">		The shape is `n_points`-by-3.</span>
+<span class="sd">	:cvar numpy.ndarray modified_mesh_points: coordinates of the points of the deformed mesh.</span>
+<span class="sd">		The shape is `n_points`-by-3.</span>
+
+<span class="sd">	:Example:</span>
+
+<span class="sd">	&gt;&gt;&gt; import pygem.freeform as ffd</span>
+<span class="sd">	&gt;&gt;&gt; import pygem.params as ffdp</span>
+<span class="sd">	&gt;&gt;&gt; import numpy as np</span>
+
+<span class="sd">	&gt;&gt;&gt; ffd_parameters = ffdp.FFDParameters()</span>
+<span class="sd">	&gt;&gt;&gt; ffd_parameters.read_parameters(&#39;tests/test_datasets/parameters_test_ffd_sphere.prm&#39;)</span>
+<span class="sd">	&gt;&gt;&gt; original_mesh_points = np.load(&#39;tests/test_datasets/meshpoints_sphere_orig.npy&#39;)</span>
+<span class="sd">	&gt;&gt;&gt; free_form = ffd.FFD(ffd_parameters, original_mesh_points)</span>
+<span class="sd">	&gt;&gt;&gt; free_form.perform()</span>
+<span class="sd">	&gt;&gt;&gt; new_mesh_points = free_form.modified_mesh_points</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ffd_parameters</span><span class="p">,</span> <span class="n">original_mesh_points</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">ffd_parameters</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span> <span class="o">=</span> <span class="n">original_mesh_points</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="FFD.perform"><a class="viewcode-back" href="../../freeform.html#pygem.freeform.FFD.perform">[docs]</a>	<span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This method performs the deformation on the mesh points. After the execution</span>
+<span class="sd">		it sets `self.modified_mesh_points`.</span>
+
+<span class="sd">		.. todo::</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># translation and then affine transformation</span>
+		<span class="n">translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">origin_box</span>
+
+		<span class="n">physical_frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">position_vertex_1</span> <span class="o">-</span> <span class="n">translation</span><span class="p">,</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">position_vertex_2</span> <span class="o">-</span> <span class="n">translation</span><span class="p">,</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">position_vertex_3</span> <span class="o">-</span> <span class="n">translation</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+		<span class="p">])</span>
+		<span class="n">reference_frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+		<span class="n">transformation</span> <span class="o">=</span> <span class="n">at</span><span class="o">.</span><span class="n">affine_points_fit</span><span class="p">(</span><span class="n">physical_frame</span><span class="p">,</span> <span class="n">reference_frame</span><span class="p">)</span>
+		<span class="n">inverse_transformation</span> <span class="o">=</span> <span class="n">at</span><span class="o">.</span><span class="n">affine_points_fit</span><span class="p">(</span>
+			<span class="n">reference_frame</span><span class="p">,</span> <span class="n">physical_frame</span>
+		<span class="p">)</span>
+
+		<span class="c1"># apply transformation to original mesh points</span>
+		<span class="n">reference_frame_mesh_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_points</span><span class="p">(</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span> <span class="o">-</span> <span class="n">translation</span><span class="p">,</span> <span class="n">transformation</span>
+		<span class="p">)</span>
+
+		<span class="c1"># select mesh points inside bounding box</span>
+		<span class="n">mesh_points</span> <span class="o">=</span> <span class="n">reference_frame_mesh_points</span><span class="p">[(</span>
+			<span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span>
+		<span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+			<span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span>
+		<span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+			<span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span>
+		<span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)]</span>
+		<span class="p">(</span><span class="n">n_rows_mesh</span><span class="p">,</span> <span class="n">n_cols_mesh</span><span class="p">)</span> <span class="o">=</span> <span class="n">mesh_points</span><span class="o">.</span><span class="n">shape</span>
+
+		<span class="c1"># Initialization. In order to exploit the contiguity in memory the following are transposed</span>
+		<span class="p">(</span><span class="n">dim_n_mu</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">array_mu_x</span><span class="o">.</span><span class="n">shape</span>
+		<span class="n">bernstein_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_n_mu</span><span class="p">,</span> <span class="n">n_rows_mesh</span><span class="p">))</span>
+		<span class="n">bernstein_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_m_mu</span><span class="p">,</span> <span class="n">n_rows_mesh</span><span class="p">))</span>
+		<span class="n">bernstein_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_t_mu</span><span class="p">,</span> <span class="n">n_rows_mesh</span><span class="p">))</span>
+		<span class="n">shift_mesh_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_cols_mesh</span><span class="p">,</span> <span class="n">n_rows_mesh</span><span class="p">))</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_n_mu</span><span class="p">):</span>
+			<span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">dim_n_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">bernstein_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_n_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+											  <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">):</span>
+			<span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">dim_m_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">bernstein_y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_m_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+											  <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">):</span>
+			<span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">dim_t_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">bernstein_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_t_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+											  <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">)</span>
+
+		<span class="n">aux_x</span> <span class="o">=</span> <span class="mf">0.</span>
+		<span class="n">aux_y</span> <span class="o">=</span> <span class="mf">0.</span>
+		<span class="n">aux_z</span> <span class="o">=</span> <span class="mf">0.</span>
+		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">):</span>
+				<span class="n">bernstein_yz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">bernstein_y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:],</span> <span class="n">bernstein_z</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:])</span>
+				<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_n_mu</span><span class="p">):</span>
+					<span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">bernstein_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">bernstein_yz</span><span class="p">)</span>
+					<span class="n">aux_x</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+					<span class="n">aux_y</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+					<span class="n">aux_z</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+		<span class="n">shift_mesh_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_x</span>
+		<span class="n">shift_mesh_points</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_y</span>
+		<span class="n">shift_mesh_points</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_z</span>
+
+		<span class="c1"># shift_mesh_points needs to be transposed to be summed with mesh_points</span>
+		<span class="c1"># apply inverse transformation to shifted mesh points</span>
+		<span class="n">new_mesh_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">shift_mesh_points</span><span class="p">)</span> <span class="o">+</span>
+		  <span class="n">mesh_points</span><span class="p">,</span> <span class="n">inverse_transformation</span><span class="p">)</span> <span class="o">+</span> \
+		   <span class="n">translation</span>
+
+		<span class="c1"># merge non-shifted mesh points with shifted ones</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span><span class="p">[(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;</span>
+		  <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">&amp;</span>
+		  <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;</span>
+		  <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">&amp;</span>
+		  <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;</span>
+		  <span class="p">(</span><span class="n">reference_frame_mesh_points</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">)]</span> \
+		 <span class="o">=</span> <span class="n">new_mesh_points</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFD._transform_points"><a class="viewcode-back" href="../../freeform.html#pygem.freeform.FFD._transform_points">[docs]</a>	<span class="k">def</span> <span class="nf">_transform_points</span><span class="p">(</span><span class="n">original_points</span><span class="p">,</span> <span class="n">transformation</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This private static method transforms the points according to the affine transformation taken from</span>
+<span class="sd">		affine_points_fit method.</span>
+
+<span class="sd">		:param numpy.ndarray original_points: coordinates of the original points.</span>
+<span class="sd">		:param function transformation: affine transformation taken from affine_points_fit method.</span>
+
+<span class="sd">		:return: modified_points: coordinates of the modified points.</span>
+<span class="sd">		:rtype: numpy.ndarray</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">n_rows_mesh</span><span class="p">,</span> <span class="n">n_cols_mesh</span> <span class="o">=</span> <span class="n">original_points</span><span class="o">.</span><span class="n">shape</span>
+		<span class="n">modified_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_rows_mesh</span><span class="p">,</span> <span class="n">n_cols_mesh</span><span class="p">))</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_rows_mesh</span><span class="p">):</span>
+			<span class="n">modified_points</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">transformation</span><span class="p">(</span><span class="n">original_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+		<span class="k">return</span> <span class="n">modified_points</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+      Last updated on Feb 08, 2017.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

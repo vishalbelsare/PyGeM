@@ -1,0 +1,18 @@
+Plotters
+=====================
+
+.. currentmodule:: pygem.plotters
+
+.. autosummary::
+	:toctree: _summaries
+	:nosignatures:
+
+	plot_opts
+	plot_stl
+
+.. automodule:: pygem.plotters
+	:members:
+	:private-members:
+	:undoc-members:
+	:show-inheritance:
+	:noindex:

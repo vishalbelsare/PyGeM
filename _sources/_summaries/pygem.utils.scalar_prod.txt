@@ -1,0 +1,6 @@
+pygem.utils.scalar_prod
+=======================
+
+.. currentmodule:: pygem.utils
+
+.. autofunction:: scalar_prod

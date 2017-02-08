@@ -1,0 +1,6 @@
+pygem.utils.check_variable_type
+===============================
+
+.. currentmodule:: pygem.utils
+
+.. autofunction:: check_variable_type

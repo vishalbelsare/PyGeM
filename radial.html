@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Radial &mdash; PyGeM 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyGeM 1.0 documentation" href="index.html"/>
+        <link rel="up" title="Code Documentation" href="code.html"/>
+        <link rel="next" title="pygem.radial.RBF._distance_matrix" href="_summaries/pygem.radial.RBF._distance_matrix.html"/>
+        <link rel="prev" title="pygem.freeform.FFD.perform" href="_summaries/pygem.freeform.FFD.perform.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="affine.html">Affine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="freeform.html">Freeform</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Radial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF._distance_matrix.html">pygem.radial.RBF._distance_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF._get_weights.html">pygem.radial.RBF._get_weights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.beckert_wendland_c2_basis.html">pygem.radial.RBF.beckert_wendland_c2_basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.gaussian_spline.html">pygem.radial.RBF.gaussian_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline.html">pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.multi_quadratic_biharmonic_spline.html">pygem.radial.RBF.multi_quadratic_biharmonic_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.perform.html">pygem.radial.RBF.perform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.radial.RBF.thin_plate_spline.html">pygem.radial.RBF.thin_plate_spline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="params.html">Params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="igeshandler.html">Igeshandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Gui</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">PyGeM</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+      
+    <li>Radial</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/radial.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pygem.radial">
+<span id="radial"></span><h1>Radial<a class="headerlink" href="#module-pygem.radial" title="Permalink to this headline">¶</a></h1>
+<p>Module focused on the implementation of the Radial Basis Functions interpolation technique.
+This technique is still based on the use of a set of parameters, the so-called control points,
+as for FFD, but RBF is interpolatory. Another important key point of RBF strategy relies in the
+way we can locate the control points: in fact, instead of FFD where control points need to be
+placed inside a regular lattice, with RBF we hano no more limitations. So we have the possibility
+to perform localized control points refiniments.
+The module is analogous to the freeform one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Theoretical Insight:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">As reference please consult M.D. Buhmann, Radial Basis Functions, volume 12 of Cambridge
+monographs on applied and computational mathematics. Cambridge University Press, UK, 2003.
+This implementation follows D. Forti and G. Rozza, Efficient geometrical parametrization techniques
+of interfaces for reduced order modelling: application to fluid-structure interaction coupling problems,
+International Journal of Computational Fluid Dynamics.</p>
+<p>RBF shape parametrization technique is based on the definition of a map,
+<img class="math" src="_images/math/a79859770212e3db8a527c58282d9c2034f98ed1.png" alt="\mathcal{M}(\boldsymbol{x}) : \mathbb{R}^n \rightarrow \mathbb{R}^n"/>, that allows the
+possibility of transferring data across non-matching grids and facing the dynamic mesh handling.
+The map introduced is defines as follows</p>
+<div class="math">
+<p><img src="_images/math/7b5c8ff10348d6626c983d6553bc15817b9be977.png" alt="\mathcal{M}(\boldsymbol{x}) = p(\boldsymbol{x}) + \sum_{i=1}^{\mathcal{N}_C} \gamma_i
+\varphi(\| \boldsymbol{x} - \boldsymbol{x_{C_i}} \|)"/></p>
+</div><p>where <img class="math" src="_images/math/5fc881227ec12be3b2218d9f66f8009f4ec7c939.png" alt="p(\boldsymbol{x})"/> is a low_degree polynomial term, <img class="math" src="_images/math/86fc341e7bf84b2a5fa1b8274a4e721dd574b084.png" alt="\gamma_i"/> is the weight,
+corresponding to the a-priori selected <img class="math" src="_images/math/aeea44fb480f1aacc712343b97e28afeaf89afaa.png" alt="\mathcal{N}_C"/> control points, associated to the
+<img class="math" src="_images/math/df0deb143e5ac127f00bd248ee8001ecae572adc.png" alt="i"/>-th basis function, and <img class="math" src="_images/math/5c5ae5df2f08f951d090d062155a0d85378270b2.png" alt="\varphi(\| \boldsymbol{x} - \boldsymbol{x_{C_i}} \|)"/>
+a radial function based on the Euclidean distance between the control points position
+<img class="math" src="_images/math/25ce74d54bf8eec960a53b7b613479854fe4b151.png" alt="\boldsymbol{x_{C_i}}"/> and <img class="math" src="_images/math/1fb53a6e43d7ce3b8f6b9680713299ee42199ead.png" alt="\boldsymbol{x}"/>. A radial basis function, generally, is
+a real-valued function whose value depends only on the distance from the origin, so that
+<img class="math" src="_images/math/22bb6729d1efb8a5f8cae2ef25c4aea778328c11.png" alt="\varphi(\boldsymbol{x}) = \tilde{\varphi}(\| \boldsymbol{x} \|)"/>.</p>
+<p>The matrix version of the formula above is:</p>
+<div class="math">
+<p><img src="_images/math/19d324efa7409bbec0b38fc29a3fd25b396c8524.png" alt="\mathcal{M}(\boldsymbol{x}) = \boldsymbol{c} + \boldsymbol{Q}\boldsymbol{x} +
+\boldsymbol{W^T}\boldsymbol{d}(\boldsymbol{x})"/></p>
+</div><p class="last">The idea is that after the computation of the weights and the polynomial terms from the coordinates
+of the control points before and after the deformation, we can deform all the points of the mesh
+accordingly.
+Among the most common used radial basis functions for modelling 2D and 3D shapes, we consider
+Gaussian splines, Multi-quadratic biharmonic splines, Inverted multi-quadratic biharmonic splines,
+Thin-plate splines and Beckert and Wendland <img class="math" src="_images/math/989dee8049ef0358e3fa647a45a2f7874e1f470a.png" alt="C^2"/> basis all defined and implemented below.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.radial.RBF._distance_matrix.html#pygem.radial.RBF._distance_matrix" title="pygem.radial.RBF._distance_matrix"><code class="xref py py-obj docutils literal"><span class="pre">RBF._distance_matrix</span></code></a></td>
+<td>This private method returns the following matrix:</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.radial.RBF._get_weights.html#pygem.radial.RBF._get_weights" title="pygem.radial.RBF._get_weights"><code class="xref py py-obj docutils literal"><span class="pre">RBF._get_weights</span></code></a></td>
+<td>This private method, given the original control points and the deformed ones, returns the matrix with the weights and the polynomial terms, that is <img class="math" src="_images/math/953bde2ab2fca30897f66185e5b37b73747b8b46.png" alt="W"/>, <img class="math" src="_images/math/38480760632adbf198c0fd765fdefdc5f998d9c8.png" alt="c^T"/> and <img class="math" src="_images/math/20c2257946e12e4ab97b17bb752a1d7b5c092443.png" alt="Q^T"/>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.beckert_wendland_c2_basis.html#pygem.radial.RBF.beckert_wendland_c2_basis" title="pygem.radial.RBF.beckert_wendland_c2_basis"><code class="xref py py-obj docutils literal"><span class="pre">RBF.beckert_wendland_c2_basis</span></code></a></td>
+<td>It implements the following formula:</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.gaussian_spline.html#pygem.radial.RBF.gaussian_spline" title="pygem.radial.RBF.gaussian_spline"><code class="xref py py-obj docutils literal"><span class="pre">RBF.gaussian_spline</span></code></a></td>
+<td>It implements the following formula:</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline.html#pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline" title="pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline"><code class="xref py py-obj docutils literal"><span class="pre">RBF.inv_multi_quadratic_biharmonic_spline</span></code></a></td>
+<td>It implements the following formula:</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.multi_quadratic_biharmonic_spline.html#pygem.radial.RBF.multi_quadratic_biharmonic_spline" title="pygem.radial.RBF.multi_quadratic_biharmonic_spline"><code class="xref py py-obj docutils literal"><span class="pre">RBF.multi_quadratic_biharmonic_spline</span></code></a></td>
+<td>It implements the following formula:</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.perform.html#pygem.radial.RBF.perform" title="pygem.radial.RBF.perform"><code class="xref py py-obj docutils literal"><span class="pre">RBF.perform</span></code></a></td>
+<td>This method performs the deformation of the mesh points.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.radial.RBF.thin_plate_spline.html#pygem.radial.RBF.thin_plate_spline" title="pygem.radial.RBF.thin_plate_spline"><code class="xref py py-obj docutils literal"><span class="pre">RBF.thin_plate_spline</span></code></a></td>
+<td>It implements the following formula:</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">RBF</code><span class="sig-paren">(</span><em>rbf_parameters</em>, <em>original_mesh_points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Class that handles the Radial Basis Functions interpolation on the mesh points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rbf_parameters</strong> (<em>RBFParameters</em>) &#8211; parameters of the RBF.</li>
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first simple">
+<li><strong>parameters</strong> (<em>RBFParameters</em>) &#8211; parameters of the RBF.</li>
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.
+The shape is <cite>n_points</cite>-by-3.</li>
+<li><strong>modified_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the points of the deformed mesh.
+The shape is <cite>n_points</cite>-by-3.</li>
+<li><strong>bases</strong> (<a class="reference external" href="http://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; a dictionary that associates the names of the basis functions
+implemented to the actual implementation.</li>
+<li><strong>weights</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)"><em>numpy.matrix</em></a>) &#8211; the matrix formed by the weights corresponding to the a-priori
+selected N control points, associated to the basis functions and c and Q terms that
+describe the polynomial of order one p(x) = c + Qx. The shape is
+(n_control_points+1+3)-by-3. It is computed internally.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pygem.radial</span> <span class="k">as</span> <span class="nn">rbf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pygem.params</span> <span class="k">as</span> <span class="nn">rbfp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rbf_parameters</span> <span class="o">=</span> <span class="n">rbfp</span><span class="o">.</span><span class="n">RBFParameters</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rbf_parameters</span><span class="o">.</span><span class="n">read_parameters</span><span class="p">(</span><span class="s1">&#39;tests/test_datasets/parameters_rbf_cube.prm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">zv</span><span class="p">,</span> <span class="n">yv</span><span class="p">,</span> <span class="n">xv</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original_mesh_points</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">radial_trans</span> <span class="o">=</span> <span class="n">rbf</span><span class="o">.</span><span class="n">RBF</span><span class="p">(</span><span class="n">rbf_parameters</span><span class="p">,</span> <span class="n">original_mesh_points</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radial_trans</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_mesh_points</span> <span class="o">=</span> <span class="n">radial_trans</span><span class="o">.</span><span class="n">modified_mesh_points</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt>
+<code class="descname">_distance_matrix</code><span class="sig-paren">(</span><em>X1</em>, <em>X2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF._distance_matrix"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This private method returns the following matrix:
+<img class="math" src="_images/math/e2bf4cea4f616b63e677666bf205bbc2218d4dc0.png" alt="\boldsymbol{D_{ij}} = \varphi(\| \boldsymbol{x_i} - \boldsymbol{y_j} \|)"/></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X1</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>X2</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector y in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matrix: the matrix D.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)">numpy.ndarray</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_get_weights</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF._get_weights"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This private method, given the original control points and the deformed ones, returns the matrix
+with the weights and the polynomial terms, that is <img class="math" src="_images/math/953bde2ab2fca30897f66185e5b37b73747b8b46.png" alt="W"/>, <img class="math" src="_images/math/38480760632adbf198c0fd765fdefdc5f998d9c8.png" alt="c^T"/> and <img class="math" src="_images/math/20c2257946e12e4ab97b17bb752a1d7b5c092443.png" alt="Q^T"/>.
+The shape is (n_control_points+1+3)-by-3.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
+coordinates of the original interpolation control points before the deformation.</li>
+<li><strong>Y</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
+coordinates of the interpolation control points after the deformation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">weights: the matrix with the weights and the polynomial terms.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)">numpy.matrix</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">beckert_wendland_c2_basis</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.beckert_wendland_c2_basis"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>It implements the following formula:</p>
+<div class="math">
+<p><img src="_images/math/6599a7a47f0a7f8f69e18ee4defb5cc2af39123b.png" alt="\varphi(\| \boldsymbol{x} \|) = \left( 1 - \frac{\| \boldsymbol{x} \|}{r} \right)^4_+
+\left( 4 \frac{\| \boldsymbol{x} \|}{r} + 1 \right)"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">gaussian_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.gaussian_spline"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>It implements the following formula:</p>
+<div class="math">
+<p><img src="_images/math/7627871c472ed0baf6a39625ab70864f47dd67db.png" alt="\varphi(\| \boldsymbol{x} \|) = e^{-\frac{\| \boldsymbol{x} \|^2}{r^2}}"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">inv_multi_quadratic_biharmonic_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.inv_multi_quadratic_biharmonic_spline"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>It implements the following formula:</p>
+<div class="math">
+<p><img src="_images/math/60e308890636f8ce025ab4711a7b36798177d603.png" alt="\varphi(\| \boldsymbol{x} \|) = (\| \boldsymbol{x} \|^2 + r^2 )^{-\frac{1}{2}}"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">multi_quadratic_biharmonic_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.multi_quadratic_biharmonic_spline"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>It implements the following formula:</p>
+<div class="math">
+<p><img src="_images/math/2bbbcb4881ff4e9fca89523df22173fea0765450.png" alt="\varphi(\| \boldsymbol{x} \|) = \sqrt{\| \boldsymbol{x} \|^2 + r^2}"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">perform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.perform"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method performs the deformation of the mesh points. After the execution
+it sets <cite>self.modified_mesh_points</cite>.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">thin_plate_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.thin_plate_spline"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>It implements the following formula:</p>
+<div class="math">
+<p><img src="_images/math/57725f687a14d7eed26f382aa3c2d1eaf9890de9.png" alt="\varphi(\| \boldsymbol{x} \|) = \left\| \frac{\boldsymbol{x} }{r} \right\|^2
+\ln \left\| \frac{\boldsymbol{x} }{r} \right\|"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="_summaries/pygem.radial.RBF._distance_matrix.html" class="btn btn-neutral float-right" title="pygem.radial.RBF._distance_matrix" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="_summaries/pygem.freeform.FFD.perform.html" class="btn btn-neutral" title="pygem.freeform.FFD.perform" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+      Last updated on Feb 08, 2017.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

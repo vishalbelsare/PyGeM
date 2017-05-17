@@ -10,7 +10,7 @@ class IDWParameters(object):
 	Class that handles the Inverse Distance Weighting parameters in terms of
 	control points.
 
-	:cvar int p: the power parameter. The default value is 2.
+	:cvar int power: the power parameter. The default value is 2.
 	:cvar numpy.ndarray original_control_points: it is an
 		`n_control_points`-by-3 array with the coordinates of the original
 		interpolation control points before the deformation. The default is the

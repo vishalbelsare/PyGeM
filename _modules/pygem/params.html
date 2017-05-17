@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -133,15 +136,18 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utilities for reading and writing parameters files to perform the desired geometrical morphing.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">ConfigParser</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">configparser</span> <span class="k">as</span> <span class="nn">configparser</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="k">as</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">OCC.BRepBndLib</span> <span class="kn">import</span> <span class="n">brepbndlib_Add</span>
-<span class="kn">from</span> <span class="nn">OCC.BRepMesh</span> <span class="kn">import</span> <span class="n">BRepMesh_IncrementalMesh</span>
-<span class="kn">from</span> <span class="nn">OCC.Bnd</span> <span class="kn">import</span> <span class="n">Bnd_Box</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">OCC.BRepBndLib</span> <span class="k">import</span> <span class="n">brepbndlib_Add</span>
+<span class="kn">from</span> <span class="nn">OCC.BRepMesh</span> <span class="k">import</span> <span class="n">BRepMesh_IncrementalMesh</span>
+<span class="kn">from</span> <span class="nn">OCC.Bnd</span> <span class="k">import</span> <span class="n">Bnd_Box</span>
 
-<span class="kn">import</span> <span class="nn">pygem.affine</span> <span class="kn">as</span> <span class="nn">at</span>
+<span class="kn">import</span> <span class="nn">pygem.affine</span> <span class="k">as</span> <span class="nn">at</span>
 
 
 <div class="viewcode-block" id="FFDParameters"><a class="viewcode-back" href="../../params.html#pygem.params.FFDParameters">[docs]</a><span class="k">class</span> <span class="nc">FFDParameters</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -215,7 +221,7 @@
 <span class="sd">		If the four vertex are coplanar, an assert is thrown when affine_points_fit is used.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_control_points</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">conversion_unit</span> <span class="o">=</span> <span class="mf">1.</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_x</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -228,7 +234,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_y</span> <span class="o">=</span> <span class="mf">0.</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_z</span> <span class="o">=</span> <span class="mf">0.</span>
 
-		<span class="k">if</span> <span class="n">n_control_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">n_control_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">n_control_points</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span> <span class="o">=</span> <span class="n">n_control_points</span>
 
@@ -255,7 +261,7 @@
 
 <span class="sd">		:param string filename: parameters file to be read in.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
 
 		<span class="c1"># Checks if the parameters file exists. If not it writes the default class into filename.</span>
@@ -263,7 +269,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">write_parameters</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 			<span class="k">return</span>
 
-		<span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+		<span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
 		<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;n control points x&#39;</span><span class="p">)</span>
@@ -329,7 +335,7 @@
 
 <span class="sd">		:param string filename: parameters file to be written out.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
 
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
@@ -412,35 +418,35 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		This method prints all the FFD parameters on the screen. Its purpose is for debugging.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">print</span> <span class="s1">&#39;conversion_unit = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conversion_unit</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-		<span class="k">print</span> <span class="s1">&#39;(lenght_box_x, lenght_box_y, lenght_box_z) = (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_x</span><span class="p">)</span> <span class="o">+</span> \
-			<span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_y</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_z</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
-		<span class="k">print</span> <span class="s1">&#39;origin_box = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_box</span><span class="p">)</span>
-		<span class="k">print</span> <span class="s1">&#39;n_control_points = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
-		<span class="k">print</span> <span class="s1">&#39;(rot_angle_x, rot_angle_y, rot_angle_z) = (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_x</span><span class="p">)</span> <span class="o">+</span> \
-			<span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_y</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_z</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_x =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_y =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_z =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">psi_mapping =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_mapping</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">inv_psi_mapping =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_psi_mapping</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">rotation_matrix =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_0 =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_0</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_1 =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_1</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_2 =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_2</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_3 =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_3</span></div>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;conversion_unit = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conversion_unit</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(lenght_box_x, lenght_box_y, lenght_box_z) = (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_x</span><span class="p">)</span> <span class="o">+</span> \
+			<span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_y</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lenght_box_z</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;origin_box = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_box</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n_control_points = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(rot_angle_x, rot_angle_y, rot_angle_z) = (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_x</span><span class="p">)</span> <span class="o">+</span> \
+			<span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_y</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle_z</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_x =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_y =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_z =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">psi_mapping =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_mapping</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">inv_psi_mapping =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_psi_mapping</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">rotation_matrix =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_0 =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_0</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_1 =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_1</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_2 =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_2</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertex_3 =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_vertex_3</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FFDParameters.build_bounding_box"><a class="viewcode-back" href="../../params.html#pygem.params.FFDParameters.build_bounding_box">[docs]</a>	<span class="k">def</span> <span class="nf">build_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">triangulate</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">triangulate_tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">):</span>
+<div class="viewcode-block" id="FFDParameters.build_bounding_box"><a class="viewcode-back" href="../../params.html#pygem.params.FFDParameters.build_bounding_box">[docs]</a>	<span class="k">def</span> <span class="nf">build_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">triangulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">triangulate_tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Builds a bounding box around the given shape. ALl parameters (with the exception of array_mu_x/y/z)</span>
 <span class="sd">		are set to match the computed box.</span>
@@ -512,7 +518,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ctrl_pnts</span><span class="p">)</span></div>
 
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="FFDParameters._calculate_bb_dimension"><a class="viewcode-back" href="../../params.html#pygem.params.FFDParameters._calculate_bb_dimension">[docs]</a>	<span class="k">def</span> <span class="nf">_calculate_bb_dimension</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">triangulate</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">triangulate_tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">):</span>
+<div class="viewcode-block" id="FFDParameters._calculate_bb_dimension"><a class="viewcode-back" href="../../params.html#pygem.params.FFDParameters._calculate_bb_dimension">[docs]</a>	<span class="k">def</span> <span class="nf">_calculate_bb_dimension</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">triangulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">triangulate_tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Calculate dimensions (minima and maxima) of a box bounding the</span>
 
 <span class="sd">		:param TopoDS_Shape shape: or a subclass such as TopoDS_Face</span>
@@ -561,11 +567,11 @@
 <span class="sd">		is None.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="bp">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span> <span class="o">=</span> <span class="bp">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="bp">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="RBFParameters.read_parameters"><a class="viewcode-back" href="../../params.html#pygem.params.RBFParameters.read_parameters">[docs]</a>	<span class="k">def</span> <span class="nf">read_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;parameters_rbf.prm&#39;</span><span class="p">):</span>
@@ -574,7 +580,7 @@
 
 <span class="sd">		:param string filename: parameters file to be read in. Default value is parameters_rbf.prm.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;filename must be a string&#39;</span><span class="p">)</span>
 
 		<span class="c1"># Checks if the parameters file exists. If not it writes the default class into filename.</span>
@@ -591,7 +597,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">write_parameters</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 			<span class="k">return</span>
 
-		<span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+		<span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
 		<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Radial Basis Functions&#39;</span><span class="p">,</span> <span class="s1">&#39;basis function&#39;</span><span class="p">)</span>
@@ -601,7 +607,7 @@
 		<span class="n">lines</span> <span class="o">=</span> <span class="n">ctrl_points</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-		<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)):</span>
+		<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">))):</span>
 			<span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
 
@@ -610,10 +616,10 @@
 
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The number of control points must be equal both in the &#39;original control points&#39;&quot;</span> <span class="o">+</span> \
-				<span class="s2">&quot; and in the &#39;deformed control points&#39; section of the parameters file ({0!s})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+				<span class="s2">&quot; and in the &#39;deformed control points&#39; section of the parameters file (</span><span class="si">{0!s}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-		<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)):</span>
+		<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">))):</span>
 			<span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span></div>
 
@@ -625,7 +631,7 @@
 
 <span class="sd">		:param string filename: parameters file to be written out.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
 
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
@@ -672,13 +678,13 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		This method prints all the RBF parameters on the screen. Its purpose is for debugging.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">print</span> <span class="s1">&#39;basis function = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">)</span>
-		<span class="k">print</span> <span class="s1">&#39;radius = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
-		<span class="k">print</span> <span class="s1">&#39;n_control_points = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">original_control_points =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span>
-		<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">deformed_control_points =&#39;</span>
-		<span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span></div></div>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;basis function = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;radius = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n_control_points = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">original_control_points =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">deformed_control_points =&#39;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
@@ -691,7 +697,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

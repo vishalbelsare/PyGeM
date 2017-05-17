@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="../index.html"/>
         <link rel="up" title="Radial" href="../radial.html"/>
         <link rel="next" title="pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline" href="pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline.html"/>
@@ -108,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../stephandler.html">Stephandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gui.html">Gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
@@ -151,7 +156,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/_summaries/pygem.radial.RBF.gaussian_spline.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_summaries/pygem.radial.RBF.gaussian_spline.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -168,21 +173,21 @@
 <em class="property">static </em><code class="descclassname">RBF.</code><code class="descname">gaussian_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pygem/radial.html#RBF.gaussian_spline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pygem.radial.RBF.gaussian_spline" title="Permalink to this definition">¶</a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="../_images/math/7627871c472ed0baf6a39625ab70864f47dd67db.png" alt="\varphi(\| \boldsymbol{x} \|) = e^{-\frac{\| \boldsymbol{x} \|^2}{r^2}}"/></p>
+<p><img src="../_images/math/69c1121a920259f3235abfc26320039ccddff5b7.png" alt="\varphi(\| \boldsymbol{x} \|) = e^{-\frac{\| \boldsymbol{x} \|^2}{r^2}}"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -211,7 +216,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -147,8 +150,8 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">infile</span> <span class="o">=</span> <span class="bp">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">infile</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="FileHandler.parse"><a class="viewcode-back" href="../../filehandler.html#pygem.filehandler.FileHandler.parse">[docs]</a>	<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -182,7 +185,7 @@
 		<span class="k">if</span> <span class="n">file_ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 				<span class="s1">&#39;The input file does not have the proper extension. </span><span class="se">\</span>
-<span class="s1">				It is {0!s}, instead of {1!s}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_ext</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span>
+<span class="s1">				It is </span><span class="si">{0!s}</span><span class="s1">, instead of </span><span class="si">{1!s}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_ext</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span>
 			<span class="p">)</span></div>
 
 	<span class="nd">@staticmethod</span>
@@ -192,9 +195,9 @@
 
 <span class="sd">		:param string filename: file to check.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-				<span class="s1">&#39;The given filename ({0!s}) must be a string&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+				<span class="s1">&#39;The given filename (</span><span class="si">{0!s}</span><span class="s1">) must be a string&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 			<span class="p">)</span></div>
 
 <div class="viewcode-block" id="FileHandler._check_infile_instantiation"><a class="viewcode-back" href="../../filehandler.html#pygem.filehandler.FileHandler._check_infile_instantiation">[docs]</a>	<span class="k">def</span> <span class="nf">_check_infile_instantiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -220,7 +223,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -177,7 +180,9 @@
 <span class="sd">	Gaussian splines, Multi-quadratic biharmonic splines, Inverted multi-quadratic biharmonic splines,</span>
 <span class="sd">	Thin-plate splines and Beckert and Wendland :math:`C^2` basis all defined and implemented below.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">cdist</span>
 
 
 <div class="viewcode-block" id="RBF"><a class="viewcode-back" href="../../radial.html#pygem.radial.RBF">[docs]</a><span class="k">class</span> <span class="nc">RBF</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -225,7 +230,7 @@
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rbf_parameters</span><span class="p">,</span> <span class="n">original_mesh_points</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">rbf_parameters</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span> <span class="o">=</span> <span class="n">original_mesh_points</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="kc">None</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">bases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;gaussian_spline&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaussian_spline</span><span class="p">,</span> \
 		 <span class="s1">&#39;multi_quadratic_biharmonic_spline&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_quadratic_biharmonic_spline</span><span class="p">,</span> \
@@ -355,11 +360,9 @@
 <span class="sd">		:return: matrix: the matrix D.</span>
 <span class="sd">		:rtype: numpy.ndarray</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">X1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-		<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-				<span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">(</span><span class="n">X1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">X2</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+		<span class="n">matrix</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span>
+				<span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+		<span class="p">)</span>
 		<span class="k">return</span> <span class="n">matrix</span></div>
 
 <div class="viewcode-block" id="RBF._get_weights"><a class="viewcode-back" href="../../radial.html#pygem.radial.RBF._get_weights">[docs]</a>	<span class="k">def</span> <span class="nf">_get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -378,13 +381,12 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">n_points</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 		<span class="n">dim</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-		<span class="n">identity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="n">identity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_points</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 		<span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 		<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bmat</span><span class="p">([[</span><span class="n">dist</span><span class="p">,</span> <span class="n">identity</span><span class="p">,</span> <span class="n">X</span><span class="p">],</span> <span class="p">[</span><span class="n">identity</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">))],</span> \
 		 <span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))]])</span>
 		<span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bmat</span><span class="p">([[</span><span class="n">Y</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">))],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))]])</span>
-		<span class="n">inv_matrix_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-		<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inv_matrix_h</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+		<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">weights</span></div>
 
 <div class="viewcode-block" id="RBF.perform"><a class="viewcode-back" href="../../radial.html#pygem.radial.RBF.perform">[docs]</a>	<span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -396,7 +398,7 @@
 		<span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance_matrix</span><span class="p">(</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">original_control_points</span>
 		<span class="p">)</span>
-		<span class="n">identity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="n">identity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_points</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 		<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bmat</span><span class="p">([[</span><span class="n">dist</span><span class="p">,</span> <span class="n">identity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span><span class="p">]])</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">))</span></div></div>
 </pre></div>
@@ -411,7 +413,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

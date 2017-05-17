@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="index.html"/>
         <link rel="up" title="Code Documentation" href="code.html"/>
         <link rel="next" title="pygem.radial.RBF._distance_matrix" href="_summaries/pygem.radial.RBF._distance_matrix.html"/>
@@ -108,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -149,7 +154,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/radial.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/radial.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -173,7 +178,7 @@ The module is analogous to the freeform one.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Theoretical Insight:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">As reference please consult M.D. Buhmann, Radial Basis Functions, volume 12 of Cambridge
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">As reference please consult M.D. Buhmann, Radial Basis Functions, volume 12 of Cambridge
 monographs on applied and computational mathematics. Cambridge University Press, UK, 2003.
 This implementation follows D. Forti and G. Rozza, Efficient geometrical parametrization techniques
 of interfaces for reduced order modelling: application to fluid-structure interaction coupling problems,
@@ -183,7 +188,7 @@ International Journal of Computational Fluid Dynamics.</p>
 possibility of transferring data across non-matching grids and facing the dynamic mesh handling.
 The map introduced is defines as follows</p>
 <div class="math">
-<p><img src="_images/math/7b5c8ff10348d6626c983d6553bc15817b9be977.png" alt="\mathcal{M}(\boldsymbol{x}) = p(\boldsymbol{x}) + \sum_{i=1}^{\mathcal{N}_C} \gamma_i
+<p><img src="_images/math/0a80c24bd47237b254ddd41cdcb3b40ce402d14d.png" alt="\mathcal{M}(\boldsymbol{x}) = p(\boldsymbol{x}) + \sum_{i=1}^{\mathcal{N}_C} \gamma_i
 \varphi(\| \boldsymbol{x} - \boldsymbol{x_{C_i}} \|)"/></p>
 </div><p>where <img class="math" src="_images/math/5fc881227ec12be3b2218d9f66f8009f4ec7c939.png" alt="p(\boldsymbol{x})"/> is a low_degree polynomial term, <img class="math" src="_images/math/86fc341e7bf84b2a5fa1b8274a4e721dd574b084.png" alt="\gamma_i"/> is the weight,
 corresponding to the a-priori selected <img class="math" src="_images/math/aeea44fb480f1aacc712343b97e28afeaf89afaa.png" alt="\mathcal{N}_C"/> control points, associated to the
@@ -194,7 +199,7 @@ a real-valued function whose value depends only on the distance from the origin,
 <img class="math" src="_images/math/22bb6729d1efb8a5f8cae2ef25c4aea778328c11.png" alt="\varphi(\boldsymbol{x}) = \tilde{\varphi}(\| \boldsymbol{x} \|)"/>.</p>
 <p>The matrix version of the formula above is:</p>
 <div class="math">
-<p><img src="_images/math/19d324efa7409bbec0b38fc29a3fd25b396c8524.png" alt="\mathcal{M}(\boldsymbol{x}) = \boldsymbol{c} + \boldsymbol{Q}\boldsymbol{x} +
+<p><img src="_images/math/9bb16ce3d42ac00e9273c681b71a2b983c18a8ad.png" alt="\mathcal{M}(\boldsymbol{x}) = \boldsymbol{c} + \boldsymbol{Q}\boldsymbol{x} +
 \boldsymbol{W^T}\boldsymbol{d}(\boldsymbol{x})"/></p>
 </div><p class="last">The idea is that after the computation of the weights and the polynomial terms from the coordinates
 of the control points before and after the deformation, we can deform all the points of the mesh
@@ -241,7 +246,7 @@ Thin-plate splines and Beckert and Wendland <img class="math" src="_images/math/
 <dl class="class">
 <dt>
 <em class="property">class </em><code class="descname">RBF</code><span class="sig-paren">(</span><em>rbf_parameters</em>, <em>original_mesh_points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Class that handles the Radial Basis Functions interpolation on the mesh points.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -249,19 +254,19 @@ Thin-plate splines and Beckert and Wendland <img class="math" src="_images/math/
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>rbf_parameters</strong> (<em>RBFParameters</em>) &#8211; parameters of the RBF.</li>
-<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.</li>
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first simple">
 <li><strong>parameters</strong> (<em>RBFParameters</em>) &#8211; parameters of the RBF.</li>
-<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original points of the mesh.
 The shape is <cite>n_points</cite>-by-3.</li>
-<li><strong>modified_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the points of the deformed mesh.
+<li><strong>modified_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the points of the deformed mesh.
 The shape is <cite>n_points</cite>-by-3.</li>
-<li><strong>bases</strong> (<a class="reference external" href="http://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; a dictionary that associates the names of the basis functions
+<li><strong>bases</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; a dictionary that associates the names of the basis functions
 implemented to the actual implementation.</li>
-<li><strong>weights</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)"><em>numpy.matrix</em></a>) &#8211; the matrix formed by the weights corresponding to the a-priori
+<li><strong>weights</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)"><em>numpy.matrix</em></a>) &#8211; the matrix formed by the weights corresponding to the a-priori
 selected N control points, associated to the basis functions and c and Q terms that
 describe the polynomial of order one p(x) = c + Qx. The shape is
 (n_control_points+1+3)-by-3. It is computed internally.</li>
@@ -306,15 +311,15 @@ describe the polynomial of order one p(x) = c + Qx. The shape is
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X1</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>X2</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector y in the formula above.</li>
+<li><strong>X1</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>X2</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector y in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matrix: the matrix D.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)">numpy.ndarray</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)">numpy.ndarray</a></p>
 </td>
 </tr>
 </tbody>
@@ -332,9 +337,9 @@ The shape is (n_control_points+1+3)-by-3.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
 coordinates of the original interpolation control points before the deformation.</li>
-<li><strong>Y</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
+<li><strong>Y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an n_control_points-by-3 array with the
 coordinates of the interpolation control points after the deformation.</li>
 </ul>
 </td>
@@ -342,7 +347,7 @@ coordinates of the interpolation control points after the deformation.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">weights: the matrix with the weights and the polynomial terms.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)">numpy.matrix</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html#numpy.matrix" title="(in NumPy v1.12)">numpy.matrix</a></p>
 </td>
 </tr>
 </tbody>
@@ -354,22 +359,22 @@ coordinates of the interpolation control points after the deformation.</li>
 <em class="property">static </em><code class="descname">beckert_wendland_c2_basis</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.beckert_wendland_c2_basis"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="_images/math/6599a7a47f0a7f8f69e18ee4defb5cc2af39123b.png" alt="\varphi(\| \boldsymbol{x} \|) = \left( 1 - \frac{\| \boldsymbol{x} \|}{r} \right)^4_+
+<p><img src="_images/math/d7c4a789566b167eb0b96c95f8e51f33d23fc841.png" alt="\varphi(\| \boldsymbol{x} \|) = \left( 1 - \frac{\| \boldsymbol{x} \|}{r} \right)^4_+
 \left( 4 \frac{\| \boldsymbol{x} \|}{r} + 1 \right)"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -381,21 +386,21 @@ coordinates of the interpolation control points after the deformation.</li>
 <em class="property">static </em><code class="descname">gaussian_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.gaussian_spline"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="_images/math/7627871c472ed0baf6a39625ab70864f47dd67db.png" alt="\varphi(\| \boldsymbol{x} \|) = e^{-\frac{\| \boldsymbol{x} \|^2}{r^2}}"/></p>
+<p><img src="_images/math/69c1121a920259f3235abfc26320039ccddff5b7.png" alt="\varphi(\| \boldsymbol{x} \|) = e^{-\frac{\| \boldsymbol{x} \|^2}{r^2}}"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -407,21 +412,21 @@ coordinates of the interpolation control points after the deformation.</li>
 <em class="property">static </em><code class="descname">inv_multi_quadratic_biharmonic_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.inv_multi_quadratic_biharmonic_spline"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="_images/math/60e308890636f8ce025ab4711a7b36798177d603.png" alt="\varphi(\| \boldsymbol{x} \|) = (\| \boldsymbol{x} \|^2 + r^2 )^{-\frac{1}{2}}"/></p>
+<p><img src="_images/math/4a7608f882d4e82b3c65db2f3b9d6ded7fbe3a1f.png" alt="\varphi(\| \boldsymbol{x} \|) = (\| \boldsymbol{x} \|^2 + r^2 )^{-\frac{1}{2}}"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -433,21 +438,21 @@ coordinates of the interpolation control points after the deformation.</li>
 <em class="property">static </em><code class="descname">multi_quadratic_biharmonic_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.multi_quadratic_biharmonic_spline"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="_images/math/2bbbcb4881ff4e9fca89523df22173fea0765450.png" alt="\varphi(\| \boldsymbol{x} \|) = \sqrt{\| \boldsymbol{x} \|^2 + r^2}"/></p>
+<p><img src="_images/math/38bd1a876ad757dbdc25e26052132f7bf3d97ead.png" alt="\varphi(\| \boldsymbol{x} \|) = \sqrt{\| \boldsymbol{x} \|^2 + r^2}"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -466,22 +471,22 @@ it sets <cite>self.modified_mesh_points</cite>.</p>
 <em class="property">static </em><code class="descname">thin_plate_spline</code><span class="sig-paren">(</span><em>X</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/radial.html#RBF.thin_plate_spline"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>It implements the following formula:</p>
 <div class="math">
-<p><img src="_images/math/57725f687a14d7eed26f382aa3c2d1eaf9890de9.png" alt="\varphi(\| \boldsymbol{x} \|) = \left\| \frac{\boldsymbol{x} }{r} \right\|^2
+<p><img src="_images/math/9a1803281e6998504355509e672cffad832341a0.png" alt="\varphi(\| \boldsymbol{x} \|) = \left\| \frac{\boldsymbol{x} }{r} \right\|^2
 \ln \left\| \frac{\boldsymbol{x} }{r} \right\|"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
+<li><strong>X</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; the vector x in the formula above.</li>
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the parameter r in the formula above.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result: the result of the formula above.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </td>
 </tr>
 </tbody>
@@ -512,7 +517,7 @@ it sets <cite>self.modified_mesh_points</cite>.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Inverse Distance Weighting &mdash; PyGeM 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="PyGeM 1.0 documentation" href="index.html"/>
+        <link rel="up" title="Code Documentation" href="code.html"/>
+        <link rel="next" title="pygem.idw.IDW.perform" href="_summaries/pygem.idw.IDW.perform.html"/>
+        <link rel="prev" title="pygem.gui.Gui.start" href="_summaries/pygem.gui.Gui.start.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="affine.html">Affine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="freeform.html">Freeform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radial.html">Radial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="params.html">Params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="igeshandler.html">Igeshandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Gui</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Inverse Distance Weighting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.idw.IDW.perform.html">pygem.idw.IDW.perform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="params_idw.html">IDWParameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">PyGeM</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+      
+    <li>Inverse Distance Weighting</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/idw.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pygem.idw">
+<span id="inverse-distance-weighting"></span><h1>Inverse Distance Weighting<a class="headerlink" href="#module-pygem.idw" title="Permalink to this headline">¶</a></h1>
+<p>Module focused on the Inverse Distance Weighting interpolation technique.
+The IDW algorithm is an average moving interpolation that is usually applied to
+highly variable data. The main idea of this interpolation strategy lies in
+fact that it is not desirable to honour local high/low values but rather to look
+at a moving average of nearby data points and estimate the local trends.
+The node value is calculated by averaging the weighted sum of all the points.
+Data points that lie progressively farther from the node inuence much less the
+computed value than those lying closer to the node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Theoretical Insight:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">This implementation is based on the simplest form of inverse distance
+weighting interpolation, proposed by D. Shepard, A two-dimensional
+interpolation function for irregularly-spaced data, Proceedings of the 23 rd
+ACM National Conference.</p>
+<p>The interpolation value <img class="math" src="_images/math/92e3f44c99a016c5238a790c96f12fd46aa93c4a.png" alt="u"/> of a given point <img class="math" src="_images/math/9f3bb6a3e5f33563ae88f8762eeb9f0dfc857cd4.png" alt="\mathrm{x}"/>
+from a set of samples <img class="math" src="_images/math/aa500df628236c511e376aede7a3dd6d4a5e9f79.png" alt="u_k = u(\mathrm{x}_k)"/>, with
+<img class="math" src="_images/math/23b0400b9a49e0fe7498aa5f81e4b9dda613832f.png" alt="k = 1,2,\dotsc,\mathcal{N}"/>, is given by:</p>
+<div class="math">
+<p><img src="_images/math/52a7a6d89b6949ff71089bf18d83da5cf7fc1cc8.png" alt="u(\mathrm{x}) = \displaystyle\sum_{k=1}^\mathcal{N}
+\frac{w(\mathrm{x},\mathrm{x}_k)}
+{\displaystyle\sum_{j=1}^\mathcal{N} w(\mathrm{x},\mathrm{x}_j)}
+u_k"/></p>
+</div><p>where, in general, <img class="math" src="_images/math/ace7e6a5d4b29040eb72ffac5ce9650ba411f596.png" alt="w(\mathrm{x}, \mathrm{x}_i)"/> represents the
+weighting function:</p>
+<div class="math">
+<p><img src="_images/math/75d53b9a27f72915532f768505d8ef3c7b9ce30c.png" alt="w(\mathrm{x}, \mathrm{x}_i) = \| \mathrm{x} - \mathrm{x}_i \|^{-p}"/></p>
+</div><p class="last">being <img class="math" src="_images/math/402ea7fc940df4a0aa1d84253ae3c23160658b47.png" alt="\| \mathrm{x} - \mathrm{x}_i \|^{-p} \ge 0"/> is the
+Euclidean distance between <img class="math" src="_images/math/9f3bb6a3e5f33563ae88f8762eeb9f0dfc857cd4.png" alt="\mathrm{x}"/> and data point
+<img class="math" src="_images/math/b48be88467ccc97ccd2db69e58ea491dcfa374ff.png" alt="\mathrm{x}_i"/> and <img class="math" src="_images/math/27d463da4622be5b3ef1d4176ced7d7a323c6425.png" alt="p"/> is a power parameter, typically equal to
+2.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.idw.IDW.perform.html#pygem.idw.IDW.perform" title="pygem.idw.IDW.perform"><code class="xref py py-obj docutils literal"><span class="pre">IDW.perform</span></code></a></td>
+<td>This method performs the deformation of the mesh points.</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">IDW</code><span class="sig-paren">(</span><em>idw_parameters</em>, <em>original_mesh_points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/idw.html#IDW"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Class that handles the IDW technique.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idw_parameters</strong> (<code class="xref py py-class docutils literal"><span class="pre">IDWParameters</span></code>) &#8211; the parameters of the IDW</li>
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
+points of the mesh.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first simple">
+<li><strong>parameters</strong> (<code class="xref py py-class docutils literal"><span class="pre">IDWParameters</span></code>) &#8211; the parameters of the IDW.</li>
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
+points of the mesh.</li>
+<li><strong>modified_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the deformed
+points of the mesh.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygem.idw</span> <span class="k">import</span> <span class="n">IDW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygem.params_idw</span> <span class="k">import</span> <span class="n">IDWParameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">IDWParameters</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">read_parameters</span><span class="p">(</span><span class="s1">&#39;tests/test_datasets/parameters_idw_cube.prm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">zv</span><span class="p">,</span> <span class="n">yv</span><span class="p">,</span> <span class="n">xv</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original_mesh_points</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idw</span> <span class="o">=</span> <span class="n">IDW</span><span class="p">(</span><span class="n">rbf_parameters</span><span class="p">,</span> <span class="n">original_mesh_points</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idw</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_mesh_points</span> <span class="o">=</span> <span class="n">idw</span><span class="o">.</span><span class="n">modified_mesh_points</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt>
+<code class="descname">perform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/idw.html#IDW.perform"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method performs the deformation of the mesh points. After the
+execution it sets <cite>self.modified_mesh_points</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="_summaries/pygem.idw.IDW.perform.html" class="btn btn-neutral float-right" title="pygem.idw.IDW.perform" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="_summaries/pygem.gui.Gui.start.html" class="btn btn-neutral" title="pygem.gui.Gui.start" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+      Last updated on May 17, 2017.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

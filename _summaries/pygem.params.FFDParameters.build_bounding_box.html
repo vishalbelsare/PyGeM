@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="../index.html"/>
         <link rel="up" title="Params" href="../params.html"/>
         <link rel="next" title="pygem.params.FFDParameters.print_info" href="pygem.params.FFDParameters.print_info.html"/>
@@ -112,6 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../stephandler.html">Stephandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gui.html">Gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
@@ -155,7 +160,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/_summaries/pygem.params.FFDParameters.build_bounding_box.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_summaries/pygem.params.FFDParameters.build_bounding_box.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -179,14 +184,14 @@ are set to match the computed box.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>shape</strong> (<em>TopoDS_Shape</em>) &#8211; or a subclass such as TopoDS_Face
 the shape to compute the bounding box from</li>
-<li><strong>tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
-<li><strong>triangulate</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
+<li><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
+<li><strong>triangulate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
 <p>If <code class="docutils literal"><span class="pre">True</span></code> only the dimensions of the bb will take into account every part of the shape (also not <em>visible</em>)</p>
 <p>If <code class="docutils literal"><span class="pre">False</span></code> only the <em>visible</em> part is taken into account</p>
 <p><em>Explanation:</em> every UV-Surface has to be rectangular. When a solid is created surfaces are trimmed.
 the trimmed part, however, is still saved inside a file. It is just <em>invisible</em> when drawn in a program</p>
 </li>
-<li><strong>triangulate_tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
+<li><strong>triangulate_tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
 </ul>
 </td>
 </tr>
@@ -216,7 +221,7 @@ the trimmed part, however, is still saved inside a file. It is just <em>invisibl
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

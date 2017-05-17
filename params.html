@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="PyGeM 1.0 documentation" href="index.html"/>
         <link rel="up" title="Code Documentation" href="code.html"/>
         <link rel="next" title="pygem.params.FFDParameters._calculate_bb_dimension" href="_summaries/pygem.params.FFDParameters._calculate_bb_dimension.html"/>
@@ -112,6 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html">Gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -153,7 +158,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/params.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/params.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,46 +218,46 @@
 <dl class="class">
 <dt>
 <em class="property">class </em><code class="descname">FFDParameters</code><span class="sig-paren">(</span><em>n_control_points=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/params.html#FFDParameters"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Class that handles the Free Form Deformation parameters in terms of FFD bounding box and
 weight of the FFD control points.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_control_points</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; number of control points in the x, y, and z direction.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_control_points</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; number of control points in the x, y, and z direction.
 If not provided it is set to [2, 2, 2].</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first simple">
-<li><strong>length_box_x</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the x direction
+<li><strong>length_box_x</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the x direction
 (local coordinate system).</li>
-<li><strong>length_box_y</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the y direction
+<li><strong>length_box_y</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the y direction
 (local coordinate system).</li>
-<li><strong>length_box_z</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the z direction
+<li><strong>length_box_z</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of the FFD bounding box in the z direction
 (local coordinate system).</li>
-<li><strong>origin_box</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; a 3-by-1 vector of float numbers representing the x, y and z
+<li><strong>origin_box</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; a 3-by-1 vector of float numbers representing the x, y and z
 coordinates of the origin of the FFD bounding box.</li>
-<li><strong>rot_angle_x</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around x axis of the FFD bounding box.</li>
-<li><strong>rot_angle_y</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around y axis of the FFD bounding box.</li>
-<li><strong>rot_angle_z</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around z axis of the FFD bounding box.</li>
-<li><strong>n_control_points</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; list of 3 int representing the number of control points in the
+<li><strong>rot_angle_x</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around x axis of the FFD bounding box.</li>
+<li><strong>rot_angle_y</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around y axis of the FFD bounding box.</li>
+<li><strong>rot_angle_z</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rotation angle around z axis of the FFD bounding box.</li>
+<li><strong>n_control_points</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; list of 3 int representing the number of control points in the
 x, y, and z direction.</li>
-<li><strong>array_mu_x</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along x,
+<li><strong>array_mu_x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along x,
 normalized with the box lenght x.</li>
-<li><strong>array_mu_y</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along y,
+<li><strong>array_mu_y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along y,
 normalized with the box lenght y.</li>
-<li><strong>array_mu_z</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along z,
+<li><strong>array_mu_z</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; collects the displacements (weights) along z,
 normalized with the box lenght z.</li>
-<li><strong>psi_mapping</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; map from the pysical domain to the reference domain.</li>
-<li><strong>inv_psi_mapping</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; map from the reference domain to the physical domain.</li>
-<li><strong>rotation_matrix</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; rotation matrix (according to rot_angle_x,
+<li><strong>psi_mapping</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; map from the pysical domain to the reference domain.</li>
+<li><strong>inv_psi_mapping</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; map from the reference domain to the physical domain.</li>
+<li><strong>rotation_matrix</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; rotation matrix (according to rot_angle_x,
 rot_angle_y, rot_angle_z).</li>
-<li><strong>position_vertex_0</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the first vertex of the FFD bounding box.
+<li><strong>position_vertex_0</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the first vertex of the FFD bounding box.
 It is always equal to the member <cite>origin_box</cite>.</li>
-<li><strong>position_vertex_1</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the second vertex of the FFD bounding box.</li>
-<li><strong>position_vertex_2</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the third vertex of the FFD bounding box.</li>
-<li><strong>position_vertex_3</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the fourth vertex of the FFD bounding box.</li>
+<li><strong>position_vertex_1</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the second vertex of the FFD bounding box.</li>
+<li><strong>position_vertex_2</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the third vertex of the FFD bounding box.</li>
+<li><strong>position_vertex_3</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; position of the fourth vertex of the FFD bounding box.</li>
 </ul>
 </td>
 </tr>
@@ -301,20 +306,20 @@ If the four vertex are coplanar, an assert is thrown when affine_points_fit is u
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>shape</strong> (<em>TopoDS_Shape</em>) &#8211; or a subclass such as TopoDS_Face
 the shape to compute the bounding box from</li>
-<li><strong>tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
-<li><strong>triangulate</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
+<li><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
+<li><strong>triangulate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
 <p>If <code class="docutils literal"><span class="pre">True</span></code> only the dimensions of the bb will take into account every part of the shape (also not <em>visible</em>)</p>
 <p>If <code class="docutils literal"><span class="pre">False</span></code> only the <em>visible</em> part is taken into account</p>
 <p>*See <code class="xref py py-meth docutils literal"><span class="pre">build_bounding_box()</span></code></p>
 </li>
-<li><strong>triangulate_tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
+<li><strong>triangulate_tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">coordinates of minima and maxima along XYZ</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></p>
 </td>
 </tr>
 </tbody>
@@ -374,14 +379,14 @@ are set to match the computed box.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>shape</strong> (<em>TopoDS_Shape</em>) &#8211; or a subclass such as TopoDS_Face
 the shape to compute the bounding box from</li>
-<li><strong>tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
-<li><strong>triangulate</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
+<li><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of the computed bounding box</li>
+<li><strong>triangulate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; <p>Should shape be triangulated before the boudning box is created.</p>
 <p>If <code class="docutils literal"><span class="pre">True</span></code> only the dimensions of the bb will take into account every part of the shape (also not <em>visible</em>)</p>
 <p>If <code class="docutils literal"><span class="pre">False</span></code> only the <em>visible</em> part is taken into account</p>
 <p><em>Explanation:</em> every UV-Surface has to be rectangular. When a solid is created surfaces are trimmed.
 the trimmed part, however, is still saved inside a file. It is just <em>invisible</em> when drawn in a program</p>
 </li>
-<li><strong>triangulate_tol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
+<li><strong>triangulate_tol</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; tolerance of triangulation (size of created triangles)</li>
 </ul>
 </td>
 </tr>
@@ -403,7 +408,7 @@ the trimmed part, however, is still saved inside a file. It is just <em>invisibl
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be read in.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be read in.</td>
 </tr>
 </tbody>
 </table>
@@ -418,7 +423,7 @@ the parameters class members.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be written out.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be written out.</td>
 </tr>
 </tbody>
 </table>
@@ -429,7 +434,7 @@ the parameters class members.</p>
 <dl class="class">
 <dt>
 <em class="property">class </em><code class="descname">RBFParameters</code><a class="reference internal" href="_modules/pygem/params.html#RBFParameters"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Class that handles the Radial Basis Functions parameters in terms of RBF control points and
 basis functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -437,18 +442,18 @@ basis functions.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
-<li><strong>basis</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the basis functions to use in the transformation. The functions
+<li><strong>basis</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the basis functions to use in the transformation. The functions
 implemented so far are: gaussian spline, multi quadratic biharmonic spline,
 inv multi quadratic biharmonic spline, thin plate spline, beckert wendland c2 basis.
 For a comprehensive list with details see the class <code class="xref py py-class docutils literal"><span class="pre">RBF</span></code>.
 The default value is None.</li>
-<li><strong>radius</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; is the scaling parameter r that affects the shape of the basis functions.
+<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; is the scaling parameter r that affects the shape of the basis functions.
 For details see the class <code class="xref py py-class docutils literal"><span class="pre">RBF</span></code>. The default value is None.</li>
-<li><strong>n_control_points</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; total number of control points.</li>
-<li><strong>original_control_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an <cite>n_control_points</cite>-by-3 array with the
+<li><strong>n_control_points</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; total number of control points.</li>
+<li><strong>original_control_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an <cite>n_control_points</cite>-by-3 array with the
 coordinates of the original interpolation control points before the deformation. The
 default value is None.</li>
-<li><strong>deformed_control_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an <cite>n_control_points</cite>-by-3 array with the
+<li><strong>deformed_control_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is an <cite>n_control_points</cite>-by-3 array with the
 coordinates of the interpolation control points after the deformation. The default value
 is None.</li>
 </ul>
@@ -470,7 +475,7 @@ is None.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be read in. Default value is parameters_rbf.prm.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be read in. Default value is parameters_rbf.prm.</td>
 </tr>
 </tbody>
 </table>
@@ -485,7 +490,7 @@ the parameters class members. Default value is parameters_rbf.prm.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be written out.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; parameters file to be written out.</td>
 </tr>
 </tbody>
 </table>
@@ -515,7 +520,7 @@ the parameters class members. Default value is parameters_rbf.prm.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on Feb 08, 2017.
+      Last updated on May 17, 2017.
 
     </p>
   </div>

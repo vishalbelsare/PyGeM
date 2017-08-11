@@ -1,4 +1,4 @@
-# PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM) [![Coverage Status](https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master)](https://coveralls.io/github/mathLab/PyGeM?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/41f0acdbcba84e26a47ede5c57d62910/badge.svg)](https://www.quantifiedcode.com/app/project/41f0acdbcba84e26a47ede5c57d62910)
+# PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM) [![Coverage Status](https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master)](https://coveralls.io/github/mathLab/PyGeM?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6195fc94d5bc4a61988c401fc98484a9)](https://www.codacy.com/app/mathLab/PyGeM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/PyGeM&amp;utm_campaign=Badge_Grade)
 Python Geometrical Morphing.
 
 ![Python Geometrical Morphing](readme/logo_PyGeM_small.png)

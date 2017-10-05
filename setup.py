@@ -30,7 +30,7 @@ setup(name='pygem',
 	  		'scipy',
 	  		'matplotlib',
 	  		'enum34',
-	  		'Sphinx>=1.4',
+	  		'Sphinx==1.4',
 	  		'sphinx_rtd_theme'
 	  ],
 	  test_suite='nose.collector',

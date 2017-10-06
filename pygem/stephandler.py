@@ -56,8 +56,11 @@ class StepHandler(NurbsHandler):
 			if return_transfer:
 				# load all shapes in one
 				shape = reader.OneShape()
-
-		return shape
+				return shape
+			else:
+				raise RuntimeError("Shapes not loaded.")
+		else:
+			raise RuntimeError("Cannot read the file.")
 
 	def write_shape_to_file(self, shape, filename):
 		"""

@@ -1,7 +1,25 @@
-# PyGeM [![Build Status](https://travis-ci.org/mathLab/PyGeM.svg)](https://travis-ci.org/mathLab/PyGeM) [![Coverage Status](https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master)](https://coveralls.io/github/mathLab/PyGeM?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6195fc94d5bc4a61988c401fc98484a9)](https://www.codacy.com/app/mathLab/PyGeM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/PyGeM&amp;utm_campaign=Badge_Grade)
-Python Geometrical Morphing.
+<p align="center">
+  <a href="http://mathlab.github.io/PyGeM/" target="_blank" >
+    <img alt="Python Geometrical Morphing" src="docs/source/_static/logo_PyGeM.png" width="200" />
+  </a>
+</p>
+<p align="center">
+    <a href="LICENSE.rst" target="_blank">
+        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+    </a>
+    <a href="https://travis-ci.org/mathLab/PyGeM" target="_blank">
+        <img alt="Build Status" src="https://travis-ci.org/mathLab/PyGeM.svg">
+    </a>
+    <a href="https://coveralls.io/github/mathLab/PyGeM?branch=master" target="_blank">
+        <img alt="Coverage Status" src="https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master">
+    </a>
+    <a href="https://www.codacy.com/app/mathLab/PyGeM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/PyGeM&amp;utm_campaign=Badge_Grade" target="_blank">
+        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/6195fc94d5bc4a61988c401fc98484a9">
+    </a>
+</p>
 
-![Python Geometrical Morphing](readme/logo_PyGeM_small.png)
+
+[PyGeM](http://mathlab.github.io/PyGeM/) (Python Geometrical Morphing) is a python package that allows you to deform a given geometry or mesh with different deformation techniques such as FFD, RBF and IDW.
 
 ## Table of contents
 * [Description](#description)
@@ -19,15 +37,15 @@ Python Geometrical Morphing.
 * [License](#license)
 
 ## Description
-**PyGeM** is a python library using **Free Form Deformation**, **Radial Basis Functions** and **Inverse Distance Weighting** to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:
+**PyGeM** is a python package using **Free Form Deformation**, **Radial Basis Functions** and **Inverse Distance Weighting** to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:
 
-- Computer Aided Design files (in .iges and .stl formats)
+- Computer Aided Design files (in .iges, .step, and .stl formats)
 - Mesh files (in .unv and OpenFOAM formats)
 - Output files (in .vtk format)
 - LS-Dyna Keyword files (.k format)
 
 By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! 
-See the **Examples** section below to have an idea of the potential of this package.
+See the [Examples](#examples) section below to have an idea of the potential of this package.
 
 
 ## Graphical User Interface

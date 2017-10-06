@@ -3,6 +3,20 @@ Python Geometrical Morphing.
 
 ![Python Geometrical Morphing](readme/logo_PyGeM_small.png)
 
+## Table of contents
+* [Description](#description)
+* [Graphical User Interface](#graphical-user-interface)
+* [Dependencies and installation](#dependencies-and-installation)
+	* [Docker](#docker)
+* [Documentation](#documentation)
+* [Testing](#testing)
+* [Examples](#examples)
+* [How to cite](#how-to-cite)
+	* [References](#references)
+	* [Recent works with PyGeM](#recent-works-with-pygem)
+* [Authors and contributors](#authors-and-contributors)
+* [How to contribute](#how-to-contribute)
+* [License](#license)
 
 ## Description
 **PyGeM** is a python library using **Free Form Deformation**, **Radial Basis Functions** and **Inverse Distance Weighting** to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:
@@ -58,6 +72,8 @@ To uninstall the package you have to rerun the installation and record the insta
 > python setup.py install --record installed_files.txt
 > cat installed_files.txt | xargs rm -rf
 ```
+
+### Docker
 Alternatively, a way to run the PyGeM library is to use our prebuilt and high-performance Docker images.
 Docker containers are extremely lightweight, secure, and are based on open standards that run on all major Linux distributions, macOS and Microsoft Windows platforms.
 
@@ -108,16 +124,6 @@ To run tests locally:
 ```
 
 
-## Authors and contributors
-**PyGeM** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
-* [Marco Tezzele](mailto:marcotez@gmail.com)
-* [Nicola Demo](mailto:demo.nicola@gmail.com)
-
-under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
-
-Contact us by email for further information or questions about **PyGeM**, or suggest pull requests. Contributions improving either the code or the documentation are welcome!
-
-
 ## Examples
 You can find useful tutorials on how to use the package in the `tutorials` folder.
 Here we show three applications, taken from the **naval**, **nautical** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
@@ -141,6 +147,51 @@ Here we show three applications, taken from the **naval**, **nautical** and **au
 <p align="center">
 <em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
+
+## How to cite
+If you use this package in your publications please cite the package as follows:
+
+```tex
+\bibitem{pygem}
+{PyGeM: Python Geometrical Morphing. Available at}: \href{https://github.com/mathLab/PyGeM}{https://github.com/mathLab/PyGeM}.
+```
+
+### References
+The deformations implemented are taken from the following paper:
+
+* Forti and Rozza. Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems. International Journal of Computational Fluid Dynamics, 2014. ([DOI](http://dx.doi.org/10.1080/10618562.2014.932352)).
+
+Here there is the .bib file if you need it:
+
+	@article{doi:10.1080/10618562.2014.932352,
+	author = {Davide Forti and Gianluigi Rozza},
+	title = {Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems},
+	journal = {International Journal of Computational Fluid Dynamics},
+	volume = {28},
+	number = {3-4},
+	pages = {158-169},
+	year  = {2014},
+	publisher = {Taylor & Francis},
+	doi = {10.1080/10618562.2014.932352},
+	URL = {http://dx.doi.org/10.1080/10618562.2014.932352},
+	eprint = { http://dx.doi.org/10.1080/10618562.2014.932352}}
+
+
+### Recent works with PyGeM
+Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
+
+* Tezzele, Salmoiraghi, Mola, Rozza. Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
+* Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives. ECCOMAS 2016 proceedings. [[link](https://urania.sissa.it/xmlui/handle/1963/35179)].
+
+
+## Authors and contributors
+**PyGeM** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
+* [Marco Tezzele](mailto:marcotez@gmail.com)
+* [Nicola Demo](mailto:demo.nicola@gmail.com)
+
+under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
+
+Contact us by email for further information or questions about **PyGeM**, or suggest pull requests. Contributions improving either the code or the documentation are welcome!
 
 
 ## How to contribute

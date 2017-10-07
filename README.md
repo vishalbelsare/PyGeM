@@ -45,7 +45,7 @@
 - LS-Dyna Keyword files (.k format)
 
 By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! 
-See the [Examples](#examples) section below to have an idea of the potential of this package.
+See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 
 ## Graphical User Interface
@@ -143,7 +143,7 @@ To run tests locally:
 
 
 ## Examples
-You can find useful tutorials on how to use the package in the `tutorials` folder.
+You can find useful tutorials on how to use the package in the [tutorials](tutorials/README.md) folder.
 Here we show three applications, taken from the **naval**, **nautical** and **automotive** engineering fields. On the other hand, the provided tutorials are related to easier geometries.
 <p align="center">
 <img src="readme/DTMB_ffd.png" alt>
@@ -199,7 +199,7 @@ Here there is the .bib file if you need it:
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
 * Tezzele, Salmoiraghi, Mola, Rozza. Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
-* Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives. ECCOMAS 2016 proceedings. [[link](https://urania.sissa.it/xmlui/handle/1963/35179)].
+* Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives. ECCOMAS 2016 proceedings. [[DOI](https://doi.org/10.7712/100016.1867.8680)].
 
 
 ## Authors and contributors

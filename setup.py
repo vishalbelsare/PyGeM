@@ -26,6 +26,7 @@ setup(name='pygem',
 	  packages=['pygem'],
 	  install_requires=[
 	  		'numpy',
+	  		'numpy-stl',
 	  		'scipy',
 	  		'matplotlib',
 	  		'enum34',

@@ -145,9 +145,8 @@ def plot_rbf_control_points(parameters, save_fig=False):
 
 def write_points_in_vtp(points, outfile='points.vtp', color=None):
 	"""
-	Method that writes a vtp file containing the given points. This method allows
-	to visualize where the FFD control points are located before the geometrical
-	morphing.
+	Method that writes a vtp file containing the given points. It can be used for any set of
+	3D points. Useful to visualize control points together with mesh points in the same window.
 
 	:param numpy.ndarray points: coordinates of the points. The shape has to be (n_points, 3).
 	:param string outfile: name of the output file. The extension has to be .vtp. Default is 'points.vtp'.

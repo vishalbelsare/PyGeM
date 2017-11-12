@@ -141,3 +141,55 @@ def plot_rbf_control_points(parameters, save_fig=False):
 		plt.show()
 	else:
 		fig.savefig('RBF_control_points.png')
+
+
+def write_points_in_vtp(points, outfile='points.vtp', color=None):
+	"""
+	Method that writes a vtp file containing the given points. This method allows
+	to visualize where the FFD control points are located before the geometrical
+	morphing.
+
+	:param numpy.ndarray points: coordinates of the points. The shape has to be (n_points, 3).
+	:param string outfile: name of the output file. The extension has to be .vtp. Default is 'points.vtp'.
+	:param tuple color: tuple defining the RGB color to assign to all the points. Default is
+		blue: (0, 0, 255).
+
+	:Example:
+
+	>>> import pygem.utils as ut
+	>>> import numpy as np
+
+	>>> ctrl_points = np.arange(9).reshape(3, 3)
+	>>> ut.write_points_in_vtp(ctrl_points, 'example_points.vtp', color=(255, 0, 0))
+	"""
+	if color is None:
+		color = (0, 0, 255)
+	# setup points and vertices
+	Points = vtk.vtkPoints()
+	Vertices = vtk.vtkCellArray()
+	
+	Colors = vtk.vtkUnsignedCharArray()
+	Colors.SetNumberOfComponents(3)
+	Colors.SetName("Colors")
+	
+	for i in range(points.shape[0]): 
+		ind = Points.InsertNextPoint(points[i][0], points[i][1], points[i][2])
+		Vertices.InsertNextCell(1)
+		Vertices.InsertCellPoint(ind)
+		Colors.InsertNextTuple3(color[0], color[1], color[2])
+
+	polydata = vtk.vtkPolyData()
+	polydata.SetPoints(Points)
+	polydata.SetVerts(Vertices)
+	polydata.GetPointData().SetScalars(Colors)
+	polydata.Modified()
+	if vtk.VTK_MAJOR_VERSION <= 5:
+		polydata.Update()
+	 
+	writer = vtk.vtkXMLPolyDataWriter()
+	writer.SetFileName(outfile)
+	if vtk.VTK_MAJOR_VERSION <= 5:
+		writer.SetInput(polydata)
+	else:
+		writer.SetInputData(polydata)
+	writer.Write()

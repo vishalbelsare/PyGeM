@@ -27,10 +27,11 @@ def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 
 	>>> import pygem.affine as at
 	>>> import numpy as np
+	>>> from math import radians
 	>>> # Example of a rotation around x, y, z axis
-	>>> rotz = 10*np.pi/180
-	>>> roty = 20*np.pi/180
-	>>> rotx = 30*np.pi/180
+	>>> rotz = radians(10)
+	>>> roty = radians(20)
+	>>> rotx = radians(30)
 	>>> rot_matrix = at.angles2matrix(rotz, roty, rotx)
 
 	.. note::

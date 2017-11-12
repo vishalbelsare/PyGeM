@@ -14,6 +14,7 @@ from OCC.BRepMesh import BRepMesh_IncrementalMesh
 from OCC.Bnd import Bnd_Box
 
 import pygem.affine as at
+from math import radians
 
 
 class FFDParameters(object):
@@ -179,9 +180,9 @@ class FFDParameters(object):
 			self.array_mu_z[tuple(map(int, values[0:3]))] = float(values[3])
 
 		self.rotation_matrix = at.angles2matrix(
-				self.rot_angle[2] * np.pi / 180,
-				self.rot_angle[1] * np.pi / 180,
-				self.rot_angle[0] * np.pi / 180
+				radians(self.rot_angle[2]),
+				radians(self.rot_angle[1]),
+				radians(self.rot_angle[0])
 		)
 
 		self.position_vertex_0 = self.origin_box

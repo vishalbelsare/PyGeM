@@ -88,3 +88,14 @@ class TestUtils(TestCase):
 		ut.plot_rbf_control_points(params, save_fig=True)
 		self.assertTrue(os.path.isfile('RBF_control_points.png'))
 		os.remove('RBF_control_points.png')
+
+	def test_utils_check_write_points_in_vtp(self):
+		ctrl_points = np.arange(12).reshape(4, 3)
+
+		outfilename = 'tests/test_datasets/points_test.vtp'
+		if vtk.VTK_MAJOR_VERSION >= 6:
+			outfilename_expected = 'tests/test_datasets/points_test_true_version6.vtp'
+
+		ut.write_points_in_vtp(ctrl_points, outfile=outfilename)
+		self.assertTrue(self.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)

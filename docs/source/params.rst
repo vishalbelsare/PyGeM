@@ -15,10 +15,8 @@ Params
 	FFDParameters._set_position_of_vertices
 	FFDParameters._set_transformation_params_to_zero
 	FFDParameters.build_bounding_box
-	FFDParameters.print_info
 	FFDParameters.read_parameters
 	FFDParameters.write_parameters
-	RBFParameters.print_info
 	RBFParameters.read_parameters
 	RBFParameters.write_parameters
 

@@ -23,12 +23,12 @@
 
 ## Table of contents
 * [Description](#description)
-* [Graphical User Interface](#graphical-user-interface)
 * [Dependencies and installation](#dependencies-and-installation)
 	* [Docker](#docker)
 * [Documentation](#documentation)
 * [Testing](#testing)
 * [Examples](#examples)
+* [Graphical User Interface](#graphical-user-interface)
 * [How to cite](#how-to-cite)
 	* [References](#references)
 	* [Recent works with PyGeM](#recent-works-with-pygem)
@@ -46,19 +46,6 @@
 
 By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! 
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
-
-
-## Graphical User Interface
-**PyGeM** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Up to now, PyGeM GUI works on linux and Mac OS X computers.
-
-Pick the geometry, the parameters file, set the name of the output and decide whether dump the FFD lattices or not. Now just click on the `Run PyGeM` button and that is it. For a demonstration, see the [video tutorial on YouTube](https://youtu.be/iAjGEhXs_ys).
-
-<p align="center">
-<img src="readme/gui_PyGeM.png" alt>
-</p>
-<p align="center">
-<em>PyGeM GUI: how it appears when it pops up.</em>
-</p>
 
 
 ## Dependencies and installation
@@ -166,6 +153,20 @@ Here we show three applications, taken from the **naval**, **nautical** and **au
 <em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
 
+
+## Graphical User Interface
+**PyGeM** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Up to now, PyGeM GUI works on linux and Mac OS X computers.
+
+Pick the geometry, the parameters file, set the name of the output and decide whether dump the FFD lattices or not. Now just click on the `Run PyGeM` button and that is it. For a demonstration, see the [video tutorial on YouTube](https://youtu.be/iAjGEhXs_ys).
+
+<p align="center">
+<img src="readme/gui_PyGeM.png" alt>
+</p>
+<p align="center">
+<em>PyGeM GUI: how it appears when it pops up.</em>
+</p>
+
+
 ## How to cite
 If you use this package in your publications please cite the package as follows:
 
@@ -175,31 +176,20 @@ If you use this package in your publications please cite the package as follows:
 ```
 
 ### References
-The deformations implemented are taken from the following paper:
+The deformations implemented are taken from the following papers:
 
-* Forti and Rozza. Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems. International Journal of Computational Fluid Dynamics, 2014. ([DOI](http://dx.doi.org/10.1080/10618562.2014.932352)).
-
-Here there is the .bib file if you need it:
-
-	@article{doi:10.1080/10618562.2014.932352,
-	author = {Davide Forti and Gianluigi Rozza},
-	title = {Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems},
-	journal = {International Journal of Computational Fluid Dynamics},
-	volume = {28},
-	number = {3-4},
-	pages = {158-169},
-	year  = {2014},
-	publisher = {Taylor & Francis},
-	doi = {10.1080/10618562.2014.932352},
-	URL = {http://dx.doi.org/10.1080/10618562.2014.932352},
-	eprint = { http://dx.doi.org/10.1080/10618562.2014.932352}}
-
+* Sieger, Menzel, Botsch. *On Shape Deformation Techniques for Simulation-based Design Optimization*. SEMA SIMAI Springer Series, 2015. [[DOI](https://doi.org/10.1007/978-3-319-06053-8_14)], [[pdf](http://www.honda-ri.de/pubs/pdf/1052.pdf)].
+* Forti, Rozza. *Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems*. International Journal of Computational Fluid Dynamics, 2014. [[DOI](http://dx.doi.org/10.1080/10618562.2014.932352)].
+* Sieger, Menzel, Botsch. *RBF Morphing Techniques for Simulation-based Design Optimization*. M. Engineering with Computers, 2014. [[DOI](https://doi.org/10.1007/s00366-013-0330-1)], [[pdf](http://www.honda-ri.de/pubs/pdf/923.pdf)].
+* Lombardi, Parolini, Quarteroni, Rozza. *Numerical Simulation of Sailing Boats: Dynamics, FSI, and Shape Optimization*. Springer Optimization and Its Applications, 2012. [[DOI](http://dx.doi.org/10.1007/978-1-4614-2435-2_15)], [[pdf](https://infoscience.epfl.ch/record/175879/files/PaerErice-Lombardi-parolini-quarteroni-Rozza.pdf)].
 
 ### Recent works with PyGeM
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Tezzele, Salmoiraghi, Mola, Rozza. Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
-* Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives. ECCOMAS 2016 proceedings. [[DOI](https://doi.org/10.7712/100016.1867.8680)].
+* Bergmann, Ferrero, Iollo, Lombardi, Scardigli, Telib. *A zonal Galerkin-free POD model for incompressible flows*. Journal of Computational Physics, 2018. [[DOI](https://doi.org/10.1016/j.jcp.2017.10.001)].
+* Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1711.10884)]. 
+* Tezzele, Salmoiraghi, Mola, Rozza. *Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
+* Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. *Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives*. ECCOMAS 2016 proceedings. [[DOI](https://doi.org/10.7712/100016.1867.8680)].
 
 
 ## Authors and contributors

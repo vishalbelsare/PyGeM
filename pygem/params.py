@@ -353,9 +353,7 @@ class FFDParameters(object):
 			the bounding box in XYZ respectively
 		"""
 		dims = [max_xyz[i] - min_xyz[i] for i in range(3)]
-		self.lenght_box_x = dims[0]
-		self.lenght_box_y = dims[1]
-		self.lenght_box_z = dims[2]
+		self.lenght_box = np.asarray(dims)
 
 	def _set_position_of_vertices(self):
 		"""
@@ -364,21 +362,18 @@ class FFDParameters(object):
 		parallelepiped -- the second half of the box is created as a mirror
 		reflection of the first four vertices.
 		"""
-		origin_array = np.array(self.origin_box)
-		dim = [self.lenght_box_x, self.lenght_box_y, self.lenght_box_z]
-		self.position_vertex_0 = origin_array
-		self.position_vertex_1 = origin_array + np.array([dim[0], .0, .0])
-		self.position_vertex_2 = origin_array + np.array([.0, dim[1], .0])
-		self.position_vertex_3 = origin_array + np.array([.0, .0, dim[2]])
+		self.position_vertex_0 = self.origin_box
+		self.position_vertex_1 = self.origin_box + np.array([self.lenght_box[0], .0, .0])
+		self.position_vertex_2 = self.origin_box + np.array([.0, self.lenght_box[1], .0])
+		self.position_vertex_3 = self.origin_box + np.array([.0, .0, self.lenght_box[2]])
 
 	def _set_mapping(self):
 		"""
 		This method sets mapping from physcial domain to the reference domain
 		(``psi_mapping``) as well as inverse mapping (``inv_psi_mapping``).
 		"""
-		dim = [self.lenght_box_x, self.lenght_box_y, self.lenght_box_z]
-		self.psi_mapping = np.diag([1. / dim[i] for i in range(3)])
-		self.inv_psi_mapping = np.diag(dim)
+		self.psi_mapping = np.diag([1. / self.lenght_box[i] for i in range(3)])
+		self.inv_psi_mapping = np.diag(self.lenght_box)
 
 	def _set_transformation_params_to_zero(self):
 		"""

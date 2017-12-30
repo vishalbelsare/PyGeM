@@ -294,20 +294,26 @@ class TestFFDParameters(TestCase):
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
 
-	def test_print_info(self):
+	def test_print(self):
 		params = ffdp.FFDParameters(n_control_points=[3, 2, 2])
 		print(params)
 
-	def test_build_bounding_box(self):
+	def test_build_bounding_box_1(self):
 		origin = np.array([0., 0., 0.])
 		tops = np.array([1., 1., 1.])
 		cube = BRepPrimAPI_MakeBox(*tops).Shape()
 		params = ffdp.FFDParameters()
 		params.build_bounding_box(cube)
 
-		self.assertAlmostEqual(params.lenght_box_x, tops[0], places=5)
-		self.assertAlmostEqual(params.lenght_box_y, tops[1], places=5)
-		self.assertAlmostEqual(params.lenght_box_z, tops[2], places=5)
+		np.testing.assert_array_almost_equal(params.lenght_box, tops, decimal=5)
+
+	def test_build_bounding_box_2(self):
+		origin = np.array([0., 0., 0.])
+		tops = np.array([1., 1., 1.])
+		cube = BRepPrimAPI_MakeBox(*tops).Shape()
+		params = ffdp.FFDParameters()
+		params.build_bounding_box(cube)
+
 		np.testing.assert_almost_equal(params.position_vertex_0, origin, decimal=5)
 		np.testing.assert_almost_equal(params.position_vertex_1, [1., 0., 0.], decimal=5)
 		np.testing.assert_almost_equal(params.position_vertex_2, [0., 1., 0.], decimal=5)
@@ -319,9 +325,7 @@ class TestFFDParameters(TestCase):
 		params = ffdp.FFDParameters()
 		params.origin_box = origin
 		params._set_box_dimensions(origin, tops)
-		self.assertEqual(params.lenght_box_x, tops[0])
-		self.assertEqual(params.lenght_box_y, tops[1])
-		self.assertEqual(params.lenght_box_z, tops[2])
+		np.testing.assert_array_almost_equal(params.lenght_box, tops)
 
 	def test_set_position_of_vertices(self):
 		vertex_0 = [0., 0., 0.]

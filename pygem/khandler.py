@@ -14,6 +14,7 @@ class KHandler(fh.FileHandler):
     :cvar list extensions: extensions of the input/output files. It is equal
             to '.k'.
     """
+
     def __init__(self):
         super(KHandler, self).__init__()
         self.extensions = ['.k']
@@ -81,7 +82,8 @@ class KHandler(fh.FileHandler):
                             index = -9
                         else:
                             for j in range(0, 3):
-                                line = line[:8+16*(j)] + '{:16.10f}'.format(mesh_points[i][j]) + line[8+16*(j+1):]
+                                line = line[:8 + 16 * (j)] + '{:16.10f}'.format(
+                                    mesh_points[i][j]) + line[8 + 16 * (j + 1):]
                             i += 1
                             index = num
                     output_file.write(line)

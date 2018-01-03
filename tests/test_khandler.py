@@ -30,7 +30,7 @@ class TestKHandler(TestCase):
         k_handler = uh.KHandler()
         with self.assertRaises(ValueError):
             mesh_points = k_handler.parse(
-                    'tests/test_datasets/test_square.iges')
+                'tests/test_datasets/test_square.iges')
 
     def test_k_parse_infile(self):
         k_handler = uh.KHandler()
@@ -77,15 +77,14 @@ class TestKHandler(TestCase):
         k_handler = uh.KHandler()
         mesh_points = k_handler.parse('tests/test_datasets/test_square.k')
         with self.assertRaises(ValueError):
-            k_handler.write(mesh_points, 
-                           'tests/test_datasets/test_square.iges')
+            k_handler.write(mesh_points, 'tests/test_datasets/test_square.iges')
 
     def test_k_write_failing_infile_instantiation(self):
         k_handler = uh.KHandler()
         mesh_points = np.zeros((20, 3))
         with self.assertRaises(RuntimeError):
-            k_handler.write(mesh_points, 
-                           'tests/test_datasets/test_square_out.k')
+            k_handler.write(mesh_points,
+                            'tests/test_datasets/test_square_out.k')
 
     def test_k_write_outfile(self):
         k_handler = uh.KHandler()

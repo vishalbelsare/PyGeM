@@ -4,7 +4,7 @@
 
 # basis funtion is the name of the basis functions to use in the transformation. The functions
 # implemented so far are: gaussian_spline, multi_quadratic_biharmonic_spline,
-# inv_multi_quadratic_biharmonic_spline,	thin_plate_spline, beckert_wendland_c2_basis, polyharmonic_spline.
+# inv_multi_quadratic_biharmonic_spline, thin_plate_spline, beckert_wendland_c2_basis, polyharmonic_spline.
 # For a comprehensive list with details see the class RBF.
 basis function: gaussian_spline
 

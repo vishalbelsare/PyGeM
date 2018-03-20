@@ -4,7 +4,7 @@ import numpy as np
 import filecmp
 import os
 
-from pygem.params_rbf import RBFParameters
+from pygem import RBFParameters
 
 unit_cube = np.array([
     [0., 0., 0.],

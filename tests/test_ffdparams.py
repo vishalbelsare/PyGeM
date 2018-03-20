@@ -7,7 +7,7 @@ from OCC.BRepAlgoAPI import BRepAlgoAPI_Cut
 from OCC.BRepPrimAPI import BRepPrimAPI_MakeSphere, BRepPrimAPI_MakeBox
 from OCC.gp import gp_Pnt
 
-from pygem.params_ffd import FFDParameters
+from pygem import FFDParameters
 
 
 class TestFFDParameters(TestCase):

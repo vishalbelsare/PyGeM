@@ -24,7 +24,7 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
     >>> import pygem.utils as ut
     >>> import pygem.params as pars
     >>> import numpy as np
-
+    >>> 
     >>> params = pars.FFDParameters()
     >>> params.read_parameters(filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
     >>> ut.write_bounding_box(params, 'tests/test_datasets/box_test_sphere.vtk')

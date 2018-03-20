@@ -1,6 +1,6 @@
 from unittest import TestCase
 import unittest
-from pygem.params_idw import IDWParameters
+from pygem import IDWParameters
 import numpy as np
 import filecmp
 import os

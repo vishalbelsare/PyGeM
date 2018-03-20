@@ -1,27 +1,23 @@
 """
 """
-__all__ = [
-    'affine', 'filehandler', 'freeform', 'radial', 'openfhandler',
-    'stlhandler', 'unvhandler', 'vtkhandler', 'nurbshandler', 'stephandler',
-    'igeshandler', 'utils', 'gui', 'khandler', 'idw', 'params_idw',
-    'params_rbf', 'params_ffd'
-]
+# __all__ = [
+#     'affine', 'filehandler', 'freeform', 'radial', 'openfhandler',
+#     'stlhandler', 'unvhandler', 'vtkhandler', 'nurbshandler', 'stephandler',
+#     'igeshandler', 'utils', 'gui', 'khandler', 'idw'
+# ]
 
-from . import affine
-from . import filehandler
-from . import freeform
-from . import radial
-from . import openfhandler
-from . import stlhandler
-from . import unvhandler
-from . import vtkhandler
-from . import nurbshandler
-from . import stephandler
-from . import igeshandler
-from . import utils
+from .affine import *
+from .freeform import FFD
+from .radial import RBF
+from .idw import IDW
+from .filehandler import FileHandler
+from .openfhandler import OpenFoamHandler
+from .stlhandler import StlHandler
+from .unvhandler import UnvHandler
+from .vtkhandler import VtkHandler
+from .nurbshandler import NurbsHandler
+from .stephandler import StepHandler
+from .igeshandler import IgesHandler
+from .khandler import KHandler
 from . import gui
-from . import khandler
-from . import idw
-from . import params_idw
-from . import params_rbf
-from . import params_ffd
+from .params import *

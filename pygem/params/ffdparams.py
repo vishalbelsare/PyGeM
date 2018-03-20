@@ -13,6 +13,7 @@ from OCC.BRepBndLib import brepbndlib_Add
 from OCC.BRepMesh import BRepMesh_IncrementalMesh
 from OCC.Bnd import Bnd_Box
 
+import vtk
 import pygem.affine as at
 from math import radians
 
@@ -23,7 +24,7 @@ class FFDParameters(object):
     bounding box and weight of the FFD control points.
 
     :param list n_control_points: number of control points in the x, y, and z
-        direction.  If not provided it is set to [2, 2, 2].
+        direction. If not provided it is set to [2, 2, 2].
 
     :cvar numpy.ndarray length_box: dimension of the FFD bounding box, in the
         x, y and z direction (local coordinate system).
@@ -114,7 +115,6 @@ class FFDParameters(object):
         """
         Map from the physical domain to the reference domain.
 
-        :return: map from the pysical domain to the reference domain.
         :rtype: numpy.ndarray
         """
         return np.diag(np.reciprocal(self.lenght_box))
@@ -124,7 +124,6 @@ class FFDParameters(object):
         """
         Map from the reference domain to the physical domain.
 
-        :return: map from the reference domain to  domain.
         :rtype: numpy.ndarray
         """
         return np.diag(self.lenght_box)
@@ -132,8 +131,10 @@ class FFDParameters(object):
     @property
     def rotation_matrix(self):
         """
-    :cvar numpy.ndarray rotation_matrix: rotation matrix (according to
-        rot_angle_x, rot_angle_y, rot_angle_z).
+        The rotation matrix (according to rot_angle_x, rot_angle_y,
+        rot_angle_z).
+
+        :rtype: numpy.ndarray
         """
         return at.angles2matrix(
             radians(self.rot_angle[2]), radians(self.rot_angle[1]),
@@ -320,6 +321,70 @@ class FFDParameters(object):
         string += 'position_vertex_2 = {}\n'.format(self.position_vertex_2)
         string += 'position_vertex_3 = {}\n'.format(self.position_vertex_3)
         return string
+
+    def save(self, filename, write_deformed=True):
+        """
+        Method that writes a vtk file containing the FFD lattice. This method
+        allows to visualize where the FFD control points are located before the
+        geometrical morphing. If the `write_deformed` flag is set to True the
+        method writes out the deformed lattice, otherwise it writes one the
+        original undeformed lattice.
+
+        :param str filename: name of the output file.
+        :param bool write_deformed: flag to write the original or modified FFD
+            control lattice.  The default is set to True.
+
+        :Example:
+
+        >>> from pygem.params_ffd import FFDParameters
+        >>> 
+        >>> params = FFDParameters()
+        >>> params.read_parameters(
+        >>>     filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+        >>> params.save('tests/test_datasets/box_test_sphere.vtk')
+        """
+        x = np.linspace(0, self.lenght_box[0], self.n_control_points[0])
+        y = np.linspace(0, self.lenght_box[1], self.n_control_points[1])
+        z = np.linspace(0, self.lenght_box[2], self.n_control_points[2])
+
+        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(
+            y, x, z)
+
+        if write_deformed:
+            box_points = np.array([
+                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
+                    self.lenght_box[0],
+                lattice_y_coords.ravel() + self.array_mu_y.ravel() *
+                    self.lenght_box[1],
+                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
+                    self.lenght_box[2]
+            ])
+        else:
+            box_points = np.array([
+                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
+                lattice_z_coords.ravel()
+            ])
+
+        n_rows = box_points.shape[1]
+
+        box_points = np.dot(self.rotation_matrix, box_points) + np.transpose(
+            np.tile(self.origin_box, (n_rows, 1)))
+
+        points = vtk.vtkPoints()
+
+        for box_point in box_points.T:
+            points.InsertNextPoint(box_point[0], box_point[1], box_point[2])
+
+        data = vtk.vtkPolyData()
+        data.SetPoints(points)
+
+        writer = vtk.vtkPolyDataWriter()
+        writer.SetFileName(filename)
+        if vtk.VTK_MAJOR_VERSION <= 5:
+            writer.SetInput(data)
+        else:
+            writer.SetInputData(data)
+        writer.Write()
 
     def build_bounding_box(self,
                            shape,

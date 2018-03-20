@@ -1,7 +1,7 @@
 from unittest import TestCase
 import unittest
-from pygem.idw import IDW
-from pygem.params_idw import IDWParameters
+from pygem import IDW
+from pygem import IDWParameters
 import numpy as np
 
 

@@ -26,7 +26,7 @@ class RBFParameters(object):
         :class:`~pygem.radialbasis.RBF`. The default value is 0.5.
     :cvar int power: the power parameter that affects the shape of the basis
         functions.  For details see the class :class:`~pygem.radialbasis.RBF`.
-        The default value is 0.5.
+        The default value is 2.
     :cvar numpy.ndarray original_control_points: *n_control_points*-by-3 array
         with the coordinates of the original interpolation control points
         before the deformation. The default values are the coordinates of unit
@@ -195,3 +195,42 @@ class RBFParameters(object):
         string += '\ndeformed control points =\n'
         string += '{}\n'.format(self.deformed_control_points)
         return string
+
+    def save(self, filename, write_deformed=True):
+        """
+        Method that writes a vtk file containing the control points. This method
+        allows to visualize where the RBF control points are located before the
+        geometrical morphing. If the `write_deformed` flag is set to True the
+        method writes out the deformed points, otherwise it writes one the
+        original points.
+
+        :param str filename: name of the output file.
+        :param bool write_deformed: flag to write the original or modified
+            control lattice. The default is set to True.
+
+        :Example:
+
+        >>> from pygem.params import RBFParameters
+        >>> 
+        >>> params = RBFParameters()
+        >>> params.read_parameters(
+        >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
+        >>> params.save('tests/test_datasets/box_cube.vtk')
+        """
+        box_points = self.deformed_control_points if write_deformed else self.original_control_points
+        points = vtk.vtkPoints()
+
+        for box_point in box_points:
+            points.InsertNextPoint(box_point[0], box_point[1], box_point[2])
+
+        data = vtk.vtkPolyData()
+        data.SetPoints(points)
+
+        writer = vtk.vtkPolyDataWriter()
+        writer.SetFileName(filename)
+        if vtk.VTK_MAJOR_VERSION <= 5:
+            writer.SetInput(data)
+        else:
+            writer.SetInputData(data)
+        writer.Write()
+

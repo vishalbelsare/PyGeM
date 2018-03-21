@@ -19,5 +19,4 @@ from .nurbshandler import NurbsHandler
 from .stephandler import StepHandler
 from .igeshandler import IgesHandler
 from .khandler import KHandler
-from . import gui
 from .params import *

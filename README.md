@@ -49,7 +49,7 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 
 ## Dependencies and installation
-**PyGeM** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. 
+**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. 
 Moreover **PyGeM** depends on `OCC` and `vtk`. These requirements cannot be satisfied through `pip`.
 Please see the table below for instructions on how to satisfy the requirements.
 
@@ -122,7 +122,7 @@ The generated html can be found in `docs/build/html`. Open up the `index.html` y
 ## Testing
 We are using Travis CI for continuous intergration testing. You can check out the current status [here](https://travis-ci.org/mathLab/PyGeM).
 
-To run tests locally:
+To run tests locally (the package `nose` is required):
 
 ```bash
 > python test.py
@@ -152,20 +152,6 @@ Here we show three applications, taken from the **naval**, **nautical** and **au
 <p align="center">
 <em>DrivAer model: morphing of the bumper starting from an OpenFOAM mesh file.</em>
 </p>
-
-
-## Graphical User Interface
-**PyGeM** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Up to now, PyGeM GUI works on linux and Mac OS X computers.
-
-Pick the geometry, the parameters file, set the name of the output and decide whether dump the FFD lattices or not. Now just click on the `Run PyGeM` button and that is it. For a demonstration, see the [video tutorial on YouTube](https://youtu.be/iAjGEhXs_ys).
-
-<p align="center">
-<img src="readme/gui_PyGeM.png" alt>
-</p>
-<p align="center">
-<em>PyGeM GUI: how it appears when it pops up.</em>
-</p>
-
 
 ## How to cite
 If you use this package in your publications please cite the package as follows:

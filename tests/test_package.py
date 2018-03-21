@@ -38,10 +38,6 @@ class TestPackage(TestCase):
         import pygem as pg
         igesh = pg.igeshandler.IgesHandler()
 
-    def test_import_pg_9(self):
-        import pygem as pg
-        guih = pg.gui.Gui()
-
     def test_import_pg_10(self):
         import pygem as pg
         nurh = pg.nurbshandler.NurbsHandler()

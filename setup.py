@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def readme():
 	"""
@@ -23,7 +23,7 @@ setup(name='pygem',
 	  author='Marco Tezzele, Nicola Demo',
 	  author_email='marcotez@gmail.com, demo.nicola@gmail.com',
 	  license='MIT',
-	  packages=['pygem'],
+      packages=find_packages(),
 	  install_requires=[
 	  		'numpy',
 	  		'numpy-stl',

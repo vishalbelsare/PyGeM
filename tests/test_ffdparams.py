@@ -7,7 +7,7 @@ from OCC.BRepAlgoAPI import BRepAlgoAPI_Cut
 from OCC.BRepPrimAPI import BRepPrimAPI_MakeSphere, BRepPrimAPI_MakeBox
 from OCC.gp import gp_Pnt
 
-from pygem import FFDParameters
+from pygem.params import FFDParameters
 
 
 class TestFFDParameters(TestCase):
@@ -60,25 +60,16 @@ class TestFFDParameters(TestCase):
         params = FFDParameters()
         np.testing.assert_array_almost_equal(params.rotation_matrix, np.eye(3))
 
-    def test_class_members_default_position_vertex_0(self):
+    def test_class_members_default_position_vertices(self):
         params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.position_vertex_0,
-                                             np.zeros(3))
-
-    def test_class_members_default_position_vertex_1(self):
-        params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.position_vertex_1,
-                                             np.array([1., 0., 0.]))
-
-    def test_class_members_default_position_vertex_2(self):
-        params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.position_vertex_2,
-                                             np.array([0., 1., 0.]))
-
-    def test_class_members_default_position_vertex_3(self):
-        params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.position_vertex_3,
-                                             np.array([0., 0., 1.]))
+        expected_matrix = np.array([
+            [0., 0., 0.],
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]
+        ])
+        np.testing.assert_array_almost_equal(params.position_vertices,
+                                             expected_matrix)
 
     def test_class_members_generic_n_control_points(self):
         params = FFDParameters([2, 3, 5])
@@ -180,38 +171,21 @@ class TestFFDParameters(TestCase):
     def test_read_parameters_position_vertex_0_origin(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        np.testing.assert_array_almost_equal(params.position_vertex_0,
+        np.testing.assert_array_almost_equal(params.position_vertices[0],
                                              params.origin_box)
 
     def test_read_parameters_position_vertex_0(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        position_vertex_0_exact = np.array([-20.0, -55.0, -45.0])
-        np.testing.assert_array_almost_equal(params.position_vertex_0,
-                                             position_vertex_0_exact)
+        position_vertices = np.array([
+            [-20.0, -55.0, -45.0],
+            [24.17322326, -52.02107006, -53.05309404],
+            [-20., 29.41000412, -13.77579136],
+            [-2.82719042, -85.65053198, 37.85915459]
+        ])
 
-    def test_read_parameters_position_vertex_1(self):
-        params = FFDParameters(n_control_points=[3, 2, 2])
-        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        position_vertex_1_exact = np.array(
-            [24.17322326, -52.02107006, -53.05309404])
-        np.testing.assert_array_almost_equal(params.position_vertex_1,
-                                             position_vertex_1_exact)
-
-    def test_read_parameters_position_vertex_2(self):
-        params = FFDParameters(n_control_points=[3, 2, 2])
-        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        position_vertex_2_exact = np.array([-20., 29.41000412, -13.77579136])
-        np.testing.assert_array_almost_equal(params.position_vertex_2,
-                                             position_vertex_2_exact)
-
-    def test_read_parameters_position_vertex_3(self):
-        params = FFDParameters(n_control_points=[3, 2, 2])
-        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        position_vertex_3_exact = np.array(
-            [-2.82719042, -85.65053198, 37.85915459])
-        np.testing.assert_array_almost_equal(params.position_vertex_3,
-                                             position_vertex_3_exact)
+        np.testing.assert_array_almost_equal(params.position_vertices,
+                                             position_vertices)
 
     def test_read_parameters_failing_filename_type(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
@@ -286,33 +260,32 @@ class TestFFDParameters(TestCase):
         params = FFDParameters()
         params.build_bounding_box(cube)
 
+        expected_matrix = np.array([
+            [0., 0., 0.],
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]
+        ])
         np.testing.assert_almost_equal(
-            params.position_vertex_0, origin, decimal=5)
-        np.testing.assert_almost_equal(
-            params.position_vertex_1, [1., 0., 0.], decimal=5)
-        np.testing.assert_almost_equal(
-            params.position_vertex_2, [0., 1., 0.], decimal=5)
-        np.testing.assert_almost_equal(
-            params.position_vertex_3, [0., 0., 1.], decimal=5)
+            params.position_vertices, expected_matrix, decimal=5)
 
     def test_set_position_of_vertices(self):
-        vertex_0 = [0., 0., 0.]
-        vertex_1 = [1., 0., 0.]
-        vertex_2 = [0., 1., 0.]
-        vertex_3 = [0., 0., 1.]
+        expected_matrix = np.array([
+            [0., 0., 0.],
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]
+        ])
         tops = np.array([1., 1., 1.])
         params = FFDParameters()
-        params.origin_box = vertex_0
-        params.lenght_box = tops - vertex_0
-        params._set_position_of_vertices()
-        np.testing.assert_equal(params.position_vertex_0, vertex_0)
-        np.testing.assert_equal(params.position_vertex_1, vertex_1)
-        np.testing.assert_equal(params.position_vertex_2, vertex_2)
-        np.testing.assert_equal(params.position_vertex_3, vertex_3)
+        params.origin_box = expected_matrix[0]
+        params.lenght_box = tops - expected_matrix[0]
+        np.testing.assert_almost_equal(
+            params.position_vertices, expected_matrix, decimal=5)
 
     def test_set_modification_parameters_to_zero(self):
         params = FFDParameters([5, 5, 5])
-        params._set_transformation_params_to_zero()
+        params.reset_deformation()
         np.testing.assert_almost_equal(
             params.array_mu_x, np.zeros(shape=(5, 5, 5)))
         np.testing.assert_almost_equal(

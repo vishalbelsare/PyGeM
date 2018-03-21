@@ -41,23 +41,6 @@ class FFDParameters(object):
     :cvar numpy.ndarray array_mu_z: collects the displacements (weights) along
         z, normalized with the box lenght z.
 
-    :cvar numpy.ndarray psi_mapping: map from the pysical domain to the
-        reference domain.
-    :cvar numpy.ndarray inv_psi_mapping: map from the reference domain to the
-        physical domain.
-
-    :cvar numpy.ndarray rotation_matrix: rotation matrix (according to
-        rot_angle_x, rot_angle_y, rot_angle_z).
-
-    :cvar numpy.ndarray position_vertex_0: position of the first vertex of the
-        FFD bounding box.  It is always equal to the member `origin_box`.
-    :cvar numpy.ndarray position_vertex_1: position of the second vertex of the
-        FFD bounding box.
-    :cvar numpy.ndarray position_vertex_2: position of the third vertex of the
-        FFD bounding box.
-    :cvar numpy.ndarray position_vertex_3: position of the fourth vertex of the
-        FFD bounding box.
-
     :Example: from file
 
     >>> import pygem.params as ffdp
@@ -105,11 +88,6 @@ class FFDParameters(object):
         self.array_mu_y = np.zeros(self.n_control_points)
         self.array_mu_z = np.zeros(self.n_control_points)
 
-        self.position_vertex_0 = self.origin_box
-        self.position_vertex_1 = np.array([1., 0., 0.])
-        self.position_vertex_2 = np.array([0., 1., 0.])
-        self.position_vertex_3 = np.array([0., 0., 1.])
-
     @property
     def psi_mapping(self):
         """
@@ -140,6 +118,17 @@ class FFDParameters(object):
             radians(self.rot_angle[2]), radians(self.rot_angle[1]),
             radians(self.rot_angle[0]))
 
+    @property
+    def position_vertices(self):
+        """
+        The position of the second vertex of the FFD bounding box.
+
+        :rtype: numpy.ndarray
+        """
+        return self.origin_box + np.vstack([
+            np.zeros((1, 3)), 
+            self.rotation_matrix.dot(np.diag(self.lenght_box)).T
+        ])
 
     def read_parameters(self, filename='parameters.prm'):
         """
@@ -197,14 +186,6 @@ class FFDParameters(object):
         for line in muz.split('\n'):
             values = line.split()
             self.array_mu_z[tuple(map(int, values[0:3]))] = float(values[3])
-
-        self.position_vertex_0 = self.origin_box
-        self.position_vertex_1 = self.position_vertex_0 + \
-            np.dot(self.rotation_matrix, [self.lenght_box[0], 0, 0])
-        self.position_vertex_2 = self.position_vertex_0 + \
-            np.dot(self.rotation_matrix, [0, self.lenght_box[1], 0])
-        self.position_vertex_3 = self.position_vertex_0 + \
-            np.dot(self.rotation_matrix, [0, 0, self.lenght_box[2]])
 
     def write_parameters(self, filename='parameters.prm'):
         """
@@ -316,10 +297,7 @@ class FFDParameters(object):
         string += '\narray_mu_z =\n{}\n'.format(self.array_mu_z)
         string += '\npsi_mapping = \n{}\n'.format(self.psi_mapping)
         string += '\nrotation_matrix = \n{}\n'.format(self.rotation_matrix)
-        string += '\nposition_vertex_0 = {}\n'.format(self.position_vertex_0)
-        string += 'position_vertex_1 = {}\n'.format(self.position_vertex_1)
-        string += 'position_vertex_2 = {}\n'.format(self.position_vertex_2)
-        string += 'position_vertex_3 = {}\n'.format(self.position_vertex_3)
+        string += '\nposition_vertices = {}\n'.format(self.position_vertices)
         return string
 
     def save(self, filename, write_deformed=True):
@@ -336,7 +314,7 @@ class FFDParameters(object):
 
         :Example:
 
-        >>> from pygem.params_ffd import FFDParameters
+        >>> from pygem.params import FFDParameters
         >>> 
         >>> params = FFDParameters()
         >>> params.read_parameters(
@@ -418,25 +396,9 @@ class FFDParameters(object):
                                                         triangulate_tol)
         self.origin_box = min_xyz
         self.lenght_box = max_xyz - min_xyz
-        self._set_position_of_vertices()
-        self._set_transformation_params_to_zero()
+        self.reset_deformation()
 
-    def _set_position_of_vertices(self):
-        """
-        Vertices of the control box around the object are set in this method.
-        Four vertices (non coplanar) are sufficient to uniquely identify a
-        parallelepiped -- the second half of the box is created as a mirror
-        reflection of the first four vertices.
-        """
-        self.position_vertex_0 = self.origin_box
-        self.position_vertex_1 = self.origin_box + np.array(
-            [self.lenght_box[0], .0, .0])
-        self.position_vertex_2 = self.origin_box + np.array(
-            [.0, self.lenght_box[1], .0])
-        self.position_vertex_3 = self.origin_box + np.array(
-            [.0, .0, self.lenght_box[2]])
-
-    def _set_transformation_params_to_zero(self):
+    def reset_deformation(self):
         """
         Sets transfomration parameters (``array_mu_x, array_mu_y, array_mu_z``)
         to arrays of zeros (``numpy.zeros``). The shape of arrays corresponds to

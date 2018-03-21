@@ -121,7 +121,7 @@ class FFDParameters(object):
     @property
     def position_vertices(self):
         """
-        The position of the second vertex of the FFD bounding box.
+        The position of the vertices of the FFD bounding box.
 
         :rtype: numpy.ndarray
         """
@@ -370,67 +370,22 @@ class FFDParameters(object):
                            triangulate=False,
                            triangulate_tol=1e-1):
         """
-        Builds a bounding box around the given shape. ALl parameters (with the
-                exception of array_mu_x/y/z) are set to match the computed box.
+        Builds a bounding box around the given shape. All parameters are set to
+        match the computed box, the deformed FFD points are reset.
 
-        :param TopoDS_Shape shape: or a subclass such as TopoDS_Face the shape
-            to compute the bounding box from
-        :param float tol: tolerance of the computed bounding box
-        :param bool triangulate: Should shape be triangulated before the
-         boudning box is created.
-
-            If ``True`` only the dimensions of the bb will take into account
-            every part of the shape (also not *visible*)
-
-            If ``False`` only the *visible* part is taken into account
-
-            *Explanation:* every UV-Surface has to be rectangular. When a solid
-            is created surfaces are trimmed.  the trimmed part, however, is
-            still saved inside a file. It is just *invisible* when drawn in a
-            program
-
+        :param shape: the shape to compute the bounding box.
+        :type shape: TopoDS_Shape or its subclass
+        :param float tol: tolerance of the computed bounding box.
+        :param bool triangulate: if True, shape is triangulated before the
+            bouning box creation.
         :param float triangulate_tol: tolerance of triangulation (size of
-                created triangles)
-        """
-        min_xyz, max_xyz = self._calculate_bb_dimension(shape, tol, triangulate,
-                                                        triangulate_tol)
-        self.origin_box = min_xyz
-        self.lenght_box = max_xyz - min_xyz
-        self.reset_deformation()
+            created triangles).
 
-    def reset_deformation(self):
-        """
-        Sets transfomration parameters (``array_mu_x, array_mu_y, array_mu_z``)
-        to arrays of zeros (``numpy.zeros``). The shape of arrays corresponds to
-        the number of control points in each dimension.
-        """
-        self.array_mu_x.fill(0.0)
-        self.array_mu_y.fill(0.0)
-        self.array_mu_z.fill(0.0)
+        .. note::
 
-    @staticmethod
-    def _calculate_bb_dimension(shape,
-                                tol=1e-6,
-                                triangulate=False,
-                                triangulate_tol=1e-1):
-        """ Calculate dimensions (minima and maxima) of a box bounding the
-
-        :param TopoDS_Shape shape: or a subclass such as TopoDS_Face the shape
-            to compute the bounding box from
-        :param float tol: tolerance of the computed bounding box
-        :param bool triangulate: Should shape be triangulated before the
-            boudning box is created.
-
-            If ``True`` only the dimensions of the bb will take into account
-            every part of the shape (also not *visible*)
-
-            If ``False`` only the *visible* part is taken into account
-
-            \*See :meth:`~params.FFDParameters.build_bounding_box`
-        :param float triangulate_tol: tolerance of triangulation (size of
-                created triangles)
-        :return: coordinates of minima and maxima along XYZ
-        :rtype: tuple
+            Every UV-Surface has to be rectangular. When a solid is created
+            surfaces are trimmed. The trimmed part, however, is still saved
+            inside a file. It is just *invisible* when drawn in a program.
         """
         bbox = Bnd_Box()
         bbox.SetGap(tol)
@@ -438,6 +393,17 @@ class FFDParameters(object):
             BRepMesh_IncrementalMesh(shape, triangulate_tol)
         brepbndlib_Add(shape, bbox, triangulate)
         xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
-        xyz_min = np.array([xmin, ymin, zmin])
-        xyz_max = np.array([xmax, ymax, zmax])
-        return xyz_min, xyz_max
+        min_xyz = np.array([xmin, ymin, zmin])
+        max_xyz = np.array([xmax, ymax, zmax])
+
+        self.origin_box = min_xyz
+        self.lenght_box = max_xyz - min_xyz
+        self.reset_deformation()
+
+    def reset_deformation(self):
+        """
+        Set transformation parameters to arrays of zeros.
+        """
+        self.array_mu_x.fill(0.0)
+        self.array_mu_y.fill(0.0)
+        self.array_mu_z.fill(0.0)

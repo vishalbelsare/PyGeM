@@ -1,5 +1,5 @@
-pygem\.idw\.IDW\.perform
-========================
+pygem.idw.IDW.perform
+=====================
 
 .. currentmodule:: pygem.idw
 

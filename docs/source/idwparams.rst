@@ -1,15 +1,14 @@
 IDWParameters
 =================
 
-.. currentmodule:: pygem.params_idw
+.. currentmodule:: pygem.params.idwparams
 
-.. automodule:: pygem.params_idw
+.. automodule:: pygem.params.idwparams
 
 .. autosummary::
 	:toctree: _summaries
 	:nosignatures:
 
-	IDWParameters.__str__
 	IDWParameters.read_parameters
 	IDWParameters.write_parameters
 

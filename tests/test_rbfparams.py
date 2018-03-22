@@ -6,15 +6,9 @@ import os
 
 from pygem import RBFParameters
 
-unit_cube = np.array([
-    [0., 0., 0.],
-    [0., 0., 1.],
-    [0., 1., 0.],
-    [1., 0., 0.],
-    [0., 1., 1.],
-    [1., 0., 1.],
-    [1., 1., 0.],
-    [1., 1., 1.]])
+unit_cube = np.array([[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
+                      [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+
 
 class TestRBFParameters(TestCase):
     def test_class_members_default_basis(self):

@@ -126,7 +126,7 @@ class FFDParameters(object):
         :rtype: numpy.ndarray
         """
         return self.origin_box + np.vstack([
-            np.zeros((1, 3)), 
+            np.zeros((1, 3)),
             self.rotation_matrix.dot(np.diag(self.lenght_box)).T
         ])
 
@@ -330,16 +330,17 @@ class FFDParameters(object):
 
         if write_deformed:
             box_points = np.array([
-                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
-                    self.lenght_box[0],
-                lattice_y_coords.ravel() + self.array_mu_y.ravel() *
-                    self.lenght_box[1],
-                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
-                    self.lenght_box[2]
+                lattice_x_coords.ravel() +
+                self.array_mu_x.ravel() * self.lenght_box[0],
+                lattice_y_coords.ravel() +
+                self.array_mu_y.ravel() * self.lenght_box[1],
+                lattice_z_coords.ravel() +
+                self.array_mu_z.ravel() * self.lenght_box[2]
             ])
         else:
             box_points = np.array([
-                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
+                lattice_x_coords.ravel(),
+                lattice_y_coords.ravel(),
                 lattice_z_coords.ravel()
             ])
 

@@ -10,6 +10,7 @@ import os
 
 import numpy as np
 
+
 class RBFParameters(object):
     """
     Class that handles the Radial Basis Functions parameters in terms of RBF
@@ -41,24 +42,12 @@ class RBFParameters(object):
         self.basis = 'gaussian_spline'
         self.radius = 0.5
         self.power = 2
-        self.original_control_points = np.array([
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [1., 0., 0.],
-            [0., 1., 1.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.]])
-        self.deformed_control_points = np.array([
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [1., 0., 0.],
-            [0., 1., 1.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.]])
+        self.original_control_points = np.array(
+            [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
+             [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+        self.deformed_control_points = np.array(
+            [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
+             [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
 
     @property
     def n_control_points(self):
@@ -108,9 +97,9 @@ class RBFParameters(object):
 
         if len(lines) != self.n_control_points:
             raise TypeError("The number of control points must be equal both in"
-                    "the 'original control points' and in the 'deformed"
-                    "control points' section of the parameters file"
-                    "({0!s})".format(filename))
+                            "the 'original control points' and in the 'deformed"
+                            "control points' section of the parameters file"
+                            "({0!s})".format(filename))
 
         self.deformed_control_points = np.zeros((self.n_control_points, 3))
         for line, i in zip(lines, list(range(0, self.n_control_points))):
@@ -233,4 +222,3 @@ class RBFParameters(object):
         else:
             writer.SetInputData(data)
         writer.Write()
-

@@ -62,12 +62,8 @@ class TestFFDParameters(TestCase):
 
     def test_class_members_default_position_vertices(self):
         params = FFDParameters()
-        expected_matrix = np.array([
-            [0., 0., 0.],
-            [1., 0., 0.],
-            [0., 1., 0.],
-            [0., 0., 1.]
-        ])
+        expected_matrix = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.],
+                                    [0., 0., 1.]])
         np.testing.assert_array_almost_equal(params.position_vertices,
                                              expected_matrix)
 
@@ -177,12 +173,10 @@ class TestFFDParameters(TestCase):
     def test_read_parameters_position_vertex_0(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        position_vertices = np.array([
-            [-20.0, -55.0, -45.0],
-            [24.17322326, -52.02107006, -53.05309404],
-            [-20., 29.41000412, -13.77579136],
-            [-2.82719042, -85.65053198, 37.85915459]
-        ])
+        position_vertices = np.array(
+            [[-20.0, -55.0, -45.0], [24.17322326, -52.02107006, -53.05309404],
+             [-20., 29.41000412,
+              -13.77579136], [-2.82719042, -85.65053198, 37.85915459]])
 
         np.testing.assert_array_almost_equal(params.position_vertices,
                                              position_vertices)
@@ -260,22 +254,14 @@ class TestFFDParameters(TestCase):
         params = FFDParameters()
         params.build_bounding_box(cube)
 
-        expected_matrix = np.array([
-            [0., 0., 0.],
-            [1., 0., 0.],
-            [0., 1., 0.],
-            [0., 0., 1.]
-        ])
+        expected_matrix = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.],
+                                    [0., 0., 1.]])
         np.testing.assert_almost_equal(
             params.position_vertices, expected_matrix, decimal=5)
 
     def test_set_position_of_vertices(self):
-        expected_matrix = np.array([
-            [0., 0., 0.],
-            [1., 0., 0.],
-            [0., 1., 0.],
-            [0., 0., 1.]
-        ])
+        expected_matrix = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.],
+                                    [0., 0., 1.]])
         tops = np.array([1., 1., 1.])
         params = FFDParameters()
         params.origin_box = expected_matrix[0]

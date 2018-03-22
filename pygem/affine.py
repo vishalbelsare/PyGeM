@@ -64,9 +64,9 @@ def angles2matrix(rot_z=0, rot_y=0, rot_x=0):
 def to_reduced_row_echelon_form(matrix):
     """
     This method computes the reduced row echelon form (a.k.a. row canonical
-            form) of a matrix.  The code is taken from
-    https://rosettacode.org/wiki/Reduced_row_echelon_form#Python and edited with
-    minor changes.
+    form) of a matrix.  The code is taken from
+    https://rosettacode.org/wiki/Reduced_row_echelon_form#Python and edited
+    with minor changes.
 
     :param matrix matrix: matrix to be reduced.
 

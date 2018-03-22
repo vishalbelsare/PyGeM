@@ -1,5 +1,5 @@
 pygem.radial.RBF.polyharmonic_spline
-==================================
+====================================
 
 .. currentmodule:: pygem.radial
 

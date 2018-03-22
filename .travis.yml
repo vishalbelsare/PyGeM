@@ -49,7 +49,7 @@ install:
         conda create --yes -n test python="2.7";
       fi
     - source activate test
-    - conda install --yes numpy scipy matplotlib vtk pip nose sip=4.18
+    - pip install numpy scipy matplotlib vtk nose
     - conda install --yes -c https://conda.anaconda.org/dlr-sc pythonocc-core==0.17
     - pip install setuptools
     - pip install coveralls

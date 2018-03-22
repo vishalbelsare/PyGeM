@@ -86,12 +86,8 @@ class FFD(object):
         # translation and then affine transformation
         translation = self.parameters.origin_box
 
-        physical_frame = np.array([
-            self.parameters.position_vertex_1 - translation,
-            self.parameters.position_vertex_2 - translation,
-            self.parameters.position_vertex_3 - translation, [0, 0, 0]
-        ])
-        reference_frame = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 0]])
+        physical_frame = self.parameters.position_vertices - translation
+        reference_frame = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
         transformation = at.affine_points_fit(physical_frame, reference_frame)
         inverse_transformation = at.affine_points_fit(reference_frame,

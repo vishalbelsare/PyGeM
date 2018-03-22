@@ -292,27 +292,3 @@ class TestFFDParameters(TestCase):
             params.array_mu_y, np.zeros(shape=(5, 5, 5)))
         np.testing.assert_almost_equal(
             params.array_mu_z, np.zeros(shape=(5, 5, 5)))
-
-    def test_calculate_bb_dimensions(self):
-        min_vals = np.zeros(3)
-        max_vals = np.ones(3)
-        cube = BRepPrimAPI_MakeBox(1, 1, 1).Shape()
-        params = FFDParameters()
-        xyz_min, xyz_max = params._calculate_bb_dimension(cube)
-        np.testing.assert_almost_equal(xyz_min, min_vals, decimal=5)
-        np.testing.assert_almost_equal(xyz_max, max_vals, decimal=5)
-
-    def test_calculate_bb_dimensions_triangulate(self):
-        a = gp_Pnt(-1, -1, -1)
-        b = gp_Pnt(3, 3, 3)
-
-        box = BRepPrimAPI_MakeBox(a, b).Shape()
-        sphere = BRepPrimAPI_MakeSphere(3).Shape()
-        section = BRepAlgoAPI_Cut(box, sphere).Shape()
-        params = FFDParameters()
-        xyz_min, xyz_max = params._calculate_bb_dimension(
-            section, triangulate=True)
-        correct_min = -1 * np.ones(3)
-        correct_max = 3 * np.ones(3)
-        np.testing.assert_almost_equal(xyz_min, correct_min, decimal=1)
-        np.testing.assert_almost_equal(xyz_max, correct_max, decimal=1)

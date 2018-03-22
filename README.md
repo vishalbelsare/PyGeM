@@ -14,10 +14,9 @@
         <img alt="Coverage Status" src="https://coveralls.io/repos/github/mathLab/PyGeM/badge.svg?branch=master">
     </a>
     <a href="https://www.codacy.com/app/mathLab/PyGeM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/PyGeM&amp;utm_campaign=Badge_Grade" target="_blank">
-        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/6195fc94d5bc4a61988c401fc98484a9">
+        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/7299abd9d61c4aa586903d80cea01c82">
     </a>
 </p>
-
 
 [PyGeM](http://mathlab.github.io/PyGeM/) (Python Geometrical Morphing) is a python package that allows you to deform a given geometry or mesh with different deformation techniques such as FFD, RBF and IDW.
 

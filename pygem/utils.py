@@ -24,7 +24,7 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
     >>> import pygem.utils as ut
     >>> import pygem.params as pars
     >>> import numpy as np
-    >>> 
+    >>>
     >>> params = pars.FFDParameters()
     >>> params.read_parameters(filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
     >>> ut.write_bounding_box(params, 'tests/test_datasets/box_test_sphere.vtk')
@@ -39,18 +39,25 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
         aux_y, aux_x, aux_z)
 
     if write_deformed:
-        box_points = np.array([ \
-         lattice_x_coords.ravel() + parameters.array_mu_x.ravel() * parameters.lenght_box[0], \
-         lattice_y_coords.ravel() + parameters.array_mu_y.ravel() * parameters.lenght_box[1], \
-         lattice_z_coords.ravel() + parameters.array_mu_z.ravel() * parameters.lenght_box[2]])
+        box_points = np.array([
+            lattice_x_coords.ravel() +
+            parameters.array_mu_x.ravel() * parameters.lenght_box[0],
+            lattice_y_coords.ravel() +
+            parameters.array_mu_y.ravel() * parameters.lenght_box[1],
+            lattice_z_coords.ravel() +
+            parameters.array_mu_z.ravel() * parameters.lenght_box[2]
+        ])
     else:
-        box_points = np.array([lattice_x_coords.ravel(), lattice_y_coords.ravel(), \
-         lattice_z_coords.ravel()])
+        box_points = np.array([
+            lattice_x_coords.ravel(),
+            lattice_y_coords.ravel(),
+            lattice_z_coords.ravel()
+        ])
 
     n_rows = box_points.shape[1]
 
-    box_points = np.dot(parameters.rotation_matrix, box_points) + \
-     np.transpose(np.tile(parameters.origin_box, (n_rows, 1)))
+    box_points = np.dot(parameters.rotation_matrix, box_points) + np.transpose(
+        np.tile(parameters.origin_box, (n_rows, 1)))
 
     # step necessary to set the correct order to the box points for vtkStructuredGrid:
     # Data in vtkStructuredGrid are ordered with x increasing fastest, then y, then z
@@ -113,23 +120,29 @@ def plot_rbf_control_points(parameters, save_fig=False):
     """
     fig = plt.figure(1)
     axes = fig.add_subplot(111, projection='3d')
-    orig = axes.scatter(parameters.original_control_points[:, 0], \
-     parameters.original_control_points[:, 1], \
-     parameters.original_control_points[:, 2], c='blue', marker='o')
-    defor = axes.scatter(parameters.deformed_control_points[:, 0], \
-     parameters.deformed_control_points[:, 1], \
-     parameters.deformed_control_points[:, 2], c='red', marker='x')
+    orig = axes.scatter(
+        parameters.original_control_points[:, 0],
+        parameters.original_control_points[:, 1],
+        parameters.original_control_points[:, 2],
+        c='blue',
+        marker='o')
+    defor = axes.scatter(
+        parameters.deformed_control_points[:, 0],
+        parameters.deformed_control_points[:, 1],
+        parameters.deformed_control_points[:, 2],
+        c='red',
+        marker='x')
 
     axes.set_xlabel('X axis')
     axes.set_ylabel('Y axis')
     axes.set_zlabel('Z axis')
 
-    plt.legend((orig, defor), \
-     ('Original', 'Deformed'), \
-     scatterpoints=1, \
-     loc='lower left', \
-     ncol=2, \
-     fontsize=10)
+    plt.legend(
+        (orig, defor), ('Original', 'Deformed'),
+        scatterpoints=1,
+        loc='lower left',
+        ncol=2,
+        fontsize=10)
 
     # Show the plot to the screen
     if not save_fig:
@@ -152,7 +165,7 @@ def write_points_in_vtp(points, outfile='points.vtp', color=None):
 
     >>> import pygem.utils as ut
     >>> import numpy as np
-
+    >>>
     >>> ctrl_points = np.arange(9).reshape(3, 3)
     >>> ut.write_points_in_vtp(ctrl_points, 'example_points.vtp', color=(255, 0, 0))
     """
@@ -177,13 +190,8 @@ def write_points_in_vtp(points, outfile='points.vtp', color=None):
     polydata.SetVerts(Vertices)
     polydata.GetPointData().SetScalars(Colors)
     polydata.Modified()
-    if vtk.VTK_MAJOR_VERSION <= 5:
-        polydata.Update()
 
     writer = vtk.vtkXMLPolyDataWriter()
     writer.SetFileName(outfile)
-    if vtk.VTK_MAJOR_VERSION <= 5:
-        writer.SetInput(polydata)
-    else:
-        writer.SetInputData(polydata)
+    writer.SetInputData(polydata)
     writer.Write()

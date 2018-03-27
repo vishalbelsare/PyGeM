@@ -4,8 +4,8 @@ Deformation.
 """
 import math
 import sys
-import numpy as np
 from functools import reduce
+import numpy as np
 
 
 def angles2matrix(rot_z=0, rot_y=0, rot_x=0):

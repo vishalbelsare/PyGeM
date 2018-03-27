@@ -11,7 +11,8 @@ class UnvHandler(fh.FileHandler):
 
     :cvar string infile: name of the input file to be processed.
     :cvar string outfile: name of the output file where to write in.
-    :cvar list extensions: extensions of the input/output files. It is equal to ['.unv'].
+    :cvar list extensions: extensions of the input/output files.
+        It is equal to ['.unv'].
     """
 
     def __init__(self):
@@ -20,13 +21,14 @@ class UnvHandler(fh.FileHandler):
 
     def parse(self, filename):
         """
-        Method to parse the file `filename`. It returns a matrix with all the coordinates.
-        It reads only the section 2411 of the unv files and it assumes there are only triangles.
+        Method to parse the file `filename`. It returns a matrix with
+        all the coordinates. It reads only the section 2411 of the unv
+        files and it assumes there are only triangles.
 
         :param string filename: name of the input file.
-        
-        :return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
-            the points of the mesh.
+
+        :return: mesh_points: it is a `n_points`-by-3 matrix containing
+            the coordinates of the points of the mesh.
         :rtype: numpy.ndarray
         """
         self._check_filename_type(filename)
@@ -59,12 +61,12 @@ class UnvHandler(fh.FileHandler):
 
     def write(self, mesh_points, filename):
         """
-        Writes a unv file, called filename, copying all the lines from self.filename but
-        the coordinates. mesh_points is a matrix that contains the new coordinates to
-        write in the unv file.
+        Writes a unv file, called filename, copying all the lines from
+        `self.filename` but the coordinates. mesh_points is a matrix
+        that contains the new coordinates to write in the unv file.
 
-        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
-            the coordinates of the points of the mesh
+        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix
+            containing the coordinates of the points of the mesh
         :param string filename: name of the output file.
         """
         self._check_filename_type(filename)

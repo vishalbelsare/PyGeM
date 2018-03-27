@@ -11,8 +11,8 @@ class OpenFoamHandler(fh.FileHandler):
 
     :cvar string infile: name of the input file to be processed.
     :cvar string outfile: name of the output file where to write in.
-    :cvar list extensions: extensions of the input/output files. It is equal to [''] since
-        openFOAM files do not have extension.
+    :cvar list extensions: extensions of the input/output files. It
+        is equal to [''] since openFOAM files do not have extension.
     """
 
     def __init__(self):
@@ -21,12 +21,13 @@ class OpenFoamHandler(fh.FileHandler):
 
     def parse(self, filename):
         """
-        Method to parse the `filename`. It returns a matrix with all the coordinates.
+        Method to parse the `filename`. It returns a matrix with all
+        the coordinates.
 
         :param string filename: name of the input file.
         
-        :return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
-            the points of the mesh
+        :return: mesh_points: it is a `n_points`-by-3 matrix containing
+            the coordinates of the points of the mesh
         :rtype: numpy.ndarray
 
         .. todo::
@@ -58,12 +59,13 @@ class OpenFoamHandler(fh.FileHandler):
 
     def write(self, mesh_points, filename):
         """
-        Writes a openFOAM file, called filename, copying all the lines from self.filename but
-        the coordinates. mesh_points is a matrix that contains the new coordinates to
-        write in the openFOAM file.
+        Writes a openFOAM file, called filename, copying all the
+        lines from self.filename but the coordinates. mesh_points
+        is a matrix that contains the new coordinates to write in
+        the openFOAM file.
 
-        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
-            the coordinates of the points of the mesh.
+        :param numpy.ndarray mesh_points: it is a `n_points`-by-3
+            matrix containing the coordinates of the points of the mesh.
         :param string filename: name of the output file.
 
         .. todo:: DOCS
@@ -82,8 +84,8 @@ class OpenFoamHandler(fh.FileHandler):
             for line in input_file:
                 nrow += 1
                 if 20 < nrow < 21 + n_points:
-                    output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(mesh_points[i][1]) + \
-                       ' ' + str(mesh_points[i][2]) +')')
+                    output_file.write('(' + str(mesh_points[i][0]) + ' ' + str(
+                        mesh_points[i][1]) + ' ' + str(mesh_points[i][2]) + ')')
                     output_file.write('\n')
                     i += 1
                 else:

@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing parameters files to perform the desired
+Utilities for reading and writing parameters files to perform RBF
 geometrical morphing.
 """
 try:
@@ -7,8 +7,8 @@ try:
 except ImportError:
     import ConfigParser as configparser
 import os
-
 import numpy as np
+import vtk
 
 
 class RBFParameters(object):
@@ -125,8 +125,9 @@ class RBFParameters(object):
             output_file.write(
                 '# This section describes the radial basis functions shape.\n')
 
-            output_file.write('\n# basis funtion is the name of the basis functions to use in the transformation. ' + \
-                'The functions\n')
+            output_file.write(
+                '\n# basis funtion is the name of the basis functions to use in the transformation. The functions\n'
+            )
             output_file.write(
                 '# implemented so far are: gaussian_spline, multi_quadratic_biharmonic_spline,\n'
             )
@@ -137,8 +138,9 @@ class RBFParameters(object):
                 '# For a comprehensive list with details see the class RBF.\n')
             output_file.write('basis function: ' + str(self.basis) + '\n')
 
-            output_file.write('\n# radius is the scaling parameter r that affects the shape of the basis functions. ' + \
-                'See the documentation\n')
+            output_file.write(
+                '\n# radius is the scaling parameter r that affects the shape of the basis functions. See the documentation\n'
+            )
             output_file.write('# of the class RBF for details.\n')
             output_file.write('radius: ' + str(self.radius) + '\n')
             output_file.write(
@@ -150,23 +152,27 @@ class RBFParameters(object):
             output_file.write(
                 '# This section describes the RBF control points.\n')
 
-            output_file.write('\n# original control points collects the coordinates of the interpolation ' + \
-                'control points before the deformation.\n')
+            output_file.write(
+                '\n# original control points collects the coordinates of the interpolation control points before the deformation.\n'
+            )
             output_file.write('original control points:')
             offset = 1
             for i in range(0, self.n_control_points):
-                output_file.write(offset * ' ' + str(self.original_control_points[i][0]) + '   ' + \
-                    str(self.original_control_points[i][1]) + '   ' + \
+                output_file.write(
+                    offset * ' ' + str(self.original_control_points[i][0]) +
+                    '   ' + str(self.original_control_points[i][1]) + '   ' +
                     str(self.original_control_points[i][2]) + '\n')
                 offset = 25
 
-            output_file.write('\n# deformed control points collects the coordinates of the interpolation ' + \
-                'control points after the deformation.\n')
+            output_file.write(
+                '\n# deformed control points collects the coordinates of the interpolation control points after the deformation.\n'
+            )
             output_file.write('deformed control points:')
             offset = 1
             for i in range(0, self.n_control_points):
-                output_file.write(offset * ' ' + str(self.deformed_control_points[i][0]) + '   ' + \
-                    str(self.deformed_control_points[i][1]) + '   ' + \
+                output_file.write(
+                    offset * ' ' + str(self.deformed_control_points[i][0]) +
+                    '   ' + str(self.deformed_control_points[i][1]) + '   ' +
                     str(self.deformed_control_points[i][2]) + '\n')
                 offset = 25
 
@@ -200,7 +206,7 @@ class RBFParameters(object):
         :Example:
 
         >>> from pygem.params import RBFParameters
-        >>> 
+        >>>
         >>> params = RBFParameters()
         >>> params.read_parameters(
         >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
@@ -217,8 +223,5 @@ class RBFParameters(object):
 
         writer = vtk.vtkPolyDataWriter()
         writer.SetFileName(filename)
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            writer.SetInput(data)
-        else:
-            writer.SetInputData(data)
+        writer.SetInputData(data)
         writer.Write()

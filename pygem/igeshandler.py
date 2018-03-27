@@ -1,7 +1,6 @@
 """
 Derived module from filehandler.py to handle iges and igs files.
 """
-
 from OCC.IGESControl import (IGESControl_Reader, IGESControl_Writer,
                              IGESControl_Controller_Init)
 from OCC.IFSelect import IFSelect_RetDone

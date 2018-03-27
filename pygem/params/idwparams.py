@@ -1,5 +1,9 @@
-import numpy as np
+"""
+Utilities for reading and writing parameters files to perform IDW
+geometrical morphing.
+"""
 import os
+import numpy as np
 try:
     import configparser as configparser
 except ImportError:

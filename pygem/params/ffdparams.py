@@ -1,5 +1,5 @@
 """
-Utilities for reading and writing parameters files to perform the desired
+Utilities for reading and writing parameters files to perform FFD
 geometrical morphing.
 """
 try:
@@ -7,15 +7,12 @@ try:
 except ImportError:
     import ConfigParser as configparser
 import os
-
 import numpy as np
+from OCC.Bnd import Bnd_Box
 from OCC.BRepBndLib import brepbndlib_Add
 from OCC.BRepMesh import BRepMesh_IncrementalMesh
-from OCC.Bnd import Bnd_Box
-
 import vtk
 import pygem.affine as at
-from math import radians
 
 
 class FFDParameters(object):
@@ -44,7 +41,7 @@ class FFDParameters(object):
     :Example: from file
 
     >>> import pygem.params as ffdp
-    >>> 
+    >>>
     >>> # Reading an existing file
     >>> params1 = ffdp.FFDParameters()
     >>> params1.read_parameters(
@@ -115,8 +112,8 @@ class FFDParameters(object):
         :rtype: numpy.ndarray
         """
         return at.angles2matrix(
-            radians(self.rot_angle[2]), radians(self.rot_angle[1]),
-            radians(self.rot_angle[0]))
+            np.radians(self.rot_angle[2]), np.radians(self.rot_angle[1]),
+            np.radians(self.rot_angle[0]))
 
     @property
     def position_vertices(self):
@@ -213,69 +210,99 @@ class FFDParameters(object):
         output_string += 'n control points z: ' + str(
             self.n_control_points[2]) + '\n'
 
-        output_string += '\n# box lenght indicates the length of the FFD bounding box along the three canonical directions (x, y, z).\n'
+        output_string += '\n# box lenght indicates the length of the FFD '
+        output_string += 'bounding box along the three canonical directions (x, y, z).\n'
+
         output_string += '# It uses the local coordinate system.\n'
-        output_string += '# For example to create a 2 x 1.5 x 3 meters box use the following: lenght box: 2.0, 1.5, 3.0\n'
+        output_string += '# For example to create a 2 x 1.5 x 3 meters box '
+        output_string += 'use the following: lenght box: 2.0, 1.5, 3.0\n'
+
         output_string += 'box lenght x: ' + str(self.lenght_box[0]) + '\n'
         output_string += 'box lenght y: ' + str(self.lenght_box[1]) + '\n'
         output_string += 'box lenght z: ' + str(self.lenght_box[2]) + '\n'
 
-        output_string += '\n# box origin indicates the x, y, and z coordinates of the origin of the FFD bounding box. That is center of\n'
-        output_string += '# rotation of the bounding box. It corresponds to the point coordinates with position [0][0][0].\n'
+        output_string += '\n# box origin indicates the x, y, and z coordinates of '
+        output_string += 'the origin of the FFD bounding box. That is center of\n'
+
+        output_string += '# rotation of the bounding box. It corresponds to '
+        output_string += 'the point coordinates with position [0][0][0].\n'
+
         output_string += '# See section "Parameters weights" for more details.\n'
-        output_string += '# For example, if the origin is equal to 0., 0., 0., use the following: origin box: 0., 0., 0.\n'
+        output_string += '# For example, if the origin is equal to 0., 0., 0., use '
+        output_string += 'the following: origin box: 0., 0., 0.\n'
+
         output_string += 'box origin x: ' + str(self.origin_box[0]) + '\n'
         output_string += 'box origin y: ' + str(self.origin_box[1]) + '\n'
         output_string += 'box origin z: ' + str(self.origin_box[2]) + '\n'
 
-        output_string += '\n# rotation angle indicates the rotation angle around the x, y, and z axis of the FFD bounding box in degrees.\n'
+        output_string += '\n# rotation angle indicates the rotation angle '
+        output_string += 'around the x, y, and z axis of the FFD bounding box in degrees.\n'
+
         output_string += '# The rotation is done with respect to the box origin.\n'
-        output_string += '# For example, to rotate the box by 2 deg along the z direction, use the following: rotation angle: 0., 0., 2.\n'
+        output_string += '# For example, to rotate the box by 2 deg along the z '
+        output_string += 'direction, use the following: rotation angle: 0., 0., 2.\n'
+
         output_string += 'rotation angle x: ' + str(self.rot_angle[0]) + '\n'
         output_string += 'rotation angle y: ' + str(self.rot_angle[1]) + '\n'
         output_string += 'rotation angle z: ' + str(self.rot_angle[2]) + '\n'
 
         output_string += '\n\n[Parameters weights]\n'
-        output_string += '# This section describes the weights of the FFD control points.\n'
+        output_string += '# This section describes the weights of the FFD '
+        output_string += 'control points.\n'
+
         output_string += '# We adopt the following convention:\n'
-        output_string += '# For example with a 2x2x2 grid of control points we have to fill a 2x2x2 matrix of weights.\n'
-        output_string += '# If a weight is equal to zero you can discard the line since the default is zero.\n'
+        output_string += '# For example with a 2x2x2 grid of control points we '
+        output_string += 'have to fill a 2x2x2 matrix of weights.\n'
+
+        output_string += '# If a weight is equal to zero you can discard the line '
+        output_string += 'since the default is zero.\n'
+
         output_string += '#\n'
         output_string += '# | x index | y index | z index | weight |\n'
         output_string += '#  --------------------------------------\n'
         output_string += '# |    0    |    0    |    0    |  1.0   |\n'
-        output_string += '# |    0    |    1    |    1    |  0.0   | --> you can erase this line without effects\n'
+        output_string += '# |    0    |    1    |    1    |  0.0   | --> you '
+        output_string += 'can erase this line without effects\n'
         output_string += '# |    0    |    1    |    0    | -2.1   |\n'
         output_string += '# |    0    |    0    |    1    |  3.4   |\n'
 
-        output_string += '\n# parameter x collects the displacements along x, normalized with the box lenght x.'
+        output_string += '\n# parameter x collects the displacements along x, '
+        output_string += 'normalized with the box lenght x.'
+
         output_string += '\nparameter x:'
         offset = 1
         for i in range(0, self.n_control_points[0]):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
-                    output_string += offset * ' ' + str(i) + '   ' + str(j) + '   ' + str(k) + \
-                        '   ' + str(self.array_mu_x[i][j][k]) + '\n'
+                    output_string += offset * ' ' + str(i) + '   ' + str(
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_x[i][j][k]) + '\n'
                     offset = 13
 
-        output_string += '\n# parameter y collects the displacements along y, normalized with the box lenght y.'
+        output_string += '\n# parameter y collects the displacements along y, '
+        output_string += 'normalized with the box lenght y.'
+
         output_string += '\nparameter y:'
         offset = 1
         for i in range(0, self.n_control_points[0]):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
-                    output_string += offset * ' ' + str(i) + '   ' + str(j) + '   ' + str(k) + \
-                        '   ' + str(self.array_mu_y[i][j][k]) + '\n'
+                    output_string += offset * ' ' + str(i) + '   ' + str(
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_y[i][j][k]) + '\n'
                     offset = 13
 
-        output_string += '\n# parameter z collects the displacements along z, normalized with the box lenght z.'
+        output_string += '\n# parameter z collects the displacements along z, '
+        output_string += 'normalized with the box lenght z.'
+
         output_string += '\nparameter z:'
         offset = 1
         for i in range(0, self.n_control_points[0]):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
-                    output_string += offset * ' ' + str(i) + '   ' + str(j) + '   ' + str(k) + \
-                        '   ' + str(self.array_mu_z[i][j][k]) + '\n'
+                    output_string += offset * ' ' + str(i) + '   ' + str(
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_z[i][j][k]) + '\n'
                     offset = 13
 
         with open(filename, 'w') as f:

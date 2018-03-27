@@ -86,10 +86,7 @@ class StlHandler(fh.FileHandler):
         writer = vtk.vtkSTLWriter()
         writer.SetFileName(self.outfile)
 
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            writer.SetInput(data)
-        else:
-            writer.SetInputData(data)
+        writer.SetInputData(data)
 
         if write_bin:
             writer.SetFileTypeToBinary()
@@ -140,12 +137,14 @@ class StlHandler(fh.FileHandler):
             axes.add_collection3d(tri)
 
         ## Get the limits of the axis and center the geometry
-        max_dim = np.array([np.max(vtx[:,:,0]), \
-         np.max(vtx[:,:,1]), \
-         np.max(vtx[:,:,2])])
-        min_dim = np.array([np.min(vtx[:,:,0]), \
-         np.min(vtx[:,:,1]), \
-         np.min(vtx[:,:,2])])
+        max_dim = np.array(
+            [np.max(vtx[:, :, 0]),
+             np.max(vtx[:, :, 1]),
+             np.max(vtx[:, :, 2])])
+        min_dim = np.array(
+            [np.min(vtx[:, :, 0]),
+             np.min(vtx[:, :, 1]),
+             np.min(vtx[:, :, 2])])
 
         max_lenght = np.max(max_dim - min_dim)
         axes.set_xlim(-.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2,
@@ -185,10 +184,7 @@ class StlHandler(fh.FileHandler):
         # Create the mapper that corresponds the objects of the vtk file
         # into graphics elements
         mapper = vtk.vtkDataSetMapper()
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            mapper.SetInput(output)
-        else:
-            mapper.SetInputData(output)
+        mapper.SetInputData(output)
         mapper.SetScalarRange(scalar_range)
 
         # Create the Actor

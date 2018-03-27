@@ -150,19 +150,19 @@ class FFD(object):
 
         # shift_mesh_points needs to be transposed to be summed with mesh_points
         # apply inverse transformation to shifted mesh points
-        new_mesh_points = self._transform_points(np.transpose(shift_mesh_points) +
-          mesh_points, inverse_transformation) + \
-           translation
+        new_mesh_points = self._transform_points(
+            np.transpose(shift_mesh_points) + mesh_points,
+            inverse_transformation) + translation
 
         # merge non-shifted mesh points with shifted ones
         self.modified_mesh_points = np.copy(self.original_mesh_points)
-        self.modified_mesh_points[(reference_frame_mesh_points[:,0] >= 0.) &
-          (reference_frame_mesh_points[:,0] <= 1.) &
-          (reference_frame_mesh_points[:,1] >= 0.) &
-          (reference_frame_mesh_points[:,1] <= 1.) &
-          (reference_frame_mesh_points[:,2] >= 0.) &
-          (reference_frame_mesh_points[:,2] <= 1.)] \
-         = new_mesh_points
+        self.modified_mesh_points[(reference_frame_mesh_points[:, 0] >= 0.)
+                                  & (reference_frame_mesh_points[:, 0] <= 1.) &
+                                  (reference_frame_mesh_points[:, 1] >= 0.) &
+                                  (reference_frame_mesh_points[:, 1] <= 1.) &
+                                  (reference_frame_mesh_points[:, 2] >= 0.) &
+                                  (reference_frame_mesh_points[:, 2] <=
+                                   1.)] = new_mesh_points
 
     @staticmethod
     def _transform_points(original_points, transformation):

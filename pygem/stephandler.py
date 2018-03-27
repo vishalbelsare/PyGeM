@@ -1,11 +1,9 @@
 """
 Derived module from nurbshandler.py to handle step and stp files.
 """
-
 from OCC.Interface import Interface_Static_SetCVal
 from OCC.STEPControl import STEPControl_Writer, STEPControl_Reader, STEPControl_AsIs
 from OCC.IFSelect import IFSelect_RetDone
-
 from pygem.nurbshandler import NurbsHandler
 
 

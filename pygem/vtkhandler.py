@@ -180,10 +180,7 @@ class VtkHandler(fh.FileHandler):
         # Create the mapper that corresponds the objects of the vtk file
         # into graphics elements
         mapper = vtk.vtkDataSetMapper()
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            mapper.SetInput(output)
-        else:
-            mapper.SetInputData(output)
+        mapper.SetInputData(output)
         mapper.SetScalarRange(scalar_range)
 
         # Create the Actor

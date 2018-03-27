@@ -25,21 +25,18 @@ computed value than those lying closer to the node.
         {\\displaystyle\\sum_{j=1}^\\mathcal{N} w(\\mathrm{x},\\mathrm{x}_j)}
         u_k
 
-
     where, in general, :math:`w(\\mathrm{x}, \\mathrm{x}_i)` represents the
     weighting function:
 
     .. math::
         w(\\mathrm{x}, \\mathrm{x}_i) = \\| \\mathrm{x} - \\mathrm{x}_i \\|^{-p}
-    
+
     being :math:`\\| \\mathrm{x} - \\mathrm{x}_i \\|^{-p} \\ge 0` is the
     Euclidean distance between :math:`\\mathrm{x}` and data point
     :math:`\\mathrm{x}_i` and :math:`p` is a power parameter, typically equal to
     2.
-
 """
 import numpy as np
-
 from scipy.spatial.distance import cdist
 
 
@@ -91,7 +88,10 @@ class IDW(object):
         """
 
         def distance(u, v):
-            return np.linalg.norm(u - v, self.parameters.power)
+            """
+            Norm of u - v
+            """
+            return np.linalg.norm(u - v, ord=self.parameters.power)
 
         # Compute displacement of the control points
         displ = (self.parameters.deformed_control_points -

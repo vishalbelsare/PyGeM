@@ -88,9 +88,7 @@ class RBFParameters(object):
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
             self.original_control_points[i] = np.array(
-                [float(values[0]),
-                 float(values[1]),
-                 float(values[2])])
+                [float(values[0]), float(values[1]), float(values[2])])
 
         mod_points = config.get('Control points', 'deformed control points')
         lines = mod_points.split('\n')
@@ -105,9 +103,7 @@ class RBFParameters(object):
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
             self.deformed_control_points[i] = np.array(
-                [float(values[0]),
-                 float(values[1]),
-                 float(values[2])])
+                [float(values[0]), float(values[1]), float(values[2])])
 
     def write_parameters(self, filename='parameters_rbf.prm'):
         """
@@ -126,21 +122,17 @@ class RBFParameters(object):
                 '# This section describes the radial basis functions shape.\n')
 
             output_file.write(
-                '\n# basis funtion is the name of the basis functions to use in the transformation. The functions\n'
-            )
+                '\n# basis funtion is the name of the basis functions to use in the transformation. The functions\n')
             output_file.write(
-                '# implemented so far are: gaussian_spline, multi_quadratic_biharmonic_spline,\n'
-            )
+                '# implemented so far are: gaussian_spline, multi_quadratic_biharmonic_spline,\n')
             output_file.write(
-                '# inv_multi_quadratic_biharmonic_spline, thin_plate_spline, beckert_wendland_c2_basis, polyharmonic_spline.\n'
-            )
+                '# inv_multi_quadratic_biharmonic_spline, thin_plate_spline, beckert_wendland_c2_basis, polyharmonic_spline.\n')
             output_file.write(
                 '# For a comprehensive list with details see the class RBF.\n')
             output_file.write('basis function: ' + str(self.basis) + '\n')
 
             output_file.write(
-                '\n# radius is the scaling parameter r that affects the shape of the basis functions. See the documentation\n'
-            )
+                '\n# radius is the scaling parameter r that affects the shape of the basis functions. See the documentation\n')
             output_file.write('# of the class RBF for details.\n')
             output_file.write('radius: ' + str(self.radius) + '\n')
             output_file.write(
@@ -153,27 +145,25 @@ class RBFParameters(object):
                 '# This section describes the RBF control points.\n')
 
             output_file.write(
-                '\n# original control points collects the coordinates of the interpolation control points before the deformation.\n'
-            )
+                '\n# original control points collects the coordinates of the interpolation control points before the deformation.\n')
             output_file.write('original control points:')
             offset = 1
             for i in range(0, self.n_control_points):
-                output_file.write(
-                    offset * ' ' + str(self.original_control_points[i][0]) +
-                    '   ' + str(self.original_control_points[i][1]) + '   ' +
-                    str(self.original_control_points[i][2]) + '\n')
+                output_file.write(offset * ' ' + str(
+                    self.original_control_points[i][0]) + '   ' + str(
+                        self.original_control_points[i][1]) + '   ' + str(
+                            self.original_control_points[i][2]) + '\n')
                 offset = 25
 
             output_file.write(
-                '\n# deformed control points collects the coordinates of the interpolation control points after the deformation.\n'
-            )
+                '\n# deformed control points collects the coordinates of the interpolation control points after the deformation.\n')
             output_file.write('deformed control points:')
             offset = 1
             for i in range(0, self.n_control_points):
-                output_file.write(
-                    offset * ' ' + str(self.deformed_control_points[i][0]) +
-                    '   ' + str(self.deformed_control_points[i][1]) + '   ' +
-                    str(self.deformed_control_points[i][2]) + '\n')
+                output_file.write(offset * ' ' + str(
+                    self.deformed_control_points[i][0]) + '   ' + str(
+                        self.deformed_control_points[i][1]) + '   ' + str(
+                            self.deformed_control_points[i][2]) + '\n')
                 offset = 25
 
     def __str__(self):

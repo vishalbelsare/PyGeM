@@ -14,7 +14,8 @@ class VtkHandler(fh.FileHandler):
 
     :cvar string infile: name of the input file to be processed.
     :cvar string outfile: name of the output file where to write in.
-    :cvar list extensions: extensions of the input/output files. It is equal to ['.vtk'].
+    :cvar list extensions: extensions of the input/output files. It
+        is equal to ['.vtk'].
     """
 
     def __init__(self):
@@ -23,12 +24,13 @@ class VtkHandler(fh.FileHandler):
 
     def parse(self, filename):
         """
-        Method to parse the file `filename`. It returns a matrix with all the coordinates.
+        Method to parse the file `filename`. It returns a matrix
+        with all the coordinates.
 
         :param string filename: name of the input file.
 
-        :return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
-            the points of the mesh
+        :return: mesh_points: it is a `n_points`-by-3 matrix
+            containing the coordinates of the points of the mesh
         :rtype: numpy.ndarray
 
         .. todo::
@@ -58,12 +60,14 @@ class VtkHandler(fh.FileHandler):
 
     def write(self, mesh_points, filename):
         """
-        Writes a vtk file, called filename, copying all the structures from self.filename but
-        the coordinates. mesh_points is a matrix that contains the new coordinates to
-        write in the vtk file.
+        Writes a vtk file, called filename, copying all the
+        structures from self.filename but the coordinates.
+        `mesh_points` is a matrix that contains the new coordinates
+        to write in the vtk file.
 
-        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
-            the coordinates of the points of the mesh
+        :param numpy.ndarray mesh_points: it is a `n_points`-by-3
+            matrix containing the coordinates of the points of the
+            mesh
         :param string filename: name of the output file.
         """
         self._check_filename_type(filename)
@@ -80,7 +84,6 @@ class VtkHandler(fh.FileHandler):
         data = reader.GetOutput()
 
         points = vtk.vtkPoints()
-
         for i in range(data.GetNumberOfPoints()):
             points.InsertNextPoint(mesh_points[i, :])
 
@@ -88,23 +91,20 @@ class VtkHandler(fh.FileHandler):
 
         writer = vtk.vtkDataSetWriter()
         writer.SetFileName(self.outfile)
-
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            writer.SetInput(data)
-        else:
-            writer.SetInputData(data)
-
+        writer.SetInputData(data)
         writer.Write()
 
     def plot(self, plot_file=None, save_fig=False):
         """
-        Method to plot a vtk file. If `plot_file` is not given it plots `self.infile`.
+        Method to plot a vtk file. If `plot_file` is not given it
+        plots `self.infile`.
 
         :param string plot_file: the vtk filename you want to plot.
-        :param bool save_fig: a flag to save the figure in png or not. If True the
-            plot is not shown.
+        :param bool save_fig: a flag to save the figure in png or
+            not. If True the plot is not shown.
             
-        :return: figure: matlplotlib structure for the figure of the chosen geometry
+        :return: figure: matlplotlib structure for the figure of
+            the chosen geometry
         :rtype: matplotlib.pyplot.figure
         """
         if plot_file is None:
@@ -136,12 +136,10 @@ class VtkHandler(fh.FileHandler):
             axes.add_collection3d(tri)
 
         ## Get the limits of the axis and center the geometry
-        max_dim = np.array([np.max(vtx[:,:,0]), \
-         np.max(vtx[:,:,1]), \
-         np.max(vtx[:,:,2])])
-        min_dim = np.array([np.min(vtx[:,:,0]), \
-         np.min(vtx[:,:,1]), \
-         np.min(vtx[:,:,2])])
+        max_dim = np.array([np.max(vtx[:, :, 0]), np.max(vtx[:, :, 1]),
+                            np.max(vtx[:, :, 2])])
+        min_dim = np.array([np.min(vtx[:, :, 0]), np.min(vtx[:, :, 1]),
+                            np.min(vtx[:, :, 2])])
 
         max_lenght = np.max(max_dim - min_dim)
         axes.set_xlim(-.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2,
@@ -161,7 +159,8 @@ class VtkHandler(fh.FileHandler):
 
     def show(self, show_file=None):
         """
-        Method to show a vtk file. If `show_file` is not given it shows `self.infile`.
+        Method to show a vtk file. If `show_file` is not given
+        it shows `self.infile`.
 
         :param string show_file: the vtk filename you want to show.
         """

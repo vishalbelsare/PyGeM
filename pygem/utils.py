@@ -26,7 +26,8 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
     >>> import numpy as np
     >>>
     >>> params = pars.FFDParameters()
-    >>> params.read_parameters(filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+    >>> fname = 'tests/test_datasets/parameters_test_ffd_sphere.prm'
+    >>> params.read_parameters(filename=fname)
     >>> ut.write_bounding_box(params, 'tests/test_datasets/box_test_sphere.vtk')
     """
     aux_x = np.linspace(0, parameters.lenght_box[0],
@@ -40,27 +41,27 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 
     if write_deformed:
         box_points = np.array([
-            lattice_x_coords.ravel() +
-            parameters.array_mu_x.ravel() * parameters.lenght_box[0],
-            lattice_y_coords.ravel() +
+            lattice_x_coords.ravel() + parameters.array_mu_x.ravel() *
+            parameters.lenght_box[0], lattice_y_coords.ravel() +
             parameters.array_mu_y.ravel() * parameters.lenght_box[1],
-            lattice_z_coords.ravel() +
-            parameters.array_mu_z.ravel() * parameters.lenght_box[2]
+            lattice_z_coords.ravel() + parameters.array_mu_z.ravel() *
+            parameters.lenght_box[2]
         ])
     else:
         box_points = np.array([
-            lattice_x_coords.ravel(),
-            lattice_y_coords.ravel(),
+            lattice_x_coords.ravel(), lattice_y_coords.ravel(),
             lattice_z_coords.ravel()
         ])
 
     n_rows = box_points.shape[1]
 
-    box_points = np.dot(parameters.rotation_matrix, box_points) + np.transpose(
-        np.tile(parameters.origin_box, (n_rows, 1)))
+    box_points = np.dot(
+        parameters.rotation_matrix,
+        box_points) + np.transpose(np.tile(parameters.origin_box, (n_rows, 1)))
 
-    # step necessary to set the correct order to the box points for vtkStructuredGrid:
-    # Data in vtkStructuredGrid are ordered with x increasing fastest, then y, then z
+    # step necessary to set the correct order to the box points for
+    # vtkStructuredGrid. Data in vtkStructuredGrid are ordered with
+    # x increasing fastest, then y, then z
     dims = lattice_y_coords.shape
     aux_xx = box_points[0, :].reshape(dims).ravel(order='f')
     aux_yy = box_points[1, :].reshape(dims).ravel(order='f')
@@ -73,15 +74,16 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 def _write_vtk_box(box_points, filename, dimensions):
     """
     Private method that writes a vtk file containing FFD control points.
-    
+
     :param numpy.ndarray box_points: coordinates of the FFD control points.
     :param string filename: name of the output file.
     :param list dimensions: dimension of the lattice in (x, y, z) directions.
-    
+
     .. warning::
-            If you want to visualize in paraview the inner points, 
-            you have to slice the lattice because paraview does not visualize them automatically
-            even in the wireframe visualization.
+
+        If you want to visualize in paraview the inner points, 
+        you have to slice the lattice because paraview does not visualize them
+        automatically even in the wireframe visualization.
     """
     # setup points and vertices
     points = vtk.vtkPoints()
@@ -110,13 +112,14 @@ def _write_vtk_box(box_points, filename, dimensions):
 
 def plot_rbf_control_points(parameters, save_fig=False):
     """
-    Method to plot the control points of a RBFParameters class. It is possible to save the
-    resulting figure.
+    Method to plot the control points of a RBFParameters class. It is possible
+    to save the resulting figure.
 
-    :param RBFParameters parameters: parameters of the Radial Basis Functions interpolation.
+    :param RBFParameters parameters: parameters of the Radial Basis Functions
+        interpolation.
     :param bool save_fig: a flag to save the figure in png or not. If True the
-        plot is not shown and the figure is saved with the name 'RBF_control_points.png'.
-        The default value is False.
+        plot is not shown and the figure is saved with the name
+        'RBF_control_points.png'. The default value is False.
     """
     fig = plt.figure(1)
     axes = fig.add_subplot(111, projection='3d')
@@ -153,13 +156,16 @@ def plot_rbf_control_points(parameters, save_fig=False):
 
 def write_points_in_vtp(points, outfile='points.vtp', color=None):
     """
-    Method that writes a vtp file containing the given points. It can be used for any set of
-    3D points. Useful to visualize control points together with mesh points in the same window.
+    Method that writes a vtp file containing the given points. It can be
+    used for any set of 3D points. Useful to visualize control points together
+    with mesh points in the same window.
 
-    :param numpy.ndarray points: coordinates of the points. The shape has to be (n_points, 3).
-    :param string outfile: name of the output file. The extension has to be .vtp. Default is 'points.vtp'.
-    :param tuple color: tuple defining the RGB color to assign to all the points. Default is
-        blue: (0, 0, 255).
+    :param numpy.ndarray points: coordinates of the points. The shape has to
+        be (n_points, 3).
+    :param string outfile: name of the output file. The extension has to be
+        .vtp. Default is 'points.vtp'.
+    :param tuple color: tuple defining the RGB color to assign to all the
+        points. Default is blue: (0, 0, 255).
 
     :Example:
 
@@ -167,7 +173,8 @@ def write_points_in_vtp(points, outfile='points.vtp', color=None):
     >>> import numpy as np
     >>>
     >>> ctrl_points = np.arange(9).reshape(3, 3)
-    >>> ut.write_points_in_vtp(ctrl_points, 'example_points.vtp', color=(255, 0, 0))
+    >>> outfile = 'example_points.vtp'
+    >>> ut.write_points_in_vtp(ctrl_points, outfile, color=(255, 0, 0))
     """
     if color is None:
         color = (0, 0, 255)

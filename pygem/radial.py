@@ -16,7 +16,7 @@ The module is analogous to the freeform one.
     Rozza, Efficient geometrical parametrization techniques of interfaces for
     reduced order modelling: application to fluid-structure interaction coupling
     problems, International Journal of Computational Fluid Dynamics.
-    
+
     RBF shape parametrization technique is based on the definition of a map,
     :math:`\\mathcal{M}(\\boldsymbol{x}) : \\mathbb{R}^n \\rightarrow
     \\mathbb{R}^n`, that allows the possibility of transferring data across
@@ -87,7 +87,8 @@ class RBF(object):
     >>> import pygem.params as rbfp
     >>> import numpy as np
     >>> rbf_parameters = rbfp.RBFParameters()
-    >>> rbf_parameters.read_parameters('tests/test_datasets/parameters_rbf_cube.prm')
+    >>> fname = 'tests/test_datasets/parameters_rbf_cube.prm'
+    >>> rbf_parameters.read_parameters(fname)
     >>> nx, ny, nz = (20, 20, 20)
     >>> mesh = np.zeros((nx * ny * nz, 3))
     >>> xv = np.linspace(0, 1, nx)
@@ -107,18 +108,14 @@ class RBF(object):
         self.modified_mesh_points = None
 
         self.bases = {
-            'gaussian_spline':
-            self.gaussian_spline,
+            'gaussian_spline': self.gaussian_spline,
             'multi_quadratic_biharmonic_spline':
             self.multi_quadratic_biharmonic_spline,
             'inv_multi_quadratic_biharmonic_spline':
             self.inv_multi_quadratic_biharmonic_spline,
-            'thin_plate_spline':
-            self.thin_plate_spline,
-            'beckert_wendland_c2_basis':
-            self.beckert_wendland_c2_basis,
-            'polyharmonic_spline':
-            self.polyharmonic_spline
+            'thin_plate_spline': self.thin_plate_spline,
+            'beckert_wendland_c2_basis': self.beckert_wendland_c2_basis,
+            'polyharmonic_spline': self.polyharmonic_spline
         }
 
         # to make the str callable we have to use a dictionary with all the
@@ -141,7 +138,7 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) = 
+            \\varphi(\\| \\boldsymbol{x} \\|) =
             e^{-\\frac{\\| \\boldsymbol{x} \\|^2}{r^2}}
 
         :param numpy.ndarray X: the vector x in the formula above.
@@ -270,15 +267,16 @@ class RBF(object):
 
         k = self.parameters.power
         r_sc = np.linalg.norm(X) / r
-        power = np.power
 
-        if k & 1: return power(r_sc, k)  # k odd
+        # k odd
+        if k & 1:
+            return np.power(r_sc, k)
 
-        # Here, k is even
+        # k even
         if r_sc < 1:
-            return power(r_sc, k - 1) * np.log(power(r_sc, r_sc))
+            return np.power(r_sc, k - 1) * np.log(np.power(r_sc, r_sc))
         else:
-            return power(r_sc, k) * np.log(r_sc)
+            return np.power(r_sc, k) * np.log(r_sc)
 
     def _distance_matrix(self, X1, X2):
         """
@@ -317,12 +315,9 @@ class RBF(object):
         dim = X.shape[1]
         identity = np.ones((n_points, 1))
         dist = self._distance_matrix(X, X)
-        H = np.bmat([[dist, identity,
-                      X], [identity.T,
-                           np.zeros((1, 1)),
-                           np.zeros((1, dim))],
-                     [X.T, np.zeros((dim, 1)),
-                      np.zeros((dim, dim))]])
+        H = np.bmat([[dist, identity, X], [identity.T, np.zeros(
+            (1, 1)), np.zeros((1, dim))], [X.T, np.zeros((dim, 1)), np.zeros(
+                (dim, dim))]])
         rhs = np.bmat([[Y], [np.zeros((1, dim))], [np.zeros((dim, dim))]])
         weights = np.linalg.solve(H, rhs)
         return weights

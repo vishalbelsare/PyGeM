@@ -1,9 +1,10 @@
 """
 Derived module from nurbshandler.py to handle step and stp files.
 """
-from OCC.Interface import Interface_Static_SetCVal
-from OCC.STEPControl import STEPControl_Writer, STEPControl_Reader, STEPControl_AsIs
 from OCC.IFSelect import IFSelect_RetDone
+from OCC.Interface import Interface_Static_SetCVal
+from OCC.STEPControl import STEPControl_Writer, STEPControl_Reader
+from OCC.STEPControl import STEPControl_AsIs
 from pygem.nurbshandler import NurbsHandler
 
 
@@ -15,18 +16,19 @@ class StepHandler(NurbsHandler):
     :cvar string outfile: name of the output file where to write in.
     :cvar list extensions: list of extensions of the input/output files.
         It is equal to ['.step', '.stp'].
-    :cvar list control_point_position: index of the first NURBS control point (or pole)
-        of each face of the iges file.
+    :cvar list control_point_position: index of the first NURBS control
+        point (or pole) of each face of the iges file.
     :cvar float tolerance: tolerance for the construction of the faces and wires
         in the write function. Default value is 1e-6.
     :cvar TopoDS_Shape shape: shape meant for modification.
 
     .. warning::
 
-            - For non trivial geometries it could be necessary to increase the tolerance.
-              Linking edges into a single wire and then trimming the surface with the wire
-              can be hard for the software, especially when the starting CAD has not been
-              made for analysis but for design purposes.
+        - For non trivial geometries it could be necessary to increase the
+          tolerance. Linking edges into a single wire and then trimming the
+          surface with the wire can be hard for the software, especially when
+          the starting CAD has not been made for analysis but for design
+          purposes.
     """
 
     def __init__(self):

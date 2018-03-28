@@ -137,14 +137,10 @@ class StlHandler(fh.FileHandler):
             axes.add_collection3d(tri)
 
         ## Get the limits of the axis and center the geometry
-        max_dim = np.array(
-            [np.max(vtx[:, :, 0]),
-             np.max(vtx[:, :, 1]),
-             np.max(vtx[:, :, 2])])
-        min_dim = np.array(
-            [np.min(vtx[:, :, 0]),
-             np.min(vtx[:, :, 1]),
-             np.min(vtx[:, :, 2])])
+        max_dim = np.array([np.max(vtx[:, :, 0]), np.max(vtx[:, :, 1]),
+                            np.max(vtx[:, :, 2])])
+        min_dim = np.array([np.min(vtx[:, :, 0]), np.min(vtx[:, :, 1]),
+                            np.min(vtx[:, :, 2])])
 
         max_lenght = np.max(max_dim - min_dim)
         axes.set_xlim(-.6 * max_lenght + (max_dim[0] + min_dim[0]) / 2,

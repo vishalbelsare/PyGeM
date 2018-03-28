@@ -1,27 +1,33 @@
 """
 Derived module from filehandler.py to handle iges/igs and step/stp files.
 Implements all methods for parsing an object and applying FFD.
-File handling operations (reading/writing) must be implemented in derived classes.
+File handling operations (reading/writing) must be implemented
+in derived classes.
 """
 import os
 import numpy as np
-import OCC.TopoDS
-from OCC.BRep import (BRep_Tool, BRep_Builder, BRep_Tool_Curve)
-from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace, \
-    BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
-from OCC.Display.SimpleGui import init_display
-from OCC.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
-                             geomconvert_CurveToBSplineCurve)
-from OCC.ShapeFix import (ShapeFix_ShapeTolerance, ShapeFix_Shell)
-from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
-import OCC.Precision
-from OCC.StlAPI import StlAPI_Writer
-from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
-                        TopAbs_SHELL)
-from OCC.TopExp import (TopExp_Explorer, topexp)
-from OCC.gp import (gp_Pnt, gp_XYZ)
-from OCC.TColgp import (TColgp_Array1OfPnt, TColgp_Array2OfPnt)
+from OCC.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
+from OCC.BRepAlgo import brepalgo_IsValid
+from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeEdge
+from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeFace
+from OCC.BRepBuilderAPI import BRepBuilderAPI_NurbsConvert
+from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeWire
+from OCC.BRepBuilderAPI import BRepBuilderAPI_Sewing
 from OCC.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
+from OCC.Display.SimpleGui import init_display
+from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface
+from OCC.GeomConvert import geomconvert_CurveToBSplineCurve
+from OCC.gp import gp_Pnt, gp_XYZ
+from OCC.Precision import precision_Confusion
+from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
+from OCC.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
+from OCC.StlAPI import StlAPI_Writer
+from OCC.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
+from OCC.TopAbs import TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE
+from OCC.TopAbs import TopAbs_FORWARD, TopAbs_SHELL
+from OCC.TopExp import TopExp_Explorer, topexp
+from OCC.TopoDS import topods_Face, TopoDS_Compound, topods_Shell
+from OCC.TopoDS import topods_Edge, topods_Wire, topods, TopoDS_Shape
 from matplotlib import pyplot
 from mpl_toolkits import mplot3d
 from stl import mesh
@@ -34,18 +40,19 @@ class NurbsHandler(fh.FileHandler):
 
     :cvar string infile: name of the input file to be processed.
     :cvar string outfile: name of the output file where to write in.
-    :cvar list control_point_position: index of the first NURBS control point (or pole)
-        of each face of the files.
+    :cvar list control_point_position: index of the first NURBS
+        control point (or pole) of each face of the files.
     :cvar TopoDS_Shape shape: shape meant for modification.
-    :cvar float tolerance: tolerance for the construction of the faces and wires
-        in the write function. Default value is 1e-6.
+    :cvar float tolerance: tolerance for the construction of the faces
+        and wires in the write function. Default value is 1e-6.
 
     .. warning::
 
-            - For non trivial geometries it could be necessary to increase the tolerance.
-              Linking edges into a single wire and then trimming the surface with the wire
-              can be hard for the software, especially when the starting CAD has not been
-              made for analysis but for design purposes.
+        - For non trivial geometries it could be necessary to increase
+          the tolerance. Linking edges into a single wire and then
+          trimming the surface with the wire can be hard for the
+          software, especially when the starting CAD has not been made
+          for analysis but for design purposes.
     """
 
     def __init__(self):
@@ -57,14 +64,14 @@ class NurbsHandler(fh.FileHandler):
 
     def _check_infile_instantiation(self):
         """
-        This private method checks if `self.infile` and `self.shape' are instantiated. If not it means
-        that nobody called the parse method and at least one of them is None` If the check fails
-        it raises a RuntimeError.
-
+        This private method checks if `self.infile` and `self.shape` are
+        instantiated. If not it means that nobody called the parse method
+        and at least one of them is None` If the check fails it raises a
+        RuntimeError.
         """
         if not self.shape or not self.infile:
             raise RuntimeError(
-                "You can not write a file without having parsed one.")
+                'You can not write a file without having parsed one.')
 
     def load_shape_from_file(self, filename):
         """
@@ -72,22 +79,23 @@ class NurbsHandler(fh.FileHandler):
 
         Not implemented, it has to be implemented in subclasses.
         """
-        raise NotImplementedError("Subclass must implement abstract method " +\
-            self.__class__.__name__ + ".load_shape_from_file")
+        raise NotImplementedError('Subclass must implement abstract method ' +
+                                  self.__class__.__name__ +
+                                  '.load_shape_from_file')
 
     def parse(self, filename):
         """
-        Method to parse the file `filename`. It returns a matrix with all the coordinates.
+        Method to parse the file `filename`. It returns a matrix with all
+        the coordinates.
 
         :param string filename: name of the input file.
 
-        :return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of
-            the points of the mesh
+        :return: mesh_points: it is a `n_points`-by-3 matrix containing
+            the coordinates of the points of the mesh
         :rtype: numpy.ndarray
 
         """
         self.infile = filename
-
         self.shape = self.load_shape_from_file(filename)
 
         # cycle on the faces to get the control points
@@ -99,11 +107,11 @@ class NurbsHandler(fh.FileHandler):
 
         while faces_explorer.More():
             # performing some conversions to get the right format (BSplineSurface)
-            face = OCC.TopoDS.topods_Face(faces_explorer.Current())
+            face = topods_Face(faces_explorer.Current())
             nurbs_converter = BRepBuilderAPI_NurbsConvert(face)
             nurbs_converter.Perform(face)
             nurbs_face = nurbs_converter.Shape()
-            brep_face = BRep_Tool.Surface(OCC.TopoDS.topods_Face(nurbs_face))
+            brep_face = BRep_Tool.Surface(topods_Face(nurbs_face))
             bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
 
             # openCascade object
@@ -112,24 +120,26 @@ class NurbsHandler(fh.FileHandler):
             # extract the Control Points of each face
             n_poles_u = occ_face.NbUPoles()
             n_poles_v = occ_face.NbVPoles()
-            control_polygon_coordinates = np.zeros(\
+            control_polygon_coordinates = np.zeros(
                 shape=(n_poles_u * n_poles_v, 3))
 
             # cycle over the poles to get their coordinates
             i = 0
             for pole_u_direction in range(n_poles_u):
                 for pole_v_direction in range(n_poles_v):
-                    control_point_coordinates = occ_face.Pole(\
+                    control_point_coordinates = occ_face.Pole(
                         pole_u_direction + 1, pole_v_direction + 1)
-                    control_polygon_coordinates[i, :] = [control_point_coordinates.X(),\
-                        control_point_coordinates.Y(),\
-                        control_point_coordinates.Z()]
+                    control_polygon_coordinates[i, :] = [
+                        control_point_coordinates.X(),
+                        control_point_coordinates.Y(),
+                        control_point_coordinates.Z()
+                    ]
                     i += 1
             # pushing the control points coordinates to the mesh_points array (used for FFD)
             mesh_points = np.append(
                 mesh_points, control_polygon_coordinates, axis=0)
-            control_point_position.append(
-                control_point_position[-1] + n_poles_u * n_poles_v)
+            control_point_position.append(control_point_position[-1] + n_poles_u
+                                          * n_poles_v)
 
             n_faces += 1
             faces_explorer.Next()
@@ -138,15 +148,16 @@ class NurbsHandler(fh.FileHandler):
 
     def write(self, mesh_points, filename, tolerance=None):
         """
-        Writes a output file, called filename, copying all the structures from self.filename but
-        the coordinates. mesh_points is a matrix that contains the new coordinates to
-        write in the output file.
+        Writes a output file, called filename, copying all the structures
+        from self.filename but the coordinates. `mesh_points` is a matrix
+        that contains the new coordinates to write in the output file.
 
-        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing
-            the coordinates of the points of the mesh
+        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix
+            containing the coordinates of the points of the mesh
         :param string filename: name of the output file.
-        :param float tolerance: tolerance for the construction of the faces and wires
-            in the write function. If not given it uses `self.tolerance`.
+        :param float tolerance: tolerance for the construction of the faces
+            and wires in the write function. If not given it uses
+            `self.tolerance`.
         """
         self._check_filename_type(filename)
         self._check_extension(filename)
@@ -164,17 +175,17 @@ class NurbsHandler(fh.FileHandler):
         control_point_position = self._control_point_position
 
         compound_builder = BRep_Builder()
-        compound = OCC.TopoDS.TopoDS_Compound()
+        compound = TopoDS_Compound()
         compound_builder.MakeCompound(compound)
 
         while faces_explorer.More():
             # similar to the parser method
-            face = OCC.TopoDS.topods_Face(faces_explorer.Current())
+            face = topods_Face(faces_explorer.Current())
             nurbs_converter = BRepBuilderAPI_NurbsConvert(face)
             nurbs_converter.Perform(face)
             nurbs_face = nurbs_converter.Shape()
-            face_aux = OCC.TopoDS.topods_Face(nurbs_face)
-            brep_face = BRep_Tool.Surface(OCC.TopoDS.topods_Face(nurbs_face))
+            face_aux = topods_Face(nurbs_face)
+            brep_face = BRep_Tool.Surface(topods_Face(nurbs_face))
             bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
             occ_face = bspline_face.GetObject()
 
@@ -203,11 +214,11 @@ class NurbsHandler(fh.FileHandler):
             # cycle on the edges
             edge_explorer = TopExp_Explorer(nurbs_face, TopAbs_EDGE)
             while edge_explorer.More():
-                edge = OCC.TopoDS.topods_Edge(edge_explorer.Current())
+                edge = topods_Edge(edge_explorer.Current())
                 # edge in the (u,v) coordinates
                 edge_uv_coordinates = BRep_Tool.CurveOnSurface(edge, face_aux)
                 # evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
-                edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(\
+                edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(
                     edge_uv_coordinates[0], brep_face)
                 edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
                 tol.SetTolerance(edge_phis_coordinates, self.tolerance)
@@ -280,16 +291,16 @@ class NurbsHandler(fh.FileHandler):
         face_exp_wire = TopExp_Explorer(topo_face, TopAbs_WIRE)
         # loop on wires per face
         while face_exp_wire.More():
-            twire = OCC.TopoDS.topods_Wire(face_exp_wire.Current())
+            twire = topods_Wire(face_exp_wire.Current())
             wire_exp_edge = TopExp_Explorer(twire, TopAbs_EDGE)
             # loop on edges per wire
             while wire_exp_edge.More():
-                edge = OCC.TopoDS.topods_Edge(wire_exp_edge.Current())
+                edge = topods_Edge(wire_exp_edge.Current())
                 bspline_converter = BRepBuilderAPI_NurbsConvert(edge)
                 bspline_converter.Perform(edge)
                 bspline_tshape_edge = bspline_converter.Shape()
-                h_geom_edge, a, b = BRep_Tool_Curve(
-                    OCC.TopoDS.topods_Edge(bspline_tshape_edge))
+                h_geom_edge = BRep_Tool_Curve(topods_Edge(bspline_tshape_edge))[
+                    0]
                 h_bspline_edge = geomconvert_CurveToBSplineCurve(h_geom_edge)
                 bspline_geom_edge = h_bspline_edge.GetObject()
 
@@ -303,9 +314,7 @@ class NurbsHandler(fh.FileHandler):
                 for i in range(1, nb_poles + 1):
                     ctrlpt = edge_ctrlpts.Value(i)
                     ctrlpt_position = np.array(
-                        [[ctrlpt.Coord(1),
-                          ctrlpt.Coord(2),
-                          ctrlpt.Coord(3)]])
+                        [[ctrlpt.Coord(1), ctrlpt.Coord(2), ctrlpt.Coord(3)]])
                     points_single_edge = np.append(
                         points_single_edge, ctrlpt_position, axis=0)
 
@@ -320,7 +329,7 @@ class NurbsHandler(fh.FileHandler):
         nurbs_converter = BRepBuilderAPI_NurbsConvert(topo_face)
         nurbs_converter.Perform(topo_face)
         nurbs_face = nurbs_converter.Shape()
-        h_geomsurface = BRep_Tool.Surface(OCC.TopoDS.topods.Face(nurbs_face))
+        h_geomsurface = BRep_Tool.Surface(topods.Face(nurbs_face))
         h_bsurface = geomconvert_SurfaceToBSplineSurface(h_geomsurface)
         bsurface = h_bsurface.GetObject()
 
@@ -333,10 +342,8 @@ class NurbsHandler(fh.FileHandler):
         for indice_u_direction in range(1, nb_u + 1):
             for indice_v_direction in range(1, nb_v + 1):
                 ctrlpt = ctrlpts.Value(indice_u_direction, indice_v_direction)
-                ctrlpt_position = np.array(
-                    [[ctrlpt.Coord(1),
-                      ctrlpt.Coord(2),
-                      ctrlpt.Coord(3)]])
+                ctrlpt_position = np.array([[ctrlpt.Coord(1), ctrlpt.Coord(2),
+                                             ctrlpt.Coord(3)]])
                 mesh_points_face = np.append(
                     mesh_points_face, ctrlpt_position, axis=0)
 
@@ -373,14 +380,13 @@ class NurbsHandler(fh.FileHandler):
 
             # cycle on shells
             while shells_explorer.More():
-                topo_shell = OCC.TopoDS.topods.Shell(shells_explorer.Current())
+                topo_shell = topods.Shell(shells_explorer.Current())
                 shell_faces_explorer = TopExp_Explorer(topo_shell, TopAbs_FACE)
                 l_faces = []  # an empty list of faces per shell
 
                 # cycle on faces
                 while shell_faces_explorer.More():
-                    topo_face = OCC.TopoDS.topods.Face(
-                        shell_faces_explorer.Current())
+                    topo_face = topods.Face(shell_faces_explorer.Current())
                     mesh_point, edge_point = self.parse_face(topo_face)
                     l_faces.append((mesh_point, edge_point))
                     shell_faces_explorer.Next()
@@ -395,8 +401,7 @@ class NurbsHandler(fh.FileHandler):
             l_faces = []  # an empty list of faces per shell
 
             while shell_faces_explorer.More():
-                topo_face = OCC.TopoDS.topods.Face(
-                    shell_faces_explorer.Current())
+                topo_face = topods.Face(shell_faces_explorer.Current())
                 mesh_point, edge_point = self.parse_face(topo_face)
                 l_faces.append((mesh_point, edge_point))
                 shell_faces_explorer.Next()
@@ -422,8 +427,8 @@ class NurbsHandler(fh.FileHandler):
         nurbs_converter = BRepBuilderAPI_NurbsConvert(topo_edge)
         nurbs_converter.Perform(topo_edge)
         nurbs_curve = nurbs_converter.Shape()
-        topo_curve = OCC.TopoDS.topods_Edge(nurbs_curve)
-        h_geomcurve, param_min, param_max = BRep_Tool.Curve(topo_curve)
+        topo_curve = topods_Edge(nurbs_curve)
+        h_geomcurve = BRep_Tool.Curve(topo_curve)[0]
         h_bcurve = geomconvert_CurveToBSplineCurve(h_geomcurve)
         bspline_edge_curve = h_bcurve.GetObject()
 
@@ -462,7 +467,7 @@ class NurbsHandler(fh.FileHandler):
         nurbs_converter = BRepBuilderAPI_NurbsConvert(topo_face)
         nurbs_converter.Perform(topo_face)
         nurbs_face = nurbs_converter.Shape()
-        topo_nurbsface = OCC.TopoDS.topods.Face(nurbs_face)
+        topo_nurbsface = topods.Face(nurbs_face)
         h_geomsurface = BRep_Tool.Surface(topo_nurbsface)
         h_bsurface = geomconvert_SurfaceToBSplineSurface(h_geomsurface)
         bsurface = h_bsurface.GetObject()
@@ -484,7 +489,7 @@ class NurbsHandler(fh.FileHandler):
 
         # create modified new face
         new_bspline_tface = BRepBuilderAPI_MakeFace()
-        toler = OCC.Precision.precision_Confusion()
+        toler = precision_Confusion()
         new_bspline_tface.Init(bsurface.GetHandle(), False, toler)
 
         # cycle on the wires
@@ -494,7 +499,7 @@ class NurbsHandler(fh.FileHandler):
 
         while face_wires_explorer.More():
             # get old wire
-            twire = OCC.TopoDS.topods_Wire(face_wires_explorer.Current())
+            twire = topods_Wire(face_wires_explorer.Current())
 
             # cycle on the edges
             ind_edge = 0
@@ -509,7 +514,7 @@ class NurbsHandler(fh.FileHandler):
             deformed_edges = []
             # cycle on the edges
             while wire_explorer_edge.More():
-                tedge = OCC.TopoDS.topods_Edge(wire_explorer_edge.Current())
+                tedge = topods_Edge(wire_explorer_edge.Current())
                 new_bspline_tedge = self.write_edge(
                     list_points_edge[ind_edge_total], tedge)
 
@@ -543,8 +548,8 @@ class NurbsHandler(fh.FileHandler):
                         stol.SetTolerance(new_edge_toadd, toledge * 10.0)
                         new_bspline_twire.Add(new_edge_toadd)
                 else:
-                    deformed_edge_revers = deformed_edges[
-                        np.abs(deformed_edge_i) - 1]
+                    deformed_edge_revers = deformed_edges[np.abs(
+                        deformed_edge_i) - 1]
                     stol.SetTolerance(deformed_edge_revers, toledge)
                     new_bspline_twire.Add(deformed_edge_revers)
                     if new_bspline_twire.Error() != 0:
@@ -554,7 +559,7 @@ class NurbsHandler(fh.FileHandler):
             new_bspline_tface.Add(new_bspline_twire.Wire())
             face_wires_explorer.Next()
 
-        return OCC.TopoDS.topods.Face(new_bspline_tface.Face())
+        return topods.Face(new_bspline_tface.Face())
 
     @staticmethod
     def combine_faces(compshape, sew_tolerance):
@@ -572,7 +577,7 @@ class NurbsHandler(fh.FileHandler):
         n_faces = 0
         # cycle on Faces
         while face_explorers.More():
-            tface = OCC.TopoDS.topods.Face(face_explorers.Current())
+            tface = topods.Face(face_explorers.Current())
             sew.Add(tface)
             offsew.Add(tface)
             n_faces += 1
@@ -584,7 +589,7 @@ class NurbsHandler(fh.FileHandler):
         shell = sew.SewedShape()
         sew.Dump()
 
-        shell = OCC.TopoDS.topods.Shell(shell)
+        shell = topods.Shell(shell)
         shell_fixer = ShapeFix_Shell()
         shell_fixer.FixFaceOrientation(shell)
 
@@ -595,7 +600,7 @@ class NurbsHandler(fh.FileHandler):
 
         new_shell = shell_fixer.Shell()
 
-        if OCC.BRepAlgo.brepalgo_IsValid(new_shell):
+        if brepalgo_IsValid(new_shell):
             print "Shell valid! "
         else:
             print "Shell failed! "
@@ -617,7 +622,7 @@ class NurbsHandler(fh.FileHandler):
         self.outfile = filename
         # global compound containing multiple shells
         global_compound_builder = BRep_Builder()
-        global_comp = OCC.TopoDS.TopoDS_Compound()
+        global_comp = TopoDS_Compound()
         global_compound_builder.MakeCompound(global_comp)
 
         if self.check_topo == 0:
@@ -627,11 +632,10 @@ class NurbsHandler(fh.FileHandler):
             ishell = 0
 
             while shape_shells_explorer.More():
-                per_shell = OCC.TopoDS.topods_Shell(
-                    shape_shells_explorer.Current())
+                per_shell = topods_Shell(shape_shells_explorer.Current())
                 # a local compound containing a shell
                 compound_builder = BRep_Builder()
-                comp = OCC.TopoDS.TopoDS_Compound()
+                comp = TopoDS_Compound()
                 compound_builder.MakeCompound(comp)
 
                 # cycle on faces
@@ -639,7 +643,7 @@ class NurbsHandler(fh.FileHandler):
                     per_shell.Oriented(TopAbs_FORWARD), TopAbs_FACE)
                 iface = 0
                 while faces_explorer.More():
-                    topoface = OCC.TopoDS.topods.Face(faces_explorer.Current())
+                    topoface = topods.Face(faces_explorer.Current())
                     newface = self.write_face(l_shells[ishell][iface][0],
                                               l_shells[ishell][iface][1],
                                               topoface, tol)
@@ -650,7 +654,7 @@ class NurbsHandler(fh.FileHandler):
                     faces_explorer.Next()
 
                 new_shell = self.combine_faces(comp, 0.01)
-                itype = OCC.TopoDS.TopoDS_Shape.ShapeType(new_shell)
+                itype = TopoDS_Shape.ShapeType(new_shell)
                 # add the new shell to the global compound
                 global_compound_builder.Add(global_comp, new_shell)
 
@@ -664,7 +668,7 @@ class NurbsHandler(fh.FileHandler):
             # cycle on faces
             # a local compound containing a shell
             compound_builder = BRep_Builder()
-            comp = OCC.TopoDS.TopoDS_Compound()
+            comp = TopoDS_Compound()
             compound_builder.MakeCompound(comp)
 
             # cycle on faces
@@ -672,7 +676,7 @@ class NurbsHandler(fh.FileHandler):
                 self.shape.Oriented(TopAbs_FORWARD), TopAbs_FACE)
             iface = 0
             while faces_explorer.More():
-                topoface = OCC.TopoDS.topods.Face(faces_explorer.Current())
+                topoface = topods.Face(faces_explorer.Current())
                 newface = self.write_face(l_shells[0][iface][0],
                                           l_shells[0][iface][1], topoface, tol)
 
@@ -682,7 +686,7 @@ class NurbsHandler(fh.FileHandler):
                 faces_explorer.Next()
 
             new_shell = self.combine_faces(comp, 0.01)
-            itype = OCC.TopoDS.TopoDS_Shape.ShapeType(new_shell)
+            itype = TopoDS_Shape.ShapeType(new_shell)
             # add the new shell to the global compound
             global_compound_builder.Add(global_comp, new_shell)
 
@@ -703,13 +707,15 @@ class NurbsHandler(fh.FileHandler):
 
     def plot(self, plot_file=None, save_fig=False):
         """
-        Method to plot a file. If `plot_file` is not given it plots `self.shape`.
+        Method to plot a file. If `plot_file` is not given it plots
+        `self.shape`.
 
         :param string plot_file: the filename you want to plot.
-        :param bool save_fig: a flag to save the figure in png or not. If True the
-            plot is not shown.
+        :param bool save_fig: a flag to save the figure in png or not.
+            If True the plot is not shown.
 
-        :return: figure: matlplotlib structure for the figure of the chosen geometry
+        :return: figure: matlplotlib structure for the figure of the
+            chosen geometry
         :rtype: matplotlib.pyplot.figure
         """
         if plot_file is None:
@@ -764,7 +770,8 @@ class NurbsHandler(fh.FileHandler):
 
     def show(self, show_file=None):
         """
-        Method to show a file. If `show_file` is not given it plots `self.shape`.
+        Method to show a file. If `show_file` is not given it plots
+        `self.shape`.
 
         :param string show_file: the filename you want to show.
         """

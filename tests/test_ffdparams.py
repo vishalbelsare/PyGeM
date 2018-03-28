@@ -33,18 +33,18 @@ class TestFFDParameters(TestCase):
 
     def test_class_members_default_array_mu_x(self):
         params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.array_mu_x,
-                                             np.zeros((2, 2, 2)))
+        np.testing.assert_array_almost_equal(params.array_mu_x, np.zeros(
+            (2, 2, 2)))
 
     def test_class_members_default_array_mu_y(self):
         params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.array_mu_y,
-                                             np.zeros((2, 2, 2)))
+        np.testing.assert_array_almost_equal(params.array_mu_y, np.zeros(
+            (2, 2, 2)))
 
     def test_class_members_default_array_mu_z(self):
         params = FFDParameters()
-        np.testing.assert_array_almost_equal(params.array_mu_z,
-                                             np.zeros((2, 2, 2)))
+        np.testing.assert_array_almost_equal(params.array_mu_z, np.zeros(
+            (2, 2, 2)))
 
     def test_class_members_default_psi_mapping(self):
         params = FFDParameters()
@@ -73,18 +73,18 @@ class TestFFDParameters(TestCase):
 
     def test_class_members_generic_array_mu_x(self):
         params = FFDParameters([2, 3, 5])
-        np.testing.assert_array_almost_equal(params.array_mu_x,
-                                             np.zeros((2, 3, 5)))
+        np.testing.assert_array_almost_equal(params.array_mu_x, np.zeros(
+            (2, 3, 5)))
 
     def test_class_members_generic_array_mu_y(self):
         params = FFDParameters([2, 3, 5])
-        np.testing.assert_array_almost_equal(params.array_mu_y,
-                                             np.zeros((2, 3, 5)))
+        np.testing.assert_array_almost_equal(params.array_mu_y, np.zeros(
+            (2, 3, 5)))
 
     def test_class_members_generic_array_mu_z(self):
         params = FFDParameters([2, 3, 5])
-        np.testing.assert_array_almost_equal(params.array_mu_z,
-                                             np.zeros((2, 3, 5)))
+        np.testing.assert_array_almost_equal(params.array_mu_z, np.zeros(
+            (2, 3, 5)))
 
     def test_read_parameters_conversion_unit(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
@@ -126,18 +126,16 @@ class TestFFDParameters(TestCase):
     def test_read_parameters_array_mu_y(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        array_mu_y_exact = np.array(
-            [0., 0., 0.5555555555, 0., 0., 0., 0., 0., -1., 0., 0.,
-             0.]).reshape((3, 2, 2))
+        array_mu_y_exact = np.array([0., 0., 0.5555555555, 0., 0., 0., 0., 0.,
+                                     -1., 0., 0., 0.]).reshape((3, 2, 2))
         np.testing.assert_array_almost_equal(params.array_mu_y,
                                              array_mu_y_exact)
 
     def test_read_parameters_array_mu_z(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        array_mu_z_exact = np.array(
-            [0., -0.2, 0., -0.45622985, 0., 0., 0., 0., -1.22, 0., -1.,
-             0.]).reshape((3, 2, 2))
+        array_mu_z_exact = np.array([0., -0.2, 0., -0.45622985, 0., 0., 0., 0.,
+                                     -1.22, 0., -1., 0.]).reshape((3, 2, 2))
         np.testing.assert_array_almost_equal(params.array_mu_z,
                                              array_mu_z_exact)
 

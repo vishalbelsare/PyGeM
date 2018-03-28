@@ -123,8 +123,8 @@ class FFDParameters(object):
         :rtype: numpy.ndarray
         """
         return self.origin_box + np.vstack([
-            np.zeros((1, 3)),
-            self.rotation_matrix.dot(np.diag(self.lenght_box)).T
+            np.zeros(
+                (1, 3)), self.rotation_matrix.dot(np.diag(self.lenght_box)).T
         ])
 
     def read_parameters(self, filename='parameters.prm'):
@@ -203,15 +203,16 @@ class FFDParameters(object):
         output_string += ' points in each direction (x, y, z).\n'
         output_string += '# For example, to create a 2 x 3 x 2 grid, use the'
         output_string += ' following: n control points: 2, 3, 2\n'
-        output_string += 'n control points x: ' + str(
-            self.n_control_points[0]) + '\n'
-        output_string += 'n control points y: ' + str(
-            self.n_control_points[1]) + '\n'
-        output_string += 'n control points z: ' + str(
-            self.n_control_points[2]) + '\n'
+        output_string += 'n control points x: ' + str(self.n_control_points[
+            0]) + '\n'
+        output_string += 'n control points y: ' + str(self.n_control_points[
+            1]) + '\n'
+        output_string += 'n control points z: ' + str(self.n_control_points[
+            2]) + '\n'
 
         output_string += '\n# box lenght indicates the length of the FFD '
-        output_string += 'bounding box along the three canonical directions (x, y, z).\n'
+        output_string += 'bounding box along the three canonical directions '
+        output_string += '(x, y, z).\n'
 
         output_string += '# It uses the local coordinate system.\n'
         output_string += '# For example to create a 2 x 1.5 x 3 meters box '
@@ -221,26 +222,32 @@ class FFDParameters(object):
         output_string += 'box lenght y: ' + str(self.lenght_box[1]) + '\n'
         output_string += 'box lenght z: ' + str(self.lenght_box[2]) + '\n'
 
-        output_string += '\n# box origin indicates the x, y, and z coordinates of '
-        output_string += 'the origin of the FFD bounding box. That is center of\n'
+        output_string += '\n# box origin indicates the x, y, and z coordinates '
+        output_string += 'of the origin of the FFD bounding box. That is '
+        output_string += 'center of\n'
 
         output_string += '# rotation of the bounding box. It corresponds to '
         output_string += 'the point coordinates with position [0][0][0].\n'
 
-        output_string += '# See section "Parameters weights" for more details.\n'
-        output_string += '# For example, if the origin is equal to 0., 0., 0., use '
-        output_string += 'the following: origin box: 0., 0., 0.\n'
+        output_string += '# See section "Parameters weights" for more '
+        output_string += 'details.\n'
+        output_string += '# For example, if the origin is equal to 0., 0., 0., '
+        output_string += 'use the following: origin box: 0., 0., 0.\n'
 
         output_string += 'box origin x: ' + str(self.origin_box[0]) + '\n'
         output_string += 'box origin y: ' + str(self.origin_box[1]) + '\n'
         output_string += 'box origin z: ' + str(self.origin_box[2]) + '\n'
 
         output_string += '\n# rotation angle indicates the rotation angle '
-        output_string += 'around the x, y, and z axis of the FFD bounding box in degrees.\n'
+        output_string += 'around the x, y, and z axis of the FFD bounding box '
+        output_string += 'in degrees.\n'
 
-        output_string += '# The rotation is done with respect to the box origin.\n'
-        output_string += '# For example, to rotate the box by 2 deg along the z '
-        output_string += 'direction, use the following: rotation angle: 0., 0., 2.\n'
+        output_string += '# The rotation is done with respect to the box '
+        output_string += 'origin.\n'
+        output_string += '# For example, to rotate the box by 2 deg along '
+        output_string += 'the z '
+        output_string += 'direction, use the following: rotation angle: '
+        output_string += '0., 0., 2.\n'
 
         output_string += 'rotation angle x: ' + str(self.rot_angle[0]) + '\n'
         output_string += 'rotation angle y: ' + str(self.rot_angle[1]) + '\n'
@@ -254,8 +261,8 @@ class FFDParameters(object):
         output_string += '# For example with a 2x2x2 grid of control points we '
         output_string += 'have to fill a 2x2x2 matrix of weights.\n'
 
-        output_string += '# If a weight is equal to zero you can discard the line '
-        output_string += 'since the default is zero.\n'
+        output_string += '# If a weight is equal to zero you can discard the '
+        output_string += 'line since the default is zero.\n'
 
         output_string += '#\n'
         output_string += '# | x index | y index | z index | weight |\n'
@@ -275,8 +282,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(
-                            self.array_mu_x[i][j][k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(self.array_mu_x[i][j][
+                            k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter y collects the displacements along y, '
@@ -288,8 +295,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(
-                            self.array_mu_y[i][j][k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(self.array_mu_y[i][j][
+                            k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter z collects the displacements along z, '
@@ -301,8 +308,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(
-                            self.array_mu_z[i][j][k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(self.array_mu_z[i][j][
+                            k]) + '\n'
                     offset = 13
 
         with open(filename, 'w') as f:
@@ -352,29 +359,28 @@ class FFDParameters(object):
         y = np.linspace(0, self.lenght_box[1], self.n_control_points[1])
         z = np.linspace(0, self.lenght_box[2], self.n_control_points[2])
 
-        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(
-            y, x, z)
+        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(y, x,
+                                                                           z)
 
         if write_deformed:
             box_points = np.array([
-                lattice_x_coords.ravel() +
-                self.array_mu_x.ravel() * self.lenght_box[0],
-                lattice_y_coords.ravel() +
+                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
+                self.lenght_box[0], lattice_y_coords.ravel() +
                 self.array_mu_y.ravel() * self.lenght_box[1],
-                lattice_z_coords.ravel() +
-                self.array_mu_z.ravel() * self.lenght_box[2]
+                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
+                self.lenght_box[2]
             ])
         else:
             box_points = np.array([
-                lattice_x_coords.ravel(),
-                lattice_y_coords.ravel(),
+                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
                 lattice_z_coords.ravel()
             ])
 
         n_rows = box_points.shape[1]
 
-        box_points = np.dot(self.rotation_matrix, box_points) + np.transpose(
-            np.tile(self.origin_box, (n_rows, 1)))
+        box_points = np.dot(
+            self.rotation_matrix,
+            box_points) + np.transpose(np.tile(self.origin_box, (n_rows, 1)))
 
         points = vtk.vtkPoints()
 
@@ -386,10 +392,7 @@ class FFDParameters(object):
 
         writer = vtk.vtkPolyDataWriter()
         writer.SetFileName(filename)
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            writer.SetInput(data)
-        else:
-            writer.SetInputData(data)
+        writer.SetInputData(data)
         writer.Write()
 
     def build_bounding_box(self,

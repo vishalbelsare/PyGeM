@@ -41,23 +41,24 @@ def write_bounding_box(parameters, outfile, write_deformed=True):
 
     if write_deformed:
         box_points = np.array([
-            lattice_x_coords.ravel() + parameters.array_mu_x.ravel() *
-            parameters.lenght_box[0], lattice_y_coords.ravel() +
+            lattice_x_coords.ravel() +
+            parameters.array_mu_x.ravel() * parameters.lenght_box[0],
+            lattice_y_coords.ravel() +
             parameters.array_mu_y.ravel() * parameters.lenght_box[1],
-            lattice_z_coords.ravel() + parameters.array_mu_z.ravel() *
-            parameters.lenght_box[2]
+            lattice_z_coords.ravel() +
+            parameters.array_mu_z.ravel() * parameters.lenght_box[2]
         ])
     else:
         box_points = np.array([
-            lattice_x_coords.ravel(), lattice_y_coords.ravel(),
+            lattice_x_coords.ravel(),
+            lattice_y_coords.ravel(),
             lattice_z_coords.ravel()
         ])
 
     n_rows = box_points.shape[1]
 
-    box_points = np.dot(
-        parameters.rotation_matrix,
-        box_points) + np.transpose(np.tile(parameters.origin_box, (n_rows, 1)))
+    box_points = np.dot(parameters.rotation_matrix, box_points) + np.transpose(
+        np.tile(parameters.origin_box, (n_rows, 1)))
 
     # step necessary to set the correct order to the box points for
     # vtkStructuredGrid. Data in vtkStructuredGrid are ordered with

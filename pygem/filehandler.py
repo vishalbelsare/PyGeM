@@ -50,8 +50,8 @@ class FileHandler(object):
         if file_ext not in self.extensions:
             raise ValueError(
                 'The input file does not have the proper extension. \
-                It is {0!s}, instead of {1!s}.'
-                .format(file_ext, self.extensions))
+                It is {0!s}, instead of {1!s}.'.format(file_ext,
+                                                       self.extensions))
 
     @staticmethod
     def _check_filename_type(filename):

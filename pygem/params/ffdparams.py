@@ -123,8 +123,8 @@ class FFDParameters(object):
         :rtype: numpy.ndarray
         """
         return self.origin_box + np.vstack([
-            np.zeros(
-                (1, 3)), self.rotation_matrix.dot(np.diag(self.lenght_box)).T
+            np.zeros((1, 3)),
+            self.rotation_matrix.dot(np.diag(self.lenght_box)).T
         ])
 
     def read_parameters(self, filename='parameters.prm'):
@@ -203,12 +203,12 @@ class FFDParameters(object):
         output_string += ' points in each direction (x, y, z).\n'
         output_string += '# For example, to create a 2 x 3 x 2 grid, use the'
         output_string += ' following: n control points: 2, 3, 2\n'
-        output_string += 'n control points x: ' + str(self.n_control_points[
-            0]) + '\n'
-        output_string += 'n control points y: ' + str(self.n_control_points[
-            1]) + '\n'
-        output_string += 'n control points z: ' + str(self.n_control_points[
-            2]) + '\n'
+        output_string += 'n control points x: ' + str(
+            self.n_control_points[0]) + '\n'
+        output_string += 'n control points y: ' + str(
+            self.n_control_points[1]) + '\n'
+        output_string += 'n control points z: ' + str(
+            self.n_control_points[2]) + '\n'
 
         output_string += '\n# box lenght indicates the length of the FFD '
         output_string += 'bounding box along the three canonical directions '
@@ -282,8 +282,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_x[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_x[i][j][k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter y collects the displacements along y, '
@@ -295,8 +295,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_y[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_y[i][j][k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter z collects the displacements along z, '
@@ -308,8 +308,8 @@ class FFDParameters(object):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_z[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_z[i][j][k]) + '\n'
                     offset = 13
 
         with open(filename, 'w') as f:
@@ -359,28 +359,29 @@ class FFDParameters(object):
         y = np.linspace(0, self.lenght_box[1], self.n_control_points[1])
         z = np.linspace(0, self.lenght_box[2], self.n_control_points[2])
 
-        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(y, x,
-                                                                           z)
+        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(
+            y, x, z)
 
         if write_deformed:
             box_points = np.array([
-                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
-                self.lenght_box[0], lattice_y_coords.ravel() +
+                lattice_x_coords.ravel() +
+                self.array_mu_x.ravel() * self.lenght_box[0],
+                lattice_y_coords.ravel() +
                 self.array_mu_y.ravel() * self.lenght_box[1],
-                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
-                self.lenght_box[2]
+                lattice_z_coords.ravel() +
+                self.array_mu_z.ravel() * self.lenght_box[2]
             ])
         else:
             box_points = np.array([
-                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
+                lattice_x_coords.ravel(),
+                lattice_y_coords.ravel(),
                 lattice_z_coords.ravel()
             ])
 
         n_rows = box_points.shape[1]
 
-        box_points = np.dot(
-            self.rotation_matrix,
-            box_points) + np.transpose(np.tile(self.origin_box, (n_rows, 1)))
+        box_points = np.dot(self.rotation_matrix, box_points) + np.transpose(
+            np.tile(self.origin_box, (n_rows, 1)))
 
         points = vtk.vtkPoints()
 

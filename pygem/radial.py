@@ -108,14 +108,18 @@ class RBF(object):
         self.modified_mesh_points = None
 
         self.bases = {
-            'gaussian_spline': self.gaussian_spline,
+            'gaussian_spline':
+            self.gaussian_spline,
             'multi_quadratic_biharmonic_spline':
             self.multi_quadratic_biharmonic_spline,
             'inv_multi_quadratic_biharmonic_spline':
             self.inv_multi_quadratic_biharmonic_spline,
-            'thin_plate_spline': self.thin_plate_spline,
-            'beckert_wendland_c2_basis': self.beckert_wendland_c2_basis,
-            'polyharmonic_spline': self.polyharmonic_spline
+            'thin_plate_spline':
+            self.thin_plate_spline,
+            'beckert_wendland_c2_basis':
+            self.beckert_wendland_c2_basis,
+            'polyharmonic_spline':
+            self.polyharmonic_spline
         }
 
         # to make the str callable we have to use a dictionary with all the
@@ -315,9 +319,12 @@ class RBF(object):
         dim = X.shape[1]
         identity = np.ones((n_points, 1))
         dist = self._distance_matrix(X, X)
-        H = np.bmat([[dist, identity, X], [identity.T, np.zeros(
-            (1, 1)), np.zeros((1, dim))], [X.T, np.zeros((dim, 1)), np.zeros(
-                (dim, dim))]])
+        H = np.bmat([[dist, identity,
+                      X], [identity.T,
+                           np.zeros((1, 1)),
+                           np.zeros((1, dim))],
+                     [X.T, np.zeros((dim, 1)),
+                      np.zeros((dim, dim))]])
         rhs = np.bmat([[Y], [np.zeros((1, dim))], [np.zeros((dim, dim))]])
         weights = np.linalg.solve(H, rhs)
         return weights

@@ -98,13 +98,13 @@ class FFD(object):
             self.original_mesh_points - translation, transformation)
 
         # select mesh points inside bounding box
-        mesh_points = reference_frame_mesh_points[(
-            reference_frame_mesh_points[:, 0] >= 0.) & (
-                reference_frame_mesh_points[:, 0] <= 1.) & (
-                    reference_frame_mesh_points[:, 1] >= 0.) & (
-                        reference_frame_mesh_points[:, 1] <= 1.) & (
-                            reference_frame_mesh_points[:, 2] >= 0.) & (
-                                reference_frame_mesh_points[:, 2] <= 1.)]
+        mesh_points = reference_frame_mesh_points[
+            (reference_frame_mesh_points[:, 0] >= 0.)
+            & (reference_frame_mesh_points[:, 0] <= 1.) &
+            (reference_frame_mesh_points[:, 1] >= 0.) &
+            (reference_frame_mesh_points[:, 1] <= 1.) &
+            (reference_frame_mesh_points[:, 2] >= 0.) &
+            (reference_frame_mesh_points[:, 2] <= 1.)]
         (n_rows_mesh, n_cols_mesh) = mesh_points.shape
 
         # Initialization. In order to exploit the contiguity in memory the
@@ -156,12 +156,13 @@ class FFD(object):
 
         # merge non-shifted mesh points with shifted ones
         self.modified_mesh_points = np.copy(self.original_mesh_points)
-        self.modified_mesh_points[(reference_frame_mesh_points[:, 0] >= 0.) & (
-            reference_frame_mesh_points[:, 0] <= 1.
-        ) & (reference_frame_mesh_points[:, 1] >= 0.) & (
-            reference_frame_mesh_points[:, 1] <= 1.) & (
-                reference_frame_mesh_points[:, 2] >= 0.) & (
-                    reference_frame_mesh_points[:, 2] <= 1.)] = new_mesh_points
+        self.modified_mesh_points[(reference_frame_mesh_points[:, 0] >= 0.)
+                                  & (reference_frame_mesh_points[:, 0] <= 1.) &
+                                  (reference_frame_mesh_points[:, 1] >= 0.) &
+                                  (reference_frame_mesh_points[:, 1] <= 1.) &
+                                  (reference_frame_mesh_points[:, 2] >= 0.) &
+                                  (reference_frame_mesh_points[:, 2] <=
+                                   1.)] = new_mesh_points
 
     @staticmethod
     def _transform_points(original_points, transformation):

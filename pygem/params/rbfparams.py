@@ -88,7 +88,9 @@ class RBFParameters(object):
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
             self.original_control_points[i] = np.array(
-                [float(values[0]), float(values[1]), float(values[2])])
+                [float(values[0]),
+                 float(values[1]),
+                 float(values[2])])
 
         mod_points = config.get('Control points', 'deformed control points')
         lines = mod_points.split('\n')
@@ -103,7 +105,9 @@ class RBFParameters(object):
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
             self.deformed_control_points[i] = np.array(
-                [float(values[0]), float(values[1]), float(values[2])])
+                [float(values[0]),
+                 float(values[1]),
+                 float(values[2])])
 
     def write_parameters(self, filename='parameters_rbf.prm'):
         """
@@ -116,55 +120,63 @@ class RBFParameters(object):
         if not isinstance(filename, str):
             raise TypeError("filename must be a string")
 
-        with open(filename, 'w') as output_file:
-            output_file.write('\n[Radial Basis Functions]\n')
-            output_file.write(
-                '# This section describes the radial basis functions shape.\n')
+        output_string = ""
+        output_string += '\n[Radial Basis Functions]\n'
+        output_string += '# This section describes the radial basis functions'
+        output_string += ' shape.\n'
 
-            output_file.write(
-                '\n# basis funtion is the name of the basis functions to use in the transformation. The functions\n')
-            output_file.write(
-                '# implemented so far are: gaussian_spline, multi_quadratic_biharmonic_spline,\n')
-            output_file.write(
-                '# inv_multi_quadratic_biharmonic_spline, thin_plate_spline, beckert_wendland_c2_basis, polyharmonic_spline.\n')
-            output_file.write(
-                '# For a comprehensive list with details see the class RBF.\n')
-            output_file.write('basis function: ' + str(self.basis) + '\n')
+        output_string += '\n# basis funtion is the name of the basis functions'
+        output_string += ' to use in the transformation. The functions\n'
+        output_string += '# implemented so far are: gaussian_spline,'
+        output_string += ' multi_quadratic_biharmonic_spline,\n'
+        output_string += '# inv_multi_quadratic_biharmonic_spline,'
+        output_string += ' thin_plate_spline, beckert_wendland_c2_basis,'
+        output_string += ' polyharmonic_spline.\n'
+        output_string += '# For a comprehensive list with details see the'
+        output_string += ' class RBF.\n'
+        output_string += 'basis function: {}\n'.format(str(self.basis))
 
-            output_file.write(
-                '\n# radius is the scaling parameter r that affects the shape of the basis functions. See the documentation\n')
-            output_file.write('# of the class RBF for details.\n')
-            output_file.write('radius: ' + str(self.radius) + '\n')
-            output_file.write(
-                '\n# The power parameter k for polyharmonic spline')
-            output_file.write('\n# See the documentation for details\n')
-            output_file.write('power: ' + str(self.power) + '\n')
+        output_string += '\n# radius is the scaling parameter r that affects'
+        output_string += ' the shape of the basis functions. See the'
+        output_string += ' documentation\n'
+        output_string += '# of the class RBF for details.\n'
+        output_string += 'radius: {}\n'.format(str(self.radius))
 
-            output_file.write('\n\n[Control points]\n')
-            output_file.write(
-                '# This section describes the RBF control points.\n')
+        output_string += '\n# The power parameter k for polyharmonic spline'
+        output_string += '\n# See the documentation for details\n'
+        output_string += 'power: {}\n'.format(self.power)
 
-            output_file.write(
-                '\n# original control points collects the coordinates of the interpolation control points before the deformation.\n')
-            output_file.write('original control points:')
-            offset = 1
-            for i in range(0, self.n_control_points):
-                output_file.write(offset * ' ' + str(
-                    self.original_control_points[i][0]) + '   ' + str(
-                        self.original_control_points[i][1]) + '   ' + str(
-                            self.original_control_points[i][2]) + '\n')
-                offset = 25
+        output_string += '\n\n[Control points]\n'
+        output_string += '# This section describes the RBF control points.\n'
 
-            output_file.write(
-                '\n# deformed control points collects the coordinates of the interpolation control points after the deformation.\n')
-            output_file.write('deformed control points:')
-            offset = 1
-            for i in range(0, self.n_control_points):
-                output_file.write(offset * ' ' + str(
-                    self.deformed_control_points[i][0]) + '   ' + str(
-                        self.deformed_control_points[i][1]) + '   ' + str(
-                            self.deformed_control_points[i][2]) + '\n')
-                offset = 25
+        output_string += '\n# original control points collects the coordinates'
+        output_string += ' of the interpolation control points before the'
+        output_string += ' deformation.\n'
+
+        output_string += 'original control points:'
+        offset = 1
+        for i in range(0, self.n_control_points):
+            output_string += offset * ' ' + str(
+                self.original_control_points[i][0]) + '   ' + str(
+                    self.original_control_points[i][1]) + '   ' + str(
+                        self.original_control_points[i][2]) + '\n'
+            offset = 25
+
+        output_string += '\n# deformed control points collects the coordinates'
+        output_string += ' of the interpolation control points after the'
+        output_string += ' deformation.\n'
+
+        output_string += 'deformed control points:'
+        offset = 1
+        for i in range(0, self.n_control_points):
+            output_string += offset * ' ' + str(
+                self.deformed_control_points[i][0]) + '   ' + str(
+                    self.deformed_control_points[i][1]) + '   ' + str(
+                        self.deformed_control_points[i][2]) + '\n'
+            offset = 25
+
+        with open(filename, 'w') as f:
+            f.write(output_string)
 
     def __str__(self):
         """

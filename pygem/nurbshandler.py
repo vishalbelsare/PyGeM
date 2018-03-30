@@ -79,9 +79,9 @@ class NurbsHandler(fh.FileHandler):
 
         Not implemented, it has to be implemented in subclasses.
         """
-        raise NotImplementedError('Subclass must implement abstract method ' +
-                                  self.__class__.__name__ +
-                                  '.load_shape_from_file')
+        raise NotImplementedError(
+            'Subclass must implement abstract method ' +
+            self.__class__.__name__ + '.load_shape_from_file')
 
     def parse(self, filename):
         """
@@ -138,8 +138,8 @@ class NurbsHandler(fh.FileHandler):
             # pushing the control points coordinates to the mesh_points array (used for FFD)
             mesh_points = np.append(
                 mesh_points, control_polygon_coordinates, axis=0)
-            control_point_position.append(control_point_position[-1] + n_poles_u
-                                          * n_poles_v)
+            control_point_position.append(
+                control_point_position[-1] + n_poles_u * n_poles_v)
 
             n_faces += 1
             faces_explorer.Next()
@@ -299,8 +299,8 @@ class NurbsHandler(fh.FileHandler):
                 bspline_converter = BRepBuilderAPI_NurbsConvert(edge)
                 bspline_converter.Perform(edge)
                 bspline_tshape_edge = bspline_converter.Shape()
-                h_geom_edge = BRep_Tool_Curve(topods_Edge(bspline_tshape_edge))[
-                    0]
+                h_geom_edge = BRep_Tool_Curve(
+                    topods_Edge(bspline_tshape_edge))[0]
                 h_bspline_edge = geomconvert_CurveToBSplineCurve(h_geom_edge)
                 bspline_geom_edge = h_bspline_edge.GetObject()
 
@@ -314,7 +314,9 @@ class NurbsHandler(fh.FileHandler):
                 for i in range(1, nb_poles + 1):
                     ctrlpt = edge_ctrlpts.Value(i)
                     ctrlpt_position = np.array(
-                        [[ctrlpt.Coord(1), ctrlpt.Coord(2), ctrlpt.Coord(3)]])
+                        [[ctrlpt.Coord(1),
+                          ctrlpt.Coord(2),
+                          ctrlpt.Coord(3)]])
                     points_single_edge = np.append(
                         points_single_edge, ctrlpt_position, axis=0)
 
@@ -342,8 +344,10 @@ class NurbsHandler(fh.FileHandler):
         for indice_u_direction in range(1, nb_u + 1):
             for indice_v_direction in range(1, nb_v + 1):
                 ctrlpt = ctrlpts.Value(indice_u_direction, indice_v_direction)
-                ctrlpt_position = np.array([[ctrlpt.Coord(1), ctrlpt.Coord(2),
-                                             ctrlpt.Coord(3)]])
+                ctrlpt_position = np.array(
+                    [[ctrlpt.Coord(1),
+                      ctrlpt.Coord(2),
+                      ctrlpt.Coord(3)]])
                 mesh_points_face = np.append(
                     mesh_points_face, ctrlpt_position, axis=0)
 
@@ -548,8 +552,8 @@ class NurbsHandler(fh.FileHandler):
                         stol.SetTolerance(new_edge_toadd, toledge * 10.0)
                         new_bspline_twire.Add(new_edge_toadd)
                 else:
-                    deformed_edge_revers = deformed_edges[np.abs(
-                        deformed_edge_i) - 1]
+                    deformed_edge_revers = deformed_edges[
+                        np.abs(deformed_edge_i) - 1]
                     stol.SetTolerance(deformed_edge_revers, toledge)
                     new_bspline_twire.Add(deformed_edge_revers)
                     if new_bspline_twire.Error() != 0:

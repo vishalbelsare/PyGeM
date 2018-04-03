@@ -12,7 +12,8 @@ RBFParameters
 	RBFParameters.n_control_points
 	RBFParameters.read_parameters
 	RBFParameters.write_parameters
-	RBFParameters.save
+	RBFParameters.save_points
+	RBFParameters.plot_points
 
 .. autoclass:: RBFParameters
 	:members:

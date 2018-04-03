@@ -15,7 +15,7 @@ FFDParameters
     FFDParameters.position_vertices
     FFDParameters.read_parameters
     FFDParameters.write_parameters
-    FFDParameters.save
+    FFDParameters.save_points
     FFDParameters.build_bounding_box
     FFDParameters.reset_deformation
 

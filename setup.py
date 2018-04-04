@@ -11,11 +11,11 @@ def readme():
 
 setup(
     name='pygem',
-    version='0.2',
+    version='1.1',
     description='Tools for gemetrical morphing.',
     long_description=readme(),
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
         'Intended Audience :: Science/Research',
@@ -28,7 +28,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     install_requires=[
-        'numpy', 'numpy-stl', 'scipy', 'matplotlib', 'vtk', 'enum34',
+        'numpy', 'numpy-stl', 'enum34', 'scipy', 'matplotlib', 'vtk',
         'Sphinx==1.4', 'sphinx_rtd_theme'
     ],
     test_suite='nose.collector',

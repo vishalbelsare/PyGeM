@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.unvhandler.UnvHandler.write &mdash; PyGeM 1.0 documentation</title>
+  <title>pygem.unvhandler.UnvHandler.write &mdash; PyGeM 1.1 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,10 +32,7 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="PyGeM 1.0 documentation" href="../index.html"/>
+    <link rel="top" title="PyGeM 1.1 documentation" href="../index.html"/>
         <link rel="up" title="Unvhandler" href="../unvhandler.html"/>
         <link rel="next" title="Nurbshandler" href="../nurbshandler.html"/>
         <link rel="prev" title="pygem.unvhandler.UnvHandler.parse" href="pygem.unvhandler.UnvHandler.parse.html"/> 
@@ -45,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -85,12 +85,18 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../code.html">Code Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../affine.html">Affine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../freeform.html">Freeform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../radial.html">Radial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../params.html">Params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ffdparams.html">FFDParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rbfparams.html">RBFParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idwparams.html">IDWParameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../filehandler.html">Filehandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../openfhandler.html">Openfhandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../stlhandler.html">Stlhandler</a></li>
@@ -103,10 +109,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../nurbshandler.html">Nurbshandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../igeshandler.html">Igeshandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../stephandler.html">Stephandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../gui.html">Gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../idw.html">Inverse Distance Weighting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
@@ -124,8 +126,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">PyGeM</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyGeM</a>
+        
       </nav>
 
 
@@ -134,27 +138,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../code.html">Code Documentation</a> &raquo;</li>
-      
+        
           <li><a href="../unvhandler.html">Unvhandler</a> &raquo;</li>
-      
-    <li>pygem.unvhandler.UnvHandler.write</li>
+        
+      <li>pygem.unvhandler.UnvHandler.write</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/_summaries/pygem.unvhandler.UnvHandler.write.rst.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/_summaries/pygem.unvhandler.UnvHandler.write.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -165,17 +186,17 @@
 <dl class="method">
 <dt id="pygem.unvhandler.UnvHandler.write">
 <code class="descclassname">UnvHandler.</code><code class="descname">write</code><span class="sig-paren">(</span><em>mesh_points</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pygem/unvhandler.html#UnvHandler.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pygem.unvhandler.UnvHandler.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a unv file, called filename, copying all the lines from self.filename but
-the coordinates. mesh_points is a matrix that contains the new coordinates to
-write in the unv file.</p>
+<dd><p>Writes a unv file, called filename, copying all the lines from
+<cite>self.filename</cite> but the coordinates. mesh_points is a matrix
+that contains the new coordinates to write in the unv file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; it is a <cite>n_points</cite>-by-3 matrix containing
-the coordinates of the points of the mesh</li>
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the output file.</li>
+<li><strong>mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) &#8211; it is a <cite>n_points</cite>-by-3 matrix
+containing the coordinates of the points of the mesh</li>
+<li><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the output file.</li>
 </ul>
 </td>
 </tr>
@@ -187,15 +208,18 @@ the coordinates of the points of the mesh</li>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../nurbshandler.html" class="btn btn-neutral float-right" title="Nurbshandler" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../nurbshandler.html" class="btn btn-neutral float-right" title="Nurbshandler" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pygem.unvhandler.UnvHandler.parse.html" class="btn btn-neutral" title="pygem.unvhandler.UnvHandler.parse" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pygem.unvhandler.UnvHandler.parse.html" class="btn btn-neutral" title="pygem.unvhandler.UnvHandler.parse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -204,8 +228,8 @@ the coordinates of the points of the mesh</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on May 17, 2017.
+        &copy; Copyright 2016-2018, PyGeM contributors.
+      Last updated on Apr 04, 2018.
 
     </p>
   </div>
@@ -227,10 +251,12 @@ the coordinates of the points of the mesh</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0',
+            VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

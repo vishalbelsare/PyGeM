@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.stephandler &mdash; PyGeM 1.0 documentation</title>
+  <title>pygem.stephandler &mdash; PyGeM 1.1 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,10 +32,7 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
+    <link rel="top" title="PyGeM 1.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -43,6 +42,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -83,7 +83,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
@@ -100,8 +103,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">PyGeM</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyGeM</a>
+        
       </nav>
 
 
@@ -114,19 +119,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>pygem.stephandler</li>
+        
+      <li>pygem.stephandler</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -136,77 +156,89 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Derived module from nurbshandler.py to handle step and stp files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">OCC.Interface</span> <span class="k">import</span> <span class="n">Interface_Static_SetCVal</span>
-<span class="kn">from</span> <span class="nn">OCC.STEPControl</span> <span class="k">import</span> <span class="n">STEPControl_Writer</span><span class="p">,</span> <span class="n">STEPControl_Reader</span><span class="p">,</span> <span class="n">STEPControl_AsIs</span>
-
-<span class="kn">from</span> <span class="nn">pygem.nurbshandler</span> <span class="k">import</span> <span class="n">NurbsHandler</span>
+<span class="kn">from</span> <span class="nn">OCC.IFSelect</span> <span class="kn">import</span> <span class="n">IFSelect_RetDone</span>
+<span class="kn">from</span> <span class="nn">OCC.Interface</span> <span class="kn">import</span> <span class="n">Interface_Static_SetCVal</span>
+<span class="kn">from</span> <span class="nn">OCC.STEPControl</span> <span class="kn">import</span> <span class="n">STEPControl_Writer</span><span class="p">,</span> <span class="n">STEPControl_Reader</span>
+<span class="kn">from</span> <span class="nn">OCC.STEPControl</span> <span class="kn">import</span> <span class="n">STEPControl_AsIs</span>
+<span class="kn">from</span> <span class="nn">pygem.nurbshandler</span> <span class="kn">import</span> <span class="n">NurbsHandler</span>
 
 
 <div class="viewcode-block" id="StepHandler"><a class="viewcode-back" href="../../stephandler.html#pygem.stephandler.StepHandler">[docs]</a><span class="k">class</span> <span class="nc">StepHandler</span><span class="p">(</span><span class="n">NurbsHandler</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Step file handler class</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Step file handler class</span>
 
-<span class="sd">	:cvar string infile: name of the input file to be processed.</span>
-<span class="sd">	:cvar string outfile: name of the output file where to write in.</span>
-<span class="sd">	:cvar list extensions: list of extensions of the input/output files.</span>
-<span class="sd">		It is equal to [&#39;.step&#39;, &#39;.stp&#39;].</span>
-<span class="sd">	:cvar list control_point_position: index of the first NURBS control point (or pole)</span>
-<span class="sd">		of each face of the iges file.</span>
-<span class="sd">	:cvar float tolerance: tolerance for the construction of the faces and wires</span>
-<span class="sd">		in the write function. Default value is 1e-6.</span>
-<span class="sd">	:cvar TopoDS_Shape shape: shape meant for modification.</span>
+<span class="sd">    :cvar string infile: name of the input file to be processed.</span>
+<span class="sd">    :cvar string outfile: name of the output file where to write in.</span>
+<span class="sd">    :cvar list extensions: list of extensions of the input/output files.</span>
+<span class="sd">        It is equal to [&#39;.step&#39;, &#39;.stp&#39;].</span>
+<span class="sd">    :cvar list control_point_position: index of the first NURBS control</span>
+<span class="sd">        point (or pole) of each face of the iges file.</span>
+<span class="sd">    :cvar float tolerance: tolerance for the construction of the faces and wires</span>
+<span class="sd">        in the write function. Default value is 1e-6.</span>
+<span class="sd">    :cvar TopoDS_Shape shape: shape meant for modification.</span>
 
-<span class="sd">	.. warning::</span>
+<span class="sd">    .. warning::</span>
 
-<span class="sd">			- For non trivial geometries it could be necessary to increase the tolerance.</span>
-<span class="sd">			  Linking edges into a single wire and then trimming the surface with the wire</span>
-<span class="sd">			  can be hard for the software, especially when the starting CAD has not been</span>
-<span class="sd">			  made for analysis but for design purposes.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">        - For non trivial geometries it could be necessary to increase the</span>
+<span class="sd">          tolerance. Linking edges into a single wire and then trimming the</span>
+<span class="sd">          surface with the wire can be hard for the software, especially when</span>
+<span class="sd">          the starting CAD has not been made for analysis but for design</span>
+<span class="sd">          purposes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="nb">super</span><span class="p">(</span><span class="n">StepHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_control_point_position</span> <span class="o">=</span> <span class="kc">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.step&#39;</span><span class="p">,</span> <span class="s1">&#39;.stp&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StepHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_control_point_position</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.step&#39;</span><span class="p">,</span> <span class="s1">&#39;.stp&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="StepHandler.load_shape_from_file"><a class="viewcode-back" href="../../stephandler.html#pygem.stephandler.StepHandler.load_shape_from_file">[docs]</a>	<span class="k">def</span> <span class="nf">load_shape_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		This method loads a shape from the file `filename`.</span>
+<div class="viewcode-block" id="StepHandler.load_shape_from_file"><a class="viewcode-back" href="../../stephandler.html#pygem.stephandler.StepHandler.load_shape_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_shape_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method loads a shape from the file `filename`.</span>
 
-<span class="sd">		:param string filename: name of the input file.</span>
-<span class="sd">			It should have proper extension (.step or .stp)</span>
+<span class="sd">        :param string filename: name of the input file.</span>
+<span class="sd">            It should have proper extension (.step or .stp)</span>
 
-<span class="sd">		:return: shape: loaded shape</span>
-<span class="sd">		:rtype: TopoDS_Shape</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="n">reader</span> <span class="o">=</span> <span class="n">STEPControl_Reader</span><span class="p">()</span>
-		<span class="n">reader</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="n">reader</span><span class="o">.</span><span class="n">TransferRoots</span><span class="p">()</span>
-		<span class="n">shape</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Shape</span><span class="p">()</span>
-		<span class="k">return</span> <span class="n">shape</span></div>
+<span class="sd">        :return: shape: loaded shape</span>
+<span class="sd">        :rtype: TopoDS_Shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">STEPControl_Reader</span><span class="p">()</span>
+        <span class="n">return_reader</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="c1"># check status</span>
+        <span class="k">if</span> <span class="n">return_reader</span> <span class="o">==</span> <span class="n">IFSelect_RetDone</span><span class="p">:</span>
+            <span class="n">return_transfer</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">TransferRoots</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">return_transfer</span><span class="p">:</span>
+                <span class="c1"># load all shapes in one</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">OneShape</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">shape</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Shapes not loaded.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot read the file.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepHandler.write_shape_to_file"><a class="viewcode-back" href="../../stephandler.html#pygem.stephandler.StepHandler.write_shape_to_file">[docs]</a>	<span class="k">def</span> <span class="nf">write_shape_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		This method saves the `shape` to the file `filename`.</span>
+<div class="viewcode-block" id="StepHandler.write_shape_to_file"><a class="viewcode-back" href="../../stephandler.html#pygem.stephandler.StepHandler.write_shape_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_shape_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method saves the `shape` to the file `filename`.</span>
 
-<span class="sd">		:param: TopoDS_Shape shape: loaded shape</span>
-<span class="sd">		:param string filename: name of the input file.</span>
-<span class="sd">			It should have proper extension (.step or .stp)</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="n">step_writer</span> <span class="o">=</span> <span class="n">STEPControl_Writer</span><span class="p">()</span>
-		<span class="c1"># Changes write schema to STEP standard AP203</span>
-		<span class="c1"># It is considered the most secure standard for STEP.</span>
-		<span class="c1"># *According to PythonOCC documentation (http://www.pythonocc.org/)</span>
-		<span class="n">Interface_Static_SetCVal</span><span class="p">(</span><span class="s2">&quot;write.step.schema&quot;</span><span class="p">,</span> <span class="s2">&quot;AP203&quot;</span><span class="p">)</span>
-		<span class="n">step_writer</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">STEPControl_AsIs</span><span class="p">)</span>
-		<span class="n">step_writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div></div>
+<span class="sd">        :param: TopoDS_Shape shape: loaded shape</span>
+<span class="sd">        :param string filename: name of the input file.</span>
+<span class="sd">            It should have proper extension (.step or .stp)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">step_writer</span> <span class="o">=</span> <span class="n">STEPControl_Writer</span><span class="p">()</span>
+        <span class="c1"># Changes write schema to STEP standard AP203</span>
+        <span class="c1"># It is considered the most secure standard for STEP.</span>
+        <span class="c1"># *According to PythonOCC documentation (http://www.pythonocc.org/)</span>
+        <span class="n">Interface_Static_SetCVal</span><span class="p">(</span><span class="s2">&quot;write.step.schema&quot;</span><span class="p">,</span> <span class="s2">&quot;AP203&quot;</span><span class="p">)</span>
+        <span class="n">step_writer</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">STEPControl_AsIs</span><span class="p">)</span>
+        <span class="n">step_writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -216,8 +248,8 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on May 17, 2017.
+        &copy; Copyright 2016-2018, PyGeM contributors.
+      Last updated on Apr 04, 2018.
 
     </p>
   </div>
@@ -239,10 +271,12 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0',
+            VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

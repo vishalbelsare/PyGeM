@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to PyGeM’s documentation! &mdash; PyGeM 1.0 documentation</title>
+  <title>Welcome to PyGeM’s documentation! &mdash; PyGeM 1.1 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,10 +32,7 @@
   
 
   
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PyGeM 1.0 documentation" href="#"/>
+    <link rel="top" title="PyGeM 1.1 documentation" href="#"/>
         <link rel="next" title="Code Documentation" href="code.html"/> 
 
   
@@ -43,6 +42,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -83,7 +83,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
@@ -100,8 +103,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">PyGeM</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">PyGeM</a>
+        
       </nav>
 
 
@@ -110,23 +115,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>Welcome to PyGeM&#8217;s documentation!</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to PyGeM&#8217;s documentation!</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -138,11 +160,12 @@
 <p>Python utilities for geometrical morphing.</p>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>PyGeM is a python library using Free Form Deformation and Radial Basis Functions to parametrize and morph complex geometries. It is ideally suited for actual industrial problems, since it allows to handle:</p>
+<p>PyGeM is a python library using Free Form Deformation, Radial Basis Functions and Inverse Distance Weighting to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:</p>
 <ul class="simple">
 <li>Computer Aided Design files (in .iges and .stl formats)</li>
 <li>Mesh files (in .unv and OpenFOAM formats)</li>
 <li>Output files (in .vtk format)</li>
+<li>LS-Dyna Keyword files (.k format)</li>
 </ul>
 <p>By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!</p>
 </div>
@@ -178,6 +201,7 @@ After installing the dependencies you can navigate into the <code class="docutil
 <li><a class="reference external" href="tutorial2iges.html">Turorial 2</a> shows how to deal with iges files and FFD.</li>
 <li><a class="reference external" href="tutorial3unv.html">Turorial 3</a> shows how to deal with unv files and how to set the desired continuity to the geometry using FFD.</li>
 <li><a class="reference external" href="tutorial4rbf.html">Turorial 4</a> shows how to perform RBF interpolation.</li>
+<li><a class="reference external" href="tutorial5idw.html">Turorial 5</a> shows how to perform IDW interpolation.</li>
 </ul>
 </div>
 <div class="section" id="indices-and-tables">
@@ -192,12 +216,15 @@ After installing the dependencies you can navigate into the <code class="docutil
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="code.html" class="btn btn-neutral float-right" title="Code Documentation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="code.html" class="btn btn-neutral float-right" title="Code Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -207,8 +234,8 @@ After installing the dependencies you can navigate into the <code class="docutil
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on May 17, 2017.
+        &copy; Copyright 2016-2018, PyGeM contributors.
+      Last updated on Apr 04, 2018.
 
     </p>
   </div>
@@ -230,10 +257,12 @@ After installing the dependencies you can navigate into the <code class="docutil
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0',
+            VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

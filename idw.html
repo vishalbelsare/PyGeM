@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Inverse Distance Weighting &mdash; PyGeM 1.0 documentation</title>
+  <title>Inverse Distance Weighting &mdash; PyGeM 1.1 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,13 +32,10 @@
   
 
   
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PyGeM 1.0 documentation" href="index.html"/>
+    <link rel="top" title="PyGeM 1.1 documentation" href="index.html"/>
         <link rel="up" title="Code Documentation" href="code.html"/>
         <link rel="next" title="pygem.idw.IDW.perform" href="_summaries/pygem.idw.IDW.perform.html"/>
-        <link rel="prev" title="pygem.gui.Gui.start" href="_summaries/pygem.gui.Gui.start.html"/> 
+        <link rel="prev" title="pygem.radial.RBF.polyharmonic_spline" href="_summaries/pygem.radial.RBF.polyharmonic_spline.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -45,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -85,12 +85,21 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="affine.html">Affine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="freeform.html">Freeform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radial.html">Radial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="params.html">Params</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Inverse Distance Weighting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.idw.IDW.perform.html">pygem.idw.IDW.perform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ffdparams.html">FFDParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbfparams.html">RBFParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idwparams.html">IDWParameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
@@ -99,13 +108,6 @@
 <li class="toctree-l2"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="igeshandler.html">Igeshandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html">Gui</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Inverse Distance Weighting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.idw.IDW.perform.html">pygem.idw.IDW.perform</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="params_idw.html">IDWParameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -123,8 +125,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">PyGeM</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyGeM</a>
+        
       </nav>
 
 
@@ -133,25 +137,42 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
-      
-    <li>Inverse Distance Weighting</li>
+        
+      <li>Inverse Distance Weighting</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/idw.rst.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/idw.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -172,7 +193,7 @@ computed value than those lying closer to the node.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Theoretical Insight:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">This implementation is based on the simplest form of inverse distance
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">This implementation is based on the simplest form of inverse distance
 weighting interpolation, proposed by D. Shepard, A two-dimensional
 interpolation function for irregularly-spaced data, Proceedings of the 23 rd
 ACM National Conference.</p>
@@ -180,14 +201,14 @@ ACM National Conference.</p>
 from a set of samples <img class="math" src="_images/math/aa500df628236c511e376aede7a3dd6d4a5e9f79.png" alt="u_k = u(\mathrm{x}_k)"/>, with
 <img class="math" src="_images/math/23b0400b9a49e0fe7498aa5f81e4b9dda613832f.png" alt="k = 1,2,\dotsc,\mathcal{N}"/>, is given by:</p>
 <div class="math">
-<p><img src="_images/math/52a7a6d89b6949ff71089bf18d83da5cf7fc1cc8.png" alt="u(\mathrm{x}) = \displaystyle\sum_{k=1}^\mathcal{N}
+<p><img src="_images/math/a8b88019b75175098f9d563b1cf266766eec00e8.png" alt="u(\mathrm{x}) = \displaystyle\sum_{k=1}^\mathcal{N}
 \frac{w(\mathrm{x},\mathrm{x}_k)}
 {\displaystyle\sum_{j=1}^\mathcal{N} w(\mathrm{x},\mathrm{x}_j)}
 u_k"/></p>
 </div><p>where, in general, <img class="math" src="_images/math/ace7e6a5d4b29040eb72ffac5ce9650ba411f596.png" alt="w(\mathrm{x}, \mathrm{x}_i)"/> represents the
 weighting function:</p>
 <div class="math">
-<p><img src="_images/math/75d53b9a27f72915532f768505d8ef3c7b9ce30c.png" alt="w(\mathrm{x}, \mathrm{x}_i) = \| \mathrm{x} - \mathrm{x}_i \|^{-p}"/></p>
+<p><img src="_images/math/181395822cb5208660c476d29f1499ed2c3c7bc8.png" alt="w(\mathrm{x}, \mathrm{x}_i) = \| \mathrm{x} - \mathrm{x}_i \|^{-p}"/></p>
 </div><p class="last">being <img class="math" src="_images/math/402ea7fc940df4a0aa1d84253ae3c23160658b47.png" alt="\| \mathrm{x} - \mathrm{x}_i \|^{-p} \ge 0"/> is the
 Euclidean distance between <img class="math" src="_images/math/9f3bb6a3e5f33563ae88f8762eeb9f0dfc857cd4.png" alt="\mathrm{x}"/> and data point
 <img class="math" src="_images/math/b48be88467ccc97ccd2db69e58ea491dcfa374ff.png" alt="\mathrm{x}_i"/> and <img class="math" src="_images/math/27d463da4622be5b3ef1d4176ced7d7a323c6425.png" alt="p"/> is a power parameter, typically equal to
@@ -210,7 +231,7 @@ Euclidean distance between <img class="math" src="_images/math/9f3bb6a3e5f33563a
 <dl class="class">
 <dt>
 <em class="property">class </em><code class="descname">IDW</code><span class="sig-paren">(</span><em>idw_parameters</em>, <em>original_mesh_points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/idw.html#IDW"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Class that handles the IDW technique.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -218,16 +239,16 @@ Euclidean distance between <img class="math" src="_images/math/9f3bb6a3e5f33563a
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>idw_parameters</strong> (<code class="xref py py-class docutils literal"><span class="pre">IDWParameters</span></code>) &#8211; the parameters of the IDW</li>
-<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
 points of the mesh.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first simple">
 <li><strong>parameters</strong> (<code class="xref py py-class docutils literal"><span class="pre">IDWParameters</span></code>) &#8211; the parameters of the IDW.</li>
-<li><strong>original_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
+<li><strong>original_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the original
 points of the mesh.</li>
-<li><strong>modified_mesh_points</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the deformed
+<li><strong>modified_mesh_points</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) &#8211; coordinates of the deformed
 points of the mesh.</li>
 </ul>
 </td>
@@ -267,15 +288,18 @@ execution it sets <cite>self.modified_mesh_points</cite>.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="_summaries/pygem.idw.IDW.perform.html" class="btn btn-neutral float-right" title="pygem.idw.IDW.perform" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="_summaries/pygem.idw.IDW.perform.html" class="btn btn-neutral float-right" title="pygem.idw.IDW.perform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="_summaries/pygem.gui.Gui.start.html" class="btn btn-neutral" title="pygem.gui.Gui.start" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="_summaries/pygem.radial.RBF.polyharmonic_spline.html" class="btn btn-neutral" title="pygem.radial.RBF.polyharmonic_spline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -284,8 +308,8 @@ execution it sets <cite>self.modified_mesh_points</cite>.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on May 17, 2017.
+        &copy; Copyright 2016-2018, PyGeM contributors.
+      Last updated on Apr 04, 2018.
 
     </p>
   </div>
@@ -307,10 +331,12 @@ execution it sets <cite>self.modified_mesh_points</cite>.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0',
+            VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

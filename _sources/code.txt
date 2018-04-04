@@ -9,7 +9,10 @@ Code Documentation
    affine
    freeform
    radial
-   params
+   idw
+   ffdparams
+   rbfparams
+   idwparams
    filehandler
    openfhandler
    stlhandler
@@ -18,6 +21,3 @@ Code Documentation
    nurbshandler
    igeshandler
    stephandler
-   utils
-   gui
-

@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.unvhandler &mdash; PyGeM 1.0 documentation</title>
+  <title>pygem.unvhandler &mdash; PyGeM 1.1 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,10 +32,7 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="PyGeM 1.0 documentation" href="../../index.html"/>
+    <link rel="top" title="PyGeM 1.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -43,6 +42,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -83,7 +83,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
@@ -100,8 +103,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">PyGeM</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyGeM</a>
+        
       </nav>
 
 
@@ -114,19 +119,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>pygem.unvhandler</li>
+        
+      <li>pygem.unvhandler</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -136,101 +156,105 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Derived module from filehandler.py to handle Universal (unv) files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pygem.filehandler</span> <span class="k">as</span> <span class="nn">fh</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pygem.filehandler</span> <span class="kn">as</span> <span class="nn">fh</span>
 
 
 <div class="viewcode-block" id="UnvHandler"><a class="viewcode-back" href="../../unvhandler.html#pygem.unvhandler.UnvHandler">[docs]</a><span class="k">class</span> <span class="nc">UnvHandler</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Universal file handler class</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Universal file handler class</span>
 
-<span class="sd">	:cvar string infile: name of the input file to be processed.</span>
-<span class="sd">	:cvar string outfile: name of the output file where to write in.</span>
-<span class="sd">	:cvar list extensions: extensions of the input/output files. It is equal to [&#39;.unv&#39;].</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">    :cvar string infile: name of the input file to be processed.</span>
+<span class="sd">    :cvar string outfile: name of the output file where to write in.</span>
+<span class="sd">    :cvar list extensions: extensions of the input/output files.</span>
+<span class="sd">        It is equal to [&#39;.unv&#39;].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="nb">super</span><span class="p">(</span><span class="n">UnvHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.unv&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UnvHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.unv&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="UnvHandler.parse"><a class="viewcode-back" href="../../unvhandler.html#pygem.unvhandler.UnvHandler.parse">[docs]</a>	<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Method to parse the file `filename`. It returns a matrix with all the coordinates.</span>
-<span class="sd">		It reads only the section 2411 of the unv files and it assumes there are only triangles.</span>
+<div class="viewcode-block" id="UnvHandler.parse"><a class="viewcode-back" href="../../unvhandler.html#pygem.unvhandler.UnvHandler.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to parse the file `filename`. It returns a matrix with</span>
+<span class="sd">        all the coordinates. It reads only the section 2411 of the unv</span>
+<span class="sd">        files and it assumes there are only triangles.</span>
 
-<span class="sd">		:param string filename: name of the input file.</span>
-<span class="sd">		</span>
-<span class="sd">		:return: mesh_points: it is a `n_points`-by-3 matrix containing the coordinates of</span>
-<span class="sd">			the points of the mesh.</span>
-<span class="sd">		:rtype: numpy.ndarray</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="sd">        :param string filename: name of the input file.</span>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">infile</span> <span class="o">=</span> <span class="n">filename</span>
+<span class="sd">        :return: mesh_points: it is a `n_points`-by-3 matrix containing</span>
+<span class="sd">            the coordinates of the points of the mesh.</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-		<span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
-		<span class="n">mesh_points</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
-			<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
-				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  2411&#39;</span><span class="p">):</span>
-					<span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
-				<span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
-					<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;    -1&#39;</span><span class="p">):</span>
-						<span class="k">break</span>
-					<span class="k">else</span><span class="p">:</span>
-						<span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
-						<span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
-						<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-							<span class="k">try</span><span class="p">:</span>
-								<span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
-							<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-								<span class="k">pass</span>
-						<span class="n">mesh_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-						<span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
-			<span class="n">mesh_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infile</span> <span class="o">=</span> <span class="n">filename</span>
 
-		<span class="k">return</span> <span class="n">mesh_points</span></div>
+        <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
+        <span class="n">mesh_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  2411&#39;</span><span class="p">):</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
+                <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;    -1&#39;</span><span class="p">):</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+                        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="k">pass</span>
+                        <span class="n">mesh_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
+            <span class="n">mesh_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">)</span>
 
+        <span class="k">return</span> <span class="n">mesh_points</span></div>
 
-<div class="viewcode-block" id="UnvHandler.write"><a class="viewcode-back" href="../../unvhandler.html#pygem.unvhandler.UnvHandler.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_points</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Writes a unv file, called filename, copying all the lines from self.filename but</span>
-<span class="sd">		the coordinates. mesh_points is a matrix that contains the new coordinates to</span>
-<span class="sd">		write in the unv file.</span>
+<div class="viewcode-block" id="UnvHandler.write"><a class="viewcode-back" href="../../unvhandler.html#pygem.unvhandler.UnvHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_points</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes a unv file, called filename, copying all the lines from</span>
+<span class="sd">        `self.filename` but the coordinates. mesh_points is a matrix</span>
+<span class="sd">        that contains the new coordinates to write in the unv file.</span>
 
-<span class="sd">		:param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix containing</span>
-<span class="sd">			the coordinates of the points of the mesh</span>
-<span class="sd">		:param string filename: name of the output file.</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_check_infile_instantiation</span><span class="p">()</span>
+<span class="sd">        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix</span>
+<span class="sd">            containing the coordinates of the points of the mesh</span>
+<span class="sd">        :param string filename: name of the output file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_infile_instantiation</span><span class="p">()</span>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">filename</span>
 
-		<span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
-		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
-			<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
-				<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
-					<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  2411&#39;</span><span class="p">):</span>
-						<span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
-					<span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
-						<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;    -1&#39;</span><span class="p">):</span>
-							<span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
-							<span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-						<span class="k">else</span><span class="p">:</span>
-							<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
-								<span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:.16E}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
-							<span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-							<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-							<span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
-					<span class="k">else</span><span class="p">:</span>
-						<span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div></div>
-
+        <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  2411&#39;</span><span class="p">):</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
+                    <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;    -1&#39;</span><span class="p">):</span>
+                            <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
+                            <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                                <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;{:.16E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">mesh_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
+                            <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">index</span> <span class="o">=</span> <span class="n">num</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -240,8 +264,8 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
-      Last updated on May 17, 2017.
+        &copy; Copyright 2016-2018, PyGeM contributors.
+      Last updated on Apr 04, 2018.
 
     </p>
   </div>
@@ -263,10 +287,12 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0',
+            VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

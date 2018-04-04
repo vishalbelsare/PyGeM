@@ -9,6 +9,7 @@ except ImportError:
 import os
 import numpy as np
 import vtk
+import matplotlib.pyplot as plt
 
 
 class RBFParameters(object):
@@ -193,7 +194,7 @@ class RBFParameters(object):
         string += '{}\n'.format(self.deformed_control_points)
         return string
 
-    def save(self, filename, write_deformed=True):
+    def save_points(self, filename, write_deformed=True):
         """
         Method that writes a vtk file containing the control points. This method
         allows to visualize where the RBF control points are located before the
@@ -212,7 +213,12 @@ class RBFParameters(object):
         >>> params = RBFParameters()
         >>> params.read_parameters(
         >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
-        >>> params.save('tests/test_datasets/box_cube.vtk')
+        >>> params.save_points('tests/test_datasets/box_cube.vtk')
+
+        .. note::
+            In order to visualize the points in Paraview, please select the
+            **Point Gaussian** representation.
+
         """
         box_points = self.deformed_control_points if write_deformed else self.original_control_points
         points = vtk.vtkPoints()
@@ -227,3 +233,44 @@ class RBFParameters(object):
         writer.SetFileName(filename)
         writer.SetInputData(data)
         writer.Write()
+
+
+    def plot_points(self, filename=None):
+        """
+        Method to plot the control points. It is possible to save the resulting
+        figure.
+
+        :param str filename: if None the figure is shown, otherwise it is saved
+            on the specified `filename`. Default is None.
+        """
+        fig = plt.figure(1)
+        axes = fig.add_subplot(111, projection='3d')
+        orig = axes.scatter(
+            self.original_control_points[:, 0],
+            self.original_control_points[:, 1],
+            self.original_control_points[:, 2],
+            c='blue',
+            marker='o')
+        defor = axes.scatter(
+            self.deformed_control_points[:, 0],
+            self.deformed_control_points[:, 1],
+            self.deformed_control_points[:, 2],
+            c='red',
+            marker='x')
+
+        axes.set_xlabel('X axis')
+        axes.set_ylabel('Y axis')
+        axes.set_zlabel('Z axis')
+
+        plt.legend(
+            (orig, defor), ('Original', 'Deformed'),
+            scatterpoints=1,
+            loc='lower left',
+            ncol=2,
+            fontsize=10)
+
+        # Show the plot to the screen
+        if filename is None:
+            plt.show()
+        else:
+            fig.savefig(filename)

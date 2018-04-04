@@ -70,8 +70,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PyGeM'
-copyright = u'2016, Filippo Salmoiraghi, Marco Tezzele'
-author = u'Filippo Salmoiraghi, Marco Tezzele'
+copyright = u'2016-2018, PyGeM contributors'
+author = u'PyGeM contributors'
 
 # autoclass
 autoclass_content = 'both'
@@ -81,7 +81,7 @@ autoclass_content = 'both'
 # built documents.
 #
 # The short X.Y version.
-version = '1.0'
+version = '1.1'
 # The full version, including alpha/beta/rc tags.
 release = version
 

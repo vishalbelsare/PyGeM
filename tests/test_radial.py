@@ -84,7 +84,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.gaussian_spline(
-            np.array([0.5, 1, 2, 0.2]).reshape(4, 1), 0.2)
+            np.linalg.norm(np.array([0.5, 1, 2, 0.2])), 0.2)
         np.testing.assert_almost_equal(value, 0.0)
 
     def test_multi_quadratic_biharmonic_spline(self):
@@ -93,7 +93,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.multi_quadratic_biharmonic_spline(
-            np.array([0.5, 1, 2, 0.2]).reshape(4, 1), 0.2)
+            np.linalg.norm(np.array([0.5, 1, 2, 0.2])), 0.2)
         np.testing.assert_almost_equal(value, 2.30867927612)
 
     def test_inv_multi_quadratic_biharmonic_spline(self):
@@ -102,7 +102,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.inv_multi_quadratic_biharmonic_spline(
-            np.array([0.5, 1, 2, 0.2]).reshape(4, 1), 0.2)
+            np.linalg.norm(np.array([0.5, 1, 2, 0.2])), 0.2)
         np.testing.assert_almost_equal(value, 0.433148081824)
 
     def test_thin_plate_spline(self):
@@ -111,7 +111,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.thin_plate_spline(
-            np.array([0.5, 1, 2, 0.2]).reshape(4, 1), 0.2)
+            np.linalg.norm(np.array([0.5, 1, 2, 0.2])), 0.2)
         np.testing.assert_almost_equal(value, 323.000395428)
 
     def test_beckert_wendland_c2_basis_01(self):
@@ -120,7 +120,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.beckert_wendland_c2_basis(
-            np.array([0.5, 1, 2, 0.2]).reshape(4, 1), 0.2)
+            np.linalg.norm(np.array([0.5, 1, 2, 0.2])), 0.2)
         np.testing.assert_almost_equal(value, 0.0)
 
     def test_beckert_wendland_c2_basis_02(self):
@@ -129,7 +129,7 @@ class TestRadial(TestCase):
             filename='tests/test_datasets/parameters_rbf_default.prm')
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.beckert_wendland_c2_basis(
-            np.array([0.1, 0.15, -0.2]).reshape(3, 1), 0.9)
+            np.linalg.norm(np.array([0.1, 0.15, -0.2])), 0.9)
         np.testing.assert_almost_equal(value, 0.529916819595)
 
     def test_polyharmonic_spline_k_even(self):
@@ -139,7 +139,7 @@ class TestRadial(TestCase):
         params.power = 3
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.polyharmonic_spline(
-            np.array([0.1, 0.15, -0.2]).reshape(3, 1), 0.9)
+            np.linalg.norm(np.array([0.1, 0.15, -0.2])), 0.9)
         np.testing.assert_almost_equal(value, 0.02677808)
 
     def test_polyharmonic_spline_k_odd1(self):
@@ -149,7 +149,7 @@ class TestRadial(TestCase):
         params.power = 2
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.polyharmonic_spline(
-            np.array([0.1, 0.15, -0.2]).reshape(3, 1), 0.9)
+            np.linalg.norm(np.array([0.1, 0.15, -0.2])), 0.9)
         np.testing.assert_almost_equal(value, -0.1080092)
 
     def test_polyharmonic_spline_k_odd2(self):
@@ -159,5 +159,5 @@ class TestRadial(TestCase):
         params.power = 2
         rbf = rad.RBF(params, self.get_cube_mesh_points())
         value = rbf.polyharmonic_spline(
-            np.array([0.1, 0.15, -0.2]).reshape(3, 1), 0.2)
+            np.linalg.norm(np.array([0.1, 0.15, -0.2])), 0.2)
         np.testing.assert_almost_equal(value, 0.53895331)

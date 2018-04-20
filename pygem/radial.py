@@ -32,12 +32,12 @@ The module is analogous to the freeform one.
     :math:`\\gamma_i` is the weight, corresponding to the a-priori selected
     :math:`\\mathcal{N}_C` control points, associated to the :math:`i`-th basis
     function, and :math:`\\varphi(\\| \\boldsymbol{x} - \\boldsymbol{x_{C_i}}
-            \\|)` a radial function based on the Euclidean distance between the
-    control points position :math:`\\boldsymbol{x_{C_i}}` and
-    :math:`\\boldsymbol{x}`. A radial basis function, generally, is a
-    real-valued function whose value depends only on the distance from the
-    origin, so that :math:`\\varphi(\\boldsymbol{x}) = \\tilde{\\varphi}(\\|
-            \\boldsymbol{x} \\|)`.
+    \\|)` a radial function based on the Euclidean distance between the control
+    points position :math:`\\boldsymbol{x_{C_i}}` and :math:`\\boldsymbol{x}`.
+    A radial basis function, generally, is a real-valued function whose value
+    depends only on the distance from the origin, so that
+    :math:`\\varphi(\\boldsymbol{x}) = \\tilde{\\varphi}(\\| \\boldsymbol{x}
+    \\|)`.
 
     The matrix version of the formula above is:
 
@@ -142,8 +142,7 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) =
-            e^{-\\frac{\\| \\boldsymbol{x} \\|^2}{r^2}}
+            \\varphi(\\boldsymbol{x}) = e^{-\\frac{\\boldsymbol{x}^2}{r^2}}
 
         :param numpy.ndarray X: the vector x in the formula above.
         :param float r: the parameter r in the formula above.
@@ -151,8 +150,7 @@ class RBF(object):
         :return: result: the result of the formula above.
         :rtype: float
         """
-        norm = np.linalg.norm(X)
-        result = np.exp(-(norm * norm) / (r * r))
+        result = np.exp(-(X * X) / (r * r))
         return result
 
     @staticmethod
@@ -161,8 +159,7 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) =
-            \\sqrt{\\| \\boldsymbol{x} \\|^2 + r^2}
+            \\varphi(\\boldsymbol{x}) = \\sqrt{\\boldsymbol{x}^2 + r^2}
 
         :param numpy.ndarray X: the vector x in the formula above.
         :param float r: the parameter r in the formula above.
@@ -170,8 +167,7 @@ class RBF(object):
         :return: result: the result of the formula above.
         :rtype: float
         """
-        norm = np.linalg.norm(X)
-        result = np.sqrt((norm * norm) + (r * r))
+        result = np.sqrt((X * X) + (r * r))
         return result
 
     @staticmethod
@@ -180,8 +176,8 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) =
-            (\\| \\boldsymbol{x} \\|^2 + r^2 )^{-\\frac{1}{2}}
+            \\varphi(\\boldsymbol{x}) =
+            (\\boldsymbol{x}^2 + r^2 )^{-\\frac{1}{2}}
 
         :param numpy.ndarray X: the vector x in the formula above.
         :param float r: the parameter r in the formula above.
@@ -189,8 +185,7 @@ class RBF(object):
         :return: result: the result of the formula above.
         :rtype: float
         """
-        norm = np.linalg.norm(X)
-        result = 1.0 / (np.sqrt((norm * norm) + (r * r)))
+        result = 1.0 / (np.sqrt((X * X) + (r * r)))
         return result
 
     @staticmethod
@@ -199,9 +194,9 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) =
-            \\left\\| \\frac{\\boldsymbol{x} }{r} \\right\\|^2
-            \\ln \\left\\| \\frac{\\boldsymbol{x} }{r} \\right\\|
+            \\varphi(\\boldsymbol{x}) =
+            \\left(\\frac{\\boldsymbol{x}}{r}\\right)^2
+            \\ln\\frac{\\boldsymbol{x}}{r}
 
         :param numpy.ndarray X: the vector x in the formula above.
         :param float r: the parameter r in the formula above.
@@ -210,10 +205,8 @@ class RBF(object):
         :rtype: float
         """
         arg = X / r
-        norm = np.linalg.norm(arg)
-        result = norm * norm
-        if norm > 0:
-            result *= np.log(norm)
+        result = arg * arg
+        result = np.where(arg > 0, result * np.log(arg), result)
         return result
 
     @staticmethod
@@ -222,9 +215,9 @@ class RBF(object):
         It implements the following formula:
 
         .. math::
-            \\varphi(\\| \\boldsymbol{x} \\|) = 
-            \\left( 1 - \\frac{\\| \\boldsymbol{x} \\|}{r} \\right)^4_+
-            \\left( 4 \\frac{\\| \\boldsymbol{x} \\|}{r} + 1 \\right)
+            \\varphi(\\boldsymbol{x}) = 
+            \\left( 1 - \\frac{\\boldsymbol{x}}{r}\\right)^4 +
+            \\left( 4 \\frac{ \\boldsymbol{x} }{r} + 1 \\right)
 
         :param numpy.ndarray X: the vector x in the formula above.
         :param float r: the parameter r in the formula above.
@@ -232,11 +225,8 @@ class RBF(object):
         :return: result: the result of the formula above.
         :rtype: float
         """
-        norm = np.linalg.norm(X)
-        arg = norm / r
-        first = 0
-        if (1 - arg) > 0:
-            first = np.power((1 - arg), 4)
+        arg = X / r
+        first = np.where((1 - arg) > 0, np.power((1 - arg), 4), 0)
         second = (4 * arg) + 1
         result = first * second
         return result
@@ -247,18 +237,18 @@ class RBF(object):
 
         .. math::
             
-            \\varphi(\\| \\boldsymbol{x} \\|) =
+            \\varphi(\\boldsymbol{x}) =
                 \\begin{cases}
-                \\|\\frac{\\boldsymbol{x}}{r}\\|^k
+                \\frac{\\boldsymbol{x}}{r}^k
                     \\quad & \\text{if}~k = 1,3,5,...\\\\
-                \\|\\frac{\\boldsymbol{x}}{r}\\|^{k-1}
-                \\ln(\\|\\frac{\\boldsymbol{x}}{r}\\|^
-                {\\|\\frac{\\boldsymbol{x}}{r}\\|})
-                    \\quad & \\text{if}~\\|\\frac{\\boldsymbol{x}}{r}\\| < 1,
+                \\frac{\\boldsymbol{x}}{r}^{k-1}
+                \\ln(\\frac{\\boldsymbol{x}}{r}^
+                {\\frac{\\boldsymbol{x}}{r}})
+                    \\quad & \\text{if}~\\frac{\\boldsymbol{x}}{r} < 1,
                     ~k = 2,4,6,...\\\\
-                \\|\\frac{\\boldsymbol{x}}{r}\\|^k
-                \\ln(\\|\\frac{\\boldsymbol{x}}{r}\\|)
-                    \\quad & \\text{if}~\\|\\frac{\\boldsymbol{x}}{r}\\| \\ge 1,
+                \\frac{\\boldsymbol{x}}{r}^k
+                \\ln(\\frac{\\boldsymbol{x}}{r})
+                    \\quad & \\text{if}~\\frac{\\boldsymbol{x}}{r} \\ge 1,
                     ~k = 2,4,6,...\\\\
                 \\end{cases}
 
@@ -270,33 +260,18 @@ class RBF(object):
         """
 
         k = self.parameters.power
-        r_sc = np.linalg.norm(X) / r
+        r_sc = X / r
 
         # k odd
         if k & 1:
             return np.power(r_sc, k)
 
+        print(r_sc)
         # k even
-        if r_sc < 1:
-            return np.power(r_sc, k - 1) * np.log(np.power(r_sc, r_sc))
-        else:
-            return np.power(r_sc, k) * np.log(r_sc)
-
-    def _distance_matrix(self, X1, X2):
-        """
-        This private method returns the following matrix:
-        :math:`\\boldsymbol{D_{ij}} = \\varphi(\\| \\boldsymbol{x_i} -
-                \\boldsymbol{y_j} \\|)`
-
-        :param numpy.ndarray X1: the vector x in the formula above.
-        :param numpy.ndarray X2: the vector y in the formula above.
-
-        :return: matrix: the matrix D.
-        :rtype: numpy.ndarray
-        """
-        matrix = cdist(X1, X2,
-                       lambda x, y: self.basis(x - y, self.parameters.radius))
-        return matrix
+        result = np.where(r_sc < 1,
+                          np.power(r_sc, k - 1) * np.log(np.power(r_sc, r_sc)),
+                          np.power(r_sc, k) * np.log(r_sc))
+        return result
 
     def _get_weights(self, X, Y):
         """
@@ -315,17 +290,17 @@ class RBF(object):
         :return: weights: the matrix with the weights and the polynomial terms.
         :rtype: numpy.matrix
         """
-        n_points = X.shape[0]
-        dim = X.shape[1]
-        identity = np.ones((n_points, 1))
-        dist = self._distance_matrix(X, X)
-        H = np.bmat([[dist, identity,
-                      X], [identity.T,
-                           np.zeros((1, 1)),
-                           np.zeros((1, dim))],
-                     [X.T, np.zeros((dim, 1)),
-                      np.zeros((dim, dim))]])
-        rhs = np.bmat([[Y], [np.zeros((1, dim))], [np.zeros((dim, dim))]])
+        n_points, dim = X.shape
+        H = np.zeros((n_points + 3 + 1, n_points + 3 + 1))
+        H[:n_points, :n_points] = self.basis(
+            cdist(X, X), self.parameters.radius)
+        H[n_points, :n_points] = 1.0
+        H[:n_points, n_points] = 1.0
+        H[:n_points, -3:] = X
+        H[-3:, :n_points] = X.T
+
+        rhs = np.zeros((n_points + 3 + 1, dim))
+        rhs[:n_points, :] = Y
         weights = np.linalg.solve(H, rhs)
         return weights
 
@@ -335,8 +310,10 @@ class RBF(object):
         execution it sets `self.modified_mesh_points`.
         """
         n_points = self.original_mesh_points.shape[0]
-        dist = self._distance_matrix(self.original_mesh_points,
-                                     self.parameters.original_control_points)
+        dist = self.basis(
+            cdist(self.original_mesh_points,
+                  self.parameters.original_control_points),
+            self.parameters.radius)
         identity = np.ones((n_points, 1))
         H = np.bmat([[dist, identity, self.original_mesh_points]])
         self.modified_mesh_points = np.asarray(np.dot(H, self.weights))

@@ -9,7 +9,6 @@ Radial
 	:toctree: _summaries
 	:nosignatures:
 
-	RBF._distance_matrix
 	RBF._get_weights
 	RBF.beckert_wendland_c2_basis
 	RBF.gaussian_spline

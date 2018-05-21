@@ -85,7 +85,7 @@ class RBFParameters(object):
 
         ctrl_points = config.get('Control points', 'original control points')
         lines = ctrl_points.split('\n')
-        self.original_control_points = np.zeros((self.n_control_points, 3))
+        self.original_control_points = np.zeros((len(lines), 3))
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
             self.original_control_points[i] = np.array(

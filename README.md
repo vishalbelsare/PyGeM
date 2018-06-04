@@ -48,13 +48,13 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 
 ## Dependencies and installation
-**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. 
+**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `numpy-stl`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. The code is compatible with Python 2.7.
 Moreover **PyGeM** depends on `OCC`. These requirements cannot be satisfied through `pip`.
 Please see the table below for instructions on how to satisfy the requirements.
 
-| Package | Version  | Comment                                                                    |
-|---------|----------|----------------------------------------------------------------------------|
-| OCC     | == 0.17  | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core==0.17` |
+| Package | Version     | Comment                                                                    |
+|---------|-------------|----------------------------------------------------------------------------|
+| OCC     | ==0.17.3    | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17.3 python=2` |
 
 
 The official distribution is on GitHub, and you can clone the repository using

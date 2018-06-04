@@ -234,6 +234,26 @@ class TestFFDParameters(TestCase):
         self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
         os.remove(outfilename)
 
+    def test_save_points(self):
+        params = FFDParameters()
+        params.read_parameters(
+            filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+        outfilename = 'tests/test_datasets/box_test_sphere_out.vtk'
+        outfilename_expected = 'tests/test_datasets/box_test_sphere.vtk'
+        params.save_points(outfilename, False)
+        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        os.remove(outfilename)
+
+    def test_save_points_deformed(self):
+        params = FFDParameters()
+        params.read_parameters(
+            filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+        outfilename = 'tests/test_datasets/box_test_sphere_deformed_out.vtk'
+        outfilename_expected = 'tests/test_datasets/box_test_sphere_deformed.vtk'
+        params.save_points(outfilename, True)
+        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        os.remove(outfilename)
+
     def test_print(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         print(params)

@@ -50,7 +50,7 @@ install:
       fi
     - source activate test
     - pip install numpy scipy matplotlib vtk nose
-    - conda install --yes -c https://conda.anaconda.org/dlr-sc pythonocc-core==0.17
+    - conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17.3 python=2
     - pip install setuptools
     - pip install coveralls
     - pip install coverage

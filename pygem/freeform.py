@@ -10,28 +10,28 @@ Utilities for performing Free Form Deformation (FFD)
     consists in three different step:
     
     - Mapping the physical domain to the reference one with map
-    :math:`\\boldsymbol{\psi}`.  In the code it is named *transformation*.
-      
+      :math:`\\boldsymbol{\\psi}`.  In the code it is named *transformation*.
+
     - Moving some control points to deform the lattice with :math:`\\hat{T}`.
-    The movement of the control points is basically the weight (or displacement)
-    :math:`\\boldsymbol{\mu}` we set in the *parameters file*.
-      
+      The movement of the control points is basically the weight (or displacement)
+      :math:`\\boldsymbol{\\mu}` we set in the *parameters file*.
+
     - Mapping back to the physical domain with map
-    :math:`\\boldsymbol{\psi}^-1`.  In the code it is named
-    *inverse_transformation*.
-      
+      :math:`\\boldsymbol{\\psi}^{-1}`.  In the code it is named
+      *inverse_transformation*.
+
     FFD map (:math:`T`) is the composition of the three maps, that is
-    
+
     .. math:: T(\\cdot, \\boldsymbol{\\mu}) = (\\Psi^{-1} \\circ \\hat{T} \\circ
             \\Psi) (\\cdot, \\boldsymbol{\\mu})
-            
+
     In this way, every point inside the FFD box changes it position according to
-    
-    .. math:: \\boldsymbol{P} = \\boldsymbol{\psi}^-1 \\left( \\sum_{l=0} ^L
-            \\sum_{m=0} ^M \\sum_{n=0} ^N
+
+    .. math:: \\boldsymbol{P} = \\boldsymbol{\\psi}^{-1} \\left( \\sum_{l=0}^L
+            \\sum_{m=0}^M \\sum_{n=0}^N
             \\mathsf{b}_{lmn}(\\boldsymbol{\\psi}(\\boldsymbol{P}_0))
             \\boldsymbol{\\mu}_{lmn} \\right)
-        
+
     where :math:`\\mathsf{b}_{lmn}` are Bernstein polynomials.  We improve the
     traditional version by allowing a rotation of the FFD lattice in order to
     give more flexibility to the tool.
@@ -56,21 +56,21 @@ class FFD(object):
 
     :cvar FFDParameters parameters: parameters of the Free Form Deformation.
     :cvar numpy.ndarray original_mesh_points: coordinates of the original points
-        of the mesh.  The shape is `n_points`-by-3.
+        of the mesh. The shape is `n_points`-by-3.
     :cvar numpy.ndarray modified_mesh_points: coordinates of the points of the
-        deformed mesh.  The shape is `n_points`-by-3.
+        deformed mesh. The shape is `n_points`-by-3.
 
     :Example:
 
-    >>> import pygem.freeform as ffd
-    >>> import pygem.params as ffdp
-    >>> import numpy as np
-    >>> ffd_parameters = ffdp.FFDParameters()
-    >>> ffd_parameters.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
-    >>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
-    >>> free_form = ffd.FFD(ffd_parameters, original_mesh_points)
-    >>> free_form.perform()
-    >>> new_mesh_points = free_form.modified_mesh_points
+        >>> import pygem.freeform as ffd
+        >>> import pygem.params as ffdp
+        >>> import numpy as np
+        >>> ffd_params = ffdp.FFDParameters()
+        >>> ffd_params.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
+        >>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
+        >>> free_form = ffd.FFD(ffd_params, original_mesh_points)
+        >>> free_form.perform()
+        >>> new_mesh_points = free_form.modified_mesh_points
     """
 
     def __init__(self, ffd_parameters, original_mesh_points):

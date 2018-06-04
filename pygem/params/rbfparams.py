@@ -208,12 +208,12 @@ class RBFParameters(object):
 
         :Example:
 
-        >>> from pygem.params import RBFParameters
-        >>>
-        >>> params = RBFParameters()
-        >>> params.read_parameters(
-        >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
-        >>> params.save_points('tests/test_datasets/box_cube.vtk')
+            >>> from pygem.params import RBFParameters
+            >>>
+            >>> params = RBFParameters()
+            >>> params.read_parameters(
+            >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
+            >>> params.save_points('tests/test_datasets/box_cube.vtk')
 
         .. note::
             In order to visualize the points in Paraview, please select the

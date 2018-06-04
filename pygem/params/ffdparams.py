@@ -40,33 +40,33 @@ class FFDParameters(object):
 
     :Example: from file
 
-    >>> import pygem.params as ffdp
-    >>>
-    >>> # Reading an existing file
-    >>> params1 = ffdp.FFDParameters()
-    >>> params1.read_parameters(
-    >>>     filename='tests/test_datasets/parameters_test_ffd_identity.prm')
-    >>> 
-    >>> # Creating a default parameters file with the right dimensions (if the
-    >>> # file does not exists it is created with that name). So it is possible
-    >>> # to manually edit it and read it again.
-    >>> params2 = ffdp.FFDParameters(n_control_points=[2, 3, 2])
-    >>> params2.read_parameters(filename='parameters_test.prm')
-    >>> 
-    >>> # Creating bounding box of the given shape
-    >>> from OCC.IGESControl import IGESControl_Reader
-    >>> params3 = ffdp.FFDParameters()
-    >>> reader = IGESControl_Reader()
-    >>> reader.ReadFile('tests/test_datasets/test_pipe.igs')
-    >>> reader.TransferRoots()
-    >>> shape = reader.Shape()
-    >>> params3.build_bounding_box(shape)
+        >>> import pygem.params as ffdp
+        >>>
+        >>> # Reading an existing file
+        >>> params1 = ffdp.FFDParameters()
+        >>> params1.read_parameters(
+        >>>     filename='tests/test_datasets/parameters_test_ffd_identity.prm')
+        >>> 
+        >>> # Creating a default parameters file with the right dimensions (if the
+        >>> # file does not exists it is created with that name). So it is possible
+        >>> # to manually edit it and read it again.
+        >>> params2 = ffdp.FFDParameters(n_control_points=[2, 3, 2])
+        >>> params2.read_parameters(filename='parameters_test.prm')
+        >>> 
+        >>> # Creating bounding box of the given shape
+        >>> from OCC.IGESControl import IGESControl_Reader
+        >>> params3 = ffdp.FFDParameters()
+        >>> reader = IGESControl_Reader()
+        >>> reader.ReadFile('tests/test_datasets/test_pipe.igs')
+        >>> reader.TransferRoots()
+        >>> shape = reader.Shape()
+        >>> params3.build_bounding_box(shape)
 
     .. note::
         Four vertex (non coplanar) are sufficient to uniquely identify a
         parallelepiped.
         If the four vertex are coplanar, an assert is thrown when
-        affine_points_fit is used.
+        `affine_points_fit is used.
 
     """
 
@@ -339,21 +339,21 @@ class FFDParameters(object):
         Method that writes a vtk file containing the FFD lattice. This method
         allows to visualize where the FFD control points are located before the
         geometrical morphing. If the `write_deformed` flag is set to True the
-        method writes out the deformed lattice, otherwise it writes one the
+        method writes out the deformed lattice, otherwise it writes the
         original undeformed lattice.
 
         :param str filename: name of the output file.
         :param bool write_deformed: flag to write the original or modified FFD
-            control lattice.  The default is set to True.
+            control lattice. The default is True.
 
         :Example:
 
-        >>> from pygem.params import FFDParameters
-        >>> 
-        >>> params = FFDParameters()
-        >>> params.read_parameters(
-        >>>     filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
-        >>> params.save('tests/test_datasets/box_test_sphere.vtk')
+            >>> from pygem.params import FFDParameters
+            >>> 
+            >>> params = FFDParameters()
+            >>> params.read_parameters(
+            >>>     filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
+            >>> params.save_points('tests/test_datasets/box_test_sphere.vtk')
 
         .. note::
             In order to visualize the points in Paraview, please select the

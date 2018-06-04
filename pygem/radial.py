@@ -83,23 +83,23 @@ class RBF(object):
 
     :Example:
 
-    >>> import pygem.radial as rbf
-    >>> import pygem.params as rbfp
-    >>> import numpy as np
-    >>> rbf_parameters = rbfp.RBFParameters()
-    >>> fname = 'tests/test_datasets/parameters_rbf_cube.prm'
-    >>> rbf_parameters.read_parameters(fname)
-    >>> nx, ny, nz = (20, 20, 20)
-    >>> mesh = np.zeros((nx * ny * nz, 3))
-    >>> xv = np.linspace(0, 1, nx)
-    >>> yv = np.linspace(0, 1, ny)
-    >>> zv = np.linspace(0, 1, nz)
-    >>> z, y, x = np.meshgrid(zv, yv, xv)
-    >>> mesh = np.array([x.ravel(), y.ravel(), z.ravel()])
-    >>> original_mesh_points = mesh.T
-    >>> radial_trans = rbf.RBF(rbf_parameters, original_mesh_points)
-    >>> radial_trans.perform()
-    >>> new_mesh_points = radial_trans.modified_mesh_points
+        >>> import pygem.radial as rbf
+        >>> import pygem.params as rbfp
+        >>> import numpy as np
+        >>> rbf_parameters = rbfp.RBFParameters()
+        >>> fname = 'tests/test_datasets/parameters_rbf_cube.prm'
+        >>> rbf_parameters.read_parameters(fname)
+        >>> nx, ny, nz = (20, 20, 20)
+        >>> mesh = np.zeros((nx * ny * nz, 3))
+        >>> xv = np.linspace(0, 1, nx)
+        >>> yv = np.linspace(0, 1, ny)
+        >>> zv = np.linspace(0, 1, nz)
+        >>> z, y, x = np.meshgrid(zv, yv, xv)
+        >>> mesh = np.array([x.ravel(), y.ravel(), z.ravel()])
+        >>> original_mesh_points = mesh.T
+        >>> radial_trans = rbf.RBF(rbf_parameters, original_mesh_points)
+        >>> radial_trans.perform()
+        >>> new_mesh_points = radial_trans.modified_mesh_points
     """
 
     def __init__(self, rbf_parameters, original_mesh_points):

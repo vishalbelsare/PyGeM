@@ -17,7 +17,7 @@ computed value than those lying closer to the node.
 
     The interpolation value :math:`u` of a given point :math:`\\mathrm{x}`
     from a set of samples :math:`u_k = u(\\mathrm{x}_k)`, with
-    :math:`k = 1,2,\dotsc,\\mathcal{N}`, is given by:
+    :math:`k = 1,2,\\dotsc,\\mathcal{N}`, is given by:
 
     .. math::
         u(\\mathrm{x}) = \\displaystyle\\sum_{k=1}^\\mathcal{N}

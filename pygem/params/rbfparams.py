@@ -234,7 +234,6 @@ class RBFParameters(object):
         writer.SetInputData(data)
         writer.Write()
 
-
     def plot_points(self, filename=None):
         """
         Method to plot the control points. It is possible to save the resulting

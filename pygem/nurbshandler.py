@@ -8,26 +8,24 @@ import os
 import numpy as np
 from OCC.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
 from OCC.BRepAlgo import brepalgo_IsValid
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeEdge
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeFace
-from OCC.BRepBuilderAPI import BRepBuilderAPI_NurbsConvert
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeWire
-from OCC.BRepBuilderAPI import BRepBuilderAPI_Sewing
+from OCC.BRepBuilderAPI import (
+    BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace,
+    BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
 from OCC.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
 from OCC.Display.SimpleGui import init_display
-from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface
-from OCC.GeomConvert import geomconvert_CurveToBSplineCurve
+from OCC.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
+                             geomconvert_CurveToBSplineCurve)
 from OCC.gp import gp_Pnt, gp_XYZ
 from OCC.Precision import precision_Confusion
 from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
 from OCC.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
 from OCC.StlAPI import StlAPI_Writer
 from OCC.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
-from OCC.TopAbs import TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE
-from OCC.TopAbs import TopAbs_FORWARD, TopAbs_SHELL
+from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
+                        TopAbs_SHELL)
 from OCC.TopExp import TopExp_Explorer, topexp
-from OCC.TopoDS import topods_Face, TopoDS_Compound, topods_Shell
-from OCC.TopoDS import topods_Edge, topods_Wire, topods, TopoDS_Shape
+from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell, topods_Edge,
+                        topods_Wire, topods, TopoDS_Shape)
 from matplotlib import pyplot
 from mpl_toolkits import mplot3d
 from stl import mesh
@@ -38,8 +36,8 @@ class NurbsHandler(fh.FileHandler):
     """
     Nurbs file handler base class
 
-    :cvar string infile: name of the input file to be processed.
-    :cvar string outfile: name of the output file where to write in.
+    :cvar str infile: name of the input file to be processed.
+    :cvar str outfile: name of the output file where to write in.
     :cvar list control_point_position: index of the first NURBS
         control point (or pole) of each face of the files.
     :cvar TopoDS_Shape shape: shape meant for modification.
@@ -48,11 +46,10 @@ class NurbsHandler(fh.FileHandler):
 
     .. warning::
 
-        - For non trivial geometries it could be necessary to increase
-          the tolerance. Linking edges into a single wire and then
-          trimming the surface with the wire can be hard for the
-          software, especially when the starting CAD has not been made
-          for analysis but for design purposes.
+        For non trivial geometries it could be necessary to increase the
+        tolerance. Linking edges into a single wire and then trimming the
+        surface with the wire can be hard for the software, especially when the
+        starting CAD has not been made for analysis but for design purposes.
     """
 
     def __init__(self):
@@ -66,7 +63,7 @@ class NurbsHandler(fh.FileHandler):
         """
         This private method checks if `self.infile` and `self.shape` are
         instantiated. If not it means that nobody called the parse method
-        and at least one of them is None` If the check fails it raises a
+        and at least one of them is None. If the check fails it raises a
         RuntimeError.
         """
         if not self.shape or not self.infile:
@@ -79,9 +76,9 @@ class NurbsHandler(fh.FileHandler):
 
         Not implemented, it has to be implemented in subclasses.
         """
-        raise NotImplementedError(
-            'Subclass must implement abstract method ' +
-            self.__class__.__name__ + '.load_shape_from_file')
+        raise NotImplementedError('Subclass must implement abstract method'
+                                  '{}.load_shape_from_file'.format(
+                                      self.__class__.__name__))
 
     def parse(self, filename):
         """
@@ -135,7 +132,8 @@ class NurbsHandler(fh.FileHandler):
                         control_point_coordinates.Z()
                     ]
                     i += 1
-            # pushing the control points coordinates to the mesh_points array (used for FFD)
+            # pushing the control points coordinates to the mesh_points array
+            # (used for FFD)
             mesh_points = np.append(
                 mesh_points, control_polygon_coordinates, axis=0)
             control_point_position.append(
@@ -148,13 +146,13 @@ class NurbsHandler(fh.FileHandler):
 
     def write(self, mesh_points, filename, tolerance=None):
         """
-        Writes a output file, called filename, copying all the structures
+        Writes a output file, called `filename`, copying all the structures
         from self.filename but the coordinates. `mesh_points` is a matrix
         that contains the new coordinates to write in the output file.
 
-        :param numpy.ndarray mesh_points: it is a `n_points`-by-3 matrix
-            containing the coordinates of the points of the mesh
-        :param string filename: name of the output file.
+        :param numpy.ndarray mesh_points: it is a *n_points*-by-3 matrix
+            containing the coordinates of the points of the mesh.
+        :param str filename: name of the output file.
         :param float tolerance: tolerance for the construction of the faces
             and wires in the write function. If not given it uses
             `self.tolerance`.
@@ -217,7 +215,8 @@ class NurbsHandler(fh.FileHandler):
                 edge = topods_Edge(edge_explorer.Current())
                 # edge in the (u,v) coordinates
                 edge_uv_coordinates = BRep_Tool.CurveOnSurface(edge, face_aux)
-                # evaluating the new edge: same (u,v) coordinates, but different (x,y,x) ones
+                # evaluating the new edge: same (u,v) coordinates, but
+                # different (x,y,x) ones
                 edge_phis_coordinates_aux = BRepBuilderAPI_MakeEdge(
                     edge_uv_coordinates[0], brep_face)
                 edge_phis_coordinates = edge_phis_coordinates_aux.Edge()
@@ -238,10 +237,15 @@ class NurbsHandler(fh.FileHandler):
 
     def check_topology(self):
         """
-        Method to check the topology of imported geometry.
-        :return: 0: 1 solid = 1 shell = n faces
-        1: 1 solid = 0 shell = n free faces
-        2: 1 solid = n shell = n faces (1 shell = 1 face)
+        Method to check the topology of imported geometry; it sets
+        *self.check_topo* as:
+
+        - 0 if 1 solid = 1 shell = n faces
+        - 1 if 1 solid = 0 shell = n free faces
+        - 2 if 1 solid = n shell = n faces (1 shell = 1 face)
+
+        :return: {0, 1, 2}
+        :rtype: int
         """
         # read shells and faces
         shells_explorer = TopExp_Explorer(self.shape, TopAbs_SHELL)
@@ -256,10 +260,10 @@ class NurbsHandler(fh.FileHandler):
             n_faces += 1
             faces_explorer.Next()
 
-        print("##############################################\n"
-              "Model statistics -- Nb Shells: {0} Faces: {1} \n"
-              "----------------------------------------------\n".format(
-                  n_shells, n_faces))
+        # print("##############################################\n"
+        #       "Model statistics -- Nb Shells: {0} Faces: {1} \n"
+        #       "----------------------------------------------\n".format(
+        #           n_shells, n_faces))
 
         if n_shells == 0:
             self.check_topo = 1
@@ -271,18 +275,15 @@ class NurbsHandler(fh.FileHandler):
     @staticmethod
     def parse_face(topo_face):
         """
-        Method to parse a single Face (a single patch nurbs surface).
+        Method to parse a single `Face` (a single patch nurbs surface).
         It returns a matrix with all the coordinates of control points of the
-        Face and a second list with all the control points related to the
-        Edges of the Face.
+        `Face` and a second list with all the control points related to the
+        `Edges` of the `Face.`
 
-        :param topo_face: the input Face
+        :param Face topo_face: the input Face.
 
-        :return: mesh_points_face: it is a `n_points`-by-3 matrix containing the
-        coordinates of the control points of the Face (a nurbs surface)
-
-        :return: mesh_points_edge: it is a list of `n_points`-by-3 matrix
-
+        :return: control points of the `Face`, control points related to
+            `Edges`.
         :rtype: tuple(numpy.ndarray, list)
 
         """
@@ -361,7 +362,7 @@ class NurbsHandler(fh.FileHandler):
         of each Face and a second list with all the control points related to
         Edges of each Face.
 
-        :param filename: the input filename.
+        :param str filename: the input filename.
 
         :return: list of (mesh_points: `n_points`-by-3 matrix containing
         the coordinates of the control points of the Face (surface),
@@ -694,8 +695,9 @@ class NurbsHandler(fh.FileHandler):
             # add the new shell to the global compound
             global_compound_builder.Add(global_comp, new_shell)
 
-            print("Shell {0} of type {1} Processed ".format(0, itype))
-            print "=============================================="
+            # TODO print to logging
+            # print("Shell {0} of type {1} Processed ".format(0, itype))
+            # print "=============================================="
 
         self.write_shape_to_file(global_comp, self.outfile)
 

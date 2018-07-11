@@ -364,28 +364,29 @@ class FFDParameters(object):
         y = np.linspace(0, self.lenght_box[1], self.n_control_points[1])
         z = np.linspace(0, self.lenght_box[2], self.n_control_points[2])
 
-        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(y, x,
-                                                                           z)
+        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(
+            y, x, z)
 
         if write_deformed:
             box_points = np.array([
-                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
-                self.lenght_box[0], lattice_y_coords.ravel() +
+                lattice_x_coords.ravel() +
+                self.array_mu_x.ravel() * self.lenght_box[0],
+                lattice_y_coords.ravel() +
                 self.array_mu_y.ravel() * self.lenght_box[1],
-                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
-                self.lenght_box[2]
+                lattice_z_coords.ravel() +
+                self.array_mu_z.ravel() * self.lenght_box[2]
             ])
         else:
             box_points = np.array([
-                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
+                lattice_x_coords.ravel(),
+                lattice_y_coords.ravel(),
                 lattice_z_coords.ravel()
             ])
 
         n_rows = box_points.shape[1]
 
-        box_points = np.dot(
-            self.rotation_matrix,
-            box_points) + np.transpose(np.tile(self.origin_box, (n_rows, 1)))
+        box_points = np.dot(self.rotation_matrix, box_points) + np.transpose(
+            np.tile(self.origin_box, (n_rows, 1)))
 
         points = vtk.vtkPoints()
 

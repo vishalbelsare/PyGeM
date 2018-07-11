@@ -309,11 +309,13 @@ class RBF(object):
         This method performs the deformation of the mesh points. After the
         execution it sets `self.modified_mesh_points`.
         """
-        n_points = self.original_mesh_points.shape[0]
-        dist = self.basis(
+        n_mesh_points = self.original_mesh_points.shape[0]
+        n_control_points = self.parameters.original_control_points.shape[0]
+        H = np.zeros((n_mesh_points, n_control_points+3+1))
+        H[:, :n_control_points] = self.basis(
             cdist(self.original_mesh_points,
                   self.parameters.original_control_points),
             self.parameters.radius)
-        identity = np.ones((n_points, 1))
-        H = np.bmat([[dist, identity, self.original_mesh_points]])
+        H[:, n_control_points] = 1.0
+        H[:, -3:] = self.original_mesh_points
         self.modified_mesh_points = np.asarray(np.dot(H, self.weights))

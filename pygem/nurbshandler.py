@@ -8,13 +8,13 @@ import os
 import numpy as np
 from OCC.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
 from OCC.BRepAlgo import brepalgo_IsValid
-from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeEdge,
-        BRepBuilderAPI_MakeFace, BRepBuilderAPI_NurbsConvert,
-        BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
+from OCC.BRepBuilderAPI import (
+    BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace,
+    BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
 from OCC.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
 from OCC.Display.SimpleGui import init_display
 from OCC.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
-        geomconvert_CurveToBSplineCurve)
+                             geomconvert_CurveToBSplineCurve)
 from OCC.gp import gp_Pnt, gp_XYZ
 from OCC.Precision import precision_Confusion
 from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
@@ -22,10 +22,10 @@ from OCC.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
 from OCC.StlAPI import StlAPI_Writer
 from OCC.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
 from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
-        TopAbs_SHELL)
+                        TopAbs_SHELL)
 from OCC.TopExp import TopExp_Explorer, topexp
-from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell,
-        topods_Edge, topods_Wire, topods, TopoDS_Shape)
+from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell, topods_Edge,
+                        topods_Wire, topods, TopoDS_Shape)
 from matplotlib import pyplot
 from mpl_toolkits import mplot3d
 from stl import mesh
@@ -76,9 +76,9 @@ class NurbsHandler(fh.FileHandler):
 
         Not implemented, it has to be implemented in subclasses.
         """
-        raise NotImplementedError(
-                'Subclass must implement abstract method'
-                '{}.load_shape_from_file'.format(self.__class__.__name__))
+        raise NotImplementedError('Subclass must implement abstract method'
+                                  '{}.load_shape_from_file'.format(
+                                      self.__class__.__name__))
 
     def parse(self, filename):
         """
@@ -282,7 +282,8 @@ class NurbsHandler(fh.FileHandler):
 
         :param Face topo_face: the input Face.
 
-        :return: control points of the `Face`, control points related to `Edges`.
+        :return: control points of the `Face`, control points related to
+            `Edges`.
         :rtype: tuple(numpy.ndarray, list)
 
         """

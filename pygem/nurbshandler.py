@@ -597,7 +597,7 @@ class NurbsHandler(fh.FileHandler):
         shell = topods.Shell(shell)
         shell_fixer = ShapeFix_Shell()
         shell_fixer.FixFaceOrientation(shell)
-
+        """
         if shell_fixer.Perform():
             print("{} shells fixed! ".format(shell_fixer.NbShells()))
         else:
@@ -609,7 +609,7 @@ class NurbsHandler(fh.FileHandler):
             print "Shell valid! "
         else:
             print "Shell failed! "
-
+        """
         return new_shell
 
     def write_shape(self, l_shells, filename, tol):
@@ -663,8 +663,9 @@ class NurbsHandler(fh.FileHandler):
                 # add the new shell to the global compound
                 global_compound_builder.Add(global_comp, new_shell)
 
-                print("Shell {0} of type {1} Processed ".format(ishell, itype))
-                print "=============================================="
+                # TODO
+                #print("Shell {0} of type {1} Processed ".format(ishell, itype))
+                #print "=============================================="
 
                 ishell += 1
                 shape_shells_explorer.Next()

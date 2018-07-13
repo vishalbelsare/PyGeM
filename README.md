@@ -48,7 +48,7 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 
 ## Dependencies and installation
-**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `numpy-stl`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. The code is compatible with Python 2.7.
+**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `numpy-stl`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. The code is compatible with Python 2.7 and Python 3.6.
 Moreover **PyGeM** depends on `OCC`. These requirements cannot be satisfied through `pip`.
 Please see the table below for instructions on how to satisfy the requirements.
 

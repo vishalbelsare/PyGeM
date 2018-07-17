@@ -127,10 +127,7 @@ class TestVtkHandler(TestCase):
         mesh_points[255][2] = -3.6
 
         outfilename = 'tests/test_datasets/test_red_blood_cell_out.vtk'
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true_version5.vtk'
-        else:
-            outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true_version6.vtk'
+        outfilename_expected = 'tests/test_datasets/test_red_blood_cell_out_true.vtk'
 
         vtk_handler.write(mesh_points, outfilename)
         self.assertTrue(self.cmp(outfilename, outfilename_expected))

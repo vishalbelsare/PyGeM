@@ -27,7 +27,6 @@
 * [Documentation](#documentation)
 * [Testing](#testing)
 * [Examples](#examples)
-* [Graphical User Interface](#graphical-user-interface)
 * [How to cite](#how-to-cite)
 	* [References](#references)
 	* [Recent works with PyGeM](#recent-works-with-pygem)

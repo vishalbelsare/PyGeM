@@ -144,7 +144,7 @@ class RBF(object):
         .. math::
             \\varphi(\\boldsymbol{x}) = e^{-\\frac{\\boldsymbol{x}^2}{r^2}}
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.
@@ -161,7 +161,7 @@ class RBF(object):
         .. math::
             \\varphi(\\boldsymbol{x}) = \\sqrt{\\boldsymbol{x}^2 + r^2}
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.
@@ -179,7 +179,7 @@ class RBF(object):
             \\varphi(\\boldsymbol{x}) =
             (\\boldsymbol{x}^2 + r^2 )^{-\\frac{1}{2}}
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.
@@ -198,7 +198,7 @@ class RBF(object):
             \\left(\\frac{\\boldsymbol{x}}{r}\\right)^2
             \\ln\\frac{\\boldsymbol{x}}{r}
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.
@@ -219,7 +219,7 @@ class RBF(object):
             \\left( 1 - \\frac{\\boldsymbol{x}}{r}\\right)^4 +
             \\left( 4 \\frac{ \\boldsymbol{x} }{r} + 1 \\right)
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.
@@ -252,7 +252,7 @@ class RBF(object):
                     ~k = 2,4,6,...\\\\
                 \\end{cases}
 
-        :param numpy.ndarray X: the vector x in the formula above.
+        :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above.
 
         :return: result: the result of the formula above.

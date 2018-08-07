@@ -53,7 +53,7 @@ Please see the table below for instructions on how to satisfy the requirements.
 
 | Package | Version     | Comment                                                                    |
 |---------|-------------|----------------------------------------------------------------------------|
-| OCC     | ==0.17.3    | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions or `conda install -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17.3 python=2` |
+| OCC     | ==0.17.3    | See pythonocc.org or github.com/tpaviot/pythonocc-core for instructions or `conda install -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17.3 python=2` |
 
 
 The official distribution is on GitHub, and you can clone the repository using

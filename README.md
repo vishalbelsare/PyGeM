@@ -169,9 +169,18 @@ The deformations implemented are taken from the following papers:
 ### Recent works with PyGeM
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
+* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)] [[arXiv](https://arxiv.org/abs/1803.07368)].
+
+* Tezzele, Demo, Gadalla, Mola, Rozza. *Model Order Reduction by means of Active Subspaces and Dynamic Mode Decomposition for Parametric Hull Shape Design Hydrodynamics*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-569)] [[arXiv](https://arxiv.org/abs/1803.07377)].
+ 
+* Demo, Tezzele, Mola, Rozza. *An efficient shape parametrisation by free-form deformation enhanced by active subspace for hull hydrodynamic ship design problems in open source environment*. 2018. [[arXiv](https://arxiv.org/abs/1801.06369)].
+
 * Bergmann, Ferrero, Iollo, Lombardi, Scardigli, Telib. *A zonal Galerkin-free POD model for incompressible flows*. Journal of Computational Physics, 2018. [[DOI](https://doi.org/10.1016/j.jcp.2017.10.001)].
+
 * Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1711.10884)]. 
+
 * Tezzele, Salmoiraghi, Mola, Rozza. *Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
+
 * Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. *Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives*. ECCOMAS 2016 proceedings. [[DOI](https://doi.org/10.7712/100016.1867.8680)].
 
 

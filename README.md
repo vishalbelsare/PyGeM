@@ -162,24 +162,30 @@ If you use this package in your publications please cite the package as follows:
 The deformations implemented are taken from the following papers:
 
 * Sieger, Menzel, Botsch. *On Shape Deformation Techniques for Simulation-based Design Optimization*. SEMA SIMAI Springer Series, 2015. [[DOI](https://doi.org/10.1007/978-3-319-06053-8_14)], [[pdf](http://www.honda-ri.de/pubs/pdf/1052.pdf)].
+
 * Forti, Rozza. *Efficient geometrical parametrisation techniques of interfaces for reduced-order modelling: application to fluid–structure interaction coupling problems*. International Journal of Computational Fluid Dynamics, 2014. [[DOI](http://dx.doi.org/10.1080/10618562.2014.932352)].
+
 * Sieger, Menzel, Botsch. *RBF Morphing Techniques for Simulation-based Design Optimization*. M. Engineering with Computers, 2014. [[DOI](https://doi.org/10.1007/s00366-013-0330-1)], [[pdf](http://www.honda-ri.de/pubs/pdf/923.pdf)].
+
 * Lombardi, Parolini, Quarteroni, Rozza. *Numerical Simulation of Sailing Boats: Dynamics, FSI, and Shape Optimization*. Springer Optimization and Its Applications, 2012. [[DOI](http://dx.doi.org/10.1007/978-1-4614-2435-2_15)], [[pdf](https://infoscience.epfl.ch/record/175879/files/PaerErice-Lombardi-parolini-quarteroni-Rozza.pdf)].
 
 ### Recent works with PyGeM
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)] [[arXiv](https://arxiv.org/abs/1803.07368)].
 
-* Tezzele, Demo, Gadalla, Mola, Rozza. *Model Order Reduction by means of Active Subspaces and Dynamic Mode Decomposition for Parametric Hull Shape Design Hydrodynamics*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-569)] [[arXiv](https://arxiv.org/abs/1803.07377)].
+* Tezzele, Salmoiraghi, Mola, Rozza. *Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems*. Advanced Modeling and Simulation in Engineering Sciences, 2018. [[DOI](https://doi.org/10.1186/s40323-018-0118-3)], [[arXiv](https://arxiv.org/abs/1709.03298)].
+
+* Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. In Mathematical and Numerical Modeling of the Cardiovascular System and Applications. SEMA SIMAI Springer Series 16, 2018. [[arXiv](https://arxiv.org/abs/1711.10884)]. 
+
+* Salmoiraghi, Scardigli, Telib, Rozza. *Free-form deformation, mesh morphing and reduced-order methods: enablers for efficient aerodynamic shape optimisation*. International Journal of Computational Fluid Dynamics, 2018. [[DOI](https://doi.org/10.1080/10618562.2018.1514115)], [[arXiv](https://arxiv.org/abs/1803.04688)].
+
+* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)], [[arXiv](https://arxiv.org/abs/1803.07368)].
+
+* Tezzele, Demo, Gadalla, Mola, Rozza. *Model Order Reduction by means of Active Subspaces and Dynamic Mode Decomposition for Parametric Hull Shape Design Hydrodynamics*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-569)], [[arXiv](https://arxiv.org/abs/1803.07377)].
  
-* Demo, Tezzele, Mola, Rozza. *An efficient shape parametrisation by free-form deformation enhanced by active subspace for hull hydrodynamic ship design problems in open source environment*. 2018. [[arXiv](https://arxiv.org/abs/1801.06369)].
+* Demo, Tezzele, Mola, Rozza. *An efficient shape parametrisation by free-form deformation enhanced by active subspace for hull hydrodynamic ship design problems in open source environment*. The 28th International Ocean and Polar Engineering Conference, 2018. [[arXiv](https://arxiv.org/abs/1801.06369)].
 
 * Bergmann, Ferrero, Iollo, Lombardi, Scardigli, Telib. *A zonal Galerkin-free POD model for incompressible flows*. Journal of Computational Physics, 2018. [[DOI](https://doi.org/10.1016/j.jcp.2017.10.001)].
-
-* Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1711.10884)]. 
-
-* Tezzele, Salmoiraghi, Mola, Rozza. *Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems*. Submitted, 2017. [[arXiv](https://arxiv.org/abs/1709.03298)].
 
 * Salmoiraghi, Ballarin, Corsi, Mola, Tezzele, Rozza. *Advances in geometrical parametrization and reduced order models and methods for computational fluid dynamics problems in applied sciences and engineering: overview and perspectives*. ECCOMAS 2016 proceedings. [[DOI](https://doi.org/10.7712/100016.1867.8680)].
 

@@ -173,10 +173,11 @@ The deformations implemented are taken from the following papers:
 ### Recent works with PyGeM
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
+* Tezzele, Demo, Mola, Rozza. *An integrated data-driven computational pipeline with model order reduction for industrial and applied mathematics*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1810.12364)].
 
 * Tezzele, Salmoiraghi, Mola, Rozza. *Dimension reduction in heterogeneous parametric spaces with application to naval engineering shape design problems*. Advanced Modeling and Simulation in Engineering Sciences, 2018. [[DOI](https://doi.org/10.1186/s40323-018-0118-3)], [[arXiv](https://arxiv.org/abs/1709.03298)].
 
-* Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. In Mathematical and Numerical Modeling of the Cardiovascular System and Applications. SEMA SIMAI Springer Series 16, 2018. [[arXiv](https://arxiv.org/abs/1711.10884)]. 
+* Tezzele, Ballarin, Rozza. *Combined parameter and model reduction of cardiovascular problems by means of active subspaces and POD-Galerkin methods*. In Mathematical and Numerical Modeling of the Cardiovascular System and Applications. SEMA SIMAI Springer Series vol. 16, 2018. [[DOI](https://doi.org/10.1007/978-3-319-96649-6_8)], [[arXiv](https://arxiv.org/abs/1711.10884)]. 
 
 * Salmoiraghi, Scardigli, Telib, Rozza. *Free-form deformation, mesh morphing and reduced-order methods: enablers for efficient aerodynamic shape optimisation*. International Journal of Computational Fluid Dynamics, 2018. [[DOI](https://doi.org/10.1080/10618562.2018.1514115)], [[arXiv](https://arxiv.org/abs/1803.04688)].
 

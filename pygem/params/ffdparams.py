@@ -66,7 +66,7 @@ class FFDParameters(object):
         Four vertex (non coplanar) are sufficient to uniquely identify a
         parallelepiped.
         If the four vertex are coplanar, an assert is thrown when
-        `affine_points_fit is used.
+        `affine_points_fit` is used.
 
     """
 
@@ -126,6 +126,64 @@ class FFDParameters(object):
             np.zeros((1, 3)),
             self.rotation_matrix.dot(np.diag(self.lenght_box)).T
         ])
+
+
+    def reflect(self, axis=0):
+        """
+        Reflect the lattice of control points along the direction defined
+        by `axis`. In particular the origin point of the lattice is preserved.
+        So, for instance, the reflection along x, is made with respect to the
+        face of the lattice in the yz plane that is opposite to the origin.
+        Same for the other directions. Only the weights (mu) along the chosen
+        axis are reflected, while the others are preserved. The symmetry plane
+        can not present deformations along the chosen axis.
+        After the refletcion there will be 2n-1 control points along `axis`,
+        witha doubled box length.
+
+        :param int axis: axis along which the reflection is performed.
+            Default is 0. Possible values are 0, 1, or 2, corresponding
+            to x, y, and z respectively.
+        """
+        # check axis value
+        if axis not in (0, 1, 2):
+            raise ValueError("The axis has to be 0, 1, or 2. " + \
+                "Current value {}.".format(axis))
+
+        # check that the plane of symmetry is undeformed
+        if (axis == 0 and np.sum(self.array_mu_x[-1, :, :]) != 0) or \
+            (axis == 1 and np.sum(self.array_mu_y[:, -1, :]) != 0) or \
+            (axis == 2 and np.sum(self.array_mu_z[:, :, -1]) != 0):
+            raise RuntimeError("If you want to reflect the FFD " + \
+                "bounding box along axis {} ".format(axis) + \
+                "you can not diplace the control points in the " + \
+                "symmetry plane along that axis.")
+
+        # double the control points in the given axis minus 1 (the symmetry plane)
+        self.n_control_points[axis] = 2 * self.n_control_points[axis] - 1
+        # double the box length
+        self.lenght_box[axis] *= 2
+        
+        # we have to reflect the dispacements only along the correct axis
+        reflection = np.ones(3)
+        reflection[axis] = -1
+
+        # we need to select all the indeces but the ones in the plane of symmetry
+        indeces = [slice(None), slice(None), slice(None)] # = [:, :, :] 
+        indeces[axis] = slice(1, None) # = [1:]
+        indeces = tuple(indeces)
+        
+        # we append along the given axis all the displacements reflected
+        # and in the reverse order
+        self.array_mu_x = np.append(self.array_mu_x, 
+            reflection[0] * np.flip(self.array_mu_x, axis)[indeces], 
+            axis=axis)
+        self.array_mu_y = np.append(self.array_mu_y, 
+            reflection[1] * np.flip(self.array_mu_y, axis)[indeces], 
+            axis=axis)
+        self.array_mu_z = np.append(self.array_mu_z, 
+            reflection[2] * np.flip(self.array_mu_z, axis)[indeces], 
+            axis=axis)
+
 
     def read_parameters(self, filename='parameters.prm'):
         """

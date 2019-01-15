@@ -86,6 +86,105 @@ class TestFFDParameters(TestCase):
         np.testing.assert_array_almost_equal(params.array_mu_z,
                                              np.zeros((2, 3, 5)))
 
+    def test_reflect_n_control_points_1(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=0)
+        assert np.array_equal(params.n_control_points, [3, 3, 5])
+
+    def test_reflect_n_control_points_2(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=1)
+        assert np.array_equal(params.n_control_points, [2, 5, 5])
+
+    def test_reflect_n_control_points_3(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=2)
+        assert np.array_equal(params.n_control_points, [2, 3, 9])
+
+    def test_reflect_box_length_1(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=0)
+        assert params.lenght_box[0] == 2 
+
+    def test_reflect_box_length_2(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=1)
+        assert params.lenght_box[1] == 2 
+
+    def test_reflect_box_length_3(self):
+        params = FFDParameters([2, 3, 5])
+        params.reflect(axis=2)
+        assert params.lenght_box[2] == 2 
+
+    def test_reflect_wrong_axis(self):
+        params = FFDParameters([2, 3, 5])
+        with self.assertRaises(ValueError):
+            params.reflect(axis=4)
+        
+    def test_reflect_wrong_symmetry_plane_1(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_x = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., 0., 1., 0., 0.3, 0.]).reshape((3, 2,
+                                                                         2))
+        with self.assertRaises(RuntimeError):
+            params.reflect(axis=0)
+
+    def test_reflect_wrong_symmetry_plane_2(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_y = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., 0., 1., 0., 0.3, 0.]).reshape((3, 2,
+                                                                         2))
+        with self.assertRaises(RuntimeError):
+            params.reflect(axis=1)
+
+    def test_reflect_wrong_symmetry_plane_3(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_z = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., 0., 1., 0., 0.3, 0.1]).reshape((3, 2,
+                                                                         2))
+        with self.assertRaises(RuntimeError):
+            params.reflect(axis=2)
+
+    def test_reflect_axis_0(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_x = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., .2, 0., 0., 0., 0.]).reshape((3, 2,
+                                                                         2))
+        params.reflect(axis=0)
+        array_mu_x_exact = np.array([0.2, 0., 0., 0., 0.5, 0., 0., 0.2, 0.,
+            0., 0., 0., -0.5, -0., -0., -0.2, -0.2, -0., -0., -0.]).reshape((5, 2,
+                                                                         2))
+        np.testing.assert_array_almost_equal(params.array_mu_x,
+                                             array_mu_x_exact)
+
+    def test_reflect_axis_1(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_y = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., 0., 0., 0., 0., 0.]).reshape((3, 2,
+                                                                         2))
+        params.reflect(axis=1)
+        array_mu_y_exact = np.array([0.2, 0., 0., 0., -0.2, -0., 0.5, 0., 0., 0.,
+            -0.5, -0., 0., 0., 0., 0., 0., 0.]).reshape((3, 3, 2))
+        np.testing.assert_array_almost_equal(params.array_mu_y,
+                                             array_mu_y_exact)
+
+    def test_reflect_axis_2(self):
+        params = FFDParameters([3, 2, 2])
+        params.read_parameters('tests/test_datasets/parameters_sphere.prm')
+        params.array_mu_z = np.array(
+            [0.2, 0., 0., 0., 0.5, 0., 0., 0., 0., 0., 0., 0.]).reshape((3, 2,
+                                                                         2))
+        params.reflect(axis=2)
+        array_mu_z_exact = np.array([0.2, 0., -0.2, 0., 0., 0., 0.5, 0., -0.5,
+            0., 0., -0., 0., 0., -0., 0., 0., -0.]).reshape((3, 2, 3))
+        np.testing.assert_array_almost_equal(params.array_mu_z,
+                                             array_mu_z_exact)
+
     def test_read_parameters_conversion_unit(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
@@ -119,7 +218,6 @@ class TestFFDParameters(TestCase):
         array_mu_x_exact = np.array(
             [0.2, 0., 0., 0., 0.5, 0., 0., 0., 1., 0., 0., 0.]).reshape((3, 2,
                                                                          2))
-        print(params.array_mu_x)
         np.testing.assert_array_almost_equal(params.array_mu_x,
                                              array_mu_x_exact)
 

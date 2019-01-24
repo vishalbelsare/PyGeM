@@ -66,6 +66,9 @@ install:
         fi
       fi
     - source activate test
+    - echo $LD_LIBRARY_PATH
+    - echo $DYLD_LIBRARY_PATH
+    - echo $PATH
     - pip install numpy scipy matplotlib vtk nose
     - if [[ "$TOXENV" == "py27" ]]; then
         conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=2.7;
@@ -74,7 +77,6 @@ install:
       fi
     - pip install setuptools
     - pip install coveralls
-    - pip install coverage
     - python setup.py install
 
 script:

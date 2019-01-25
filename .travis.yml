@@ -11,14 +11,14 @@ matrix:
           python: 2.7
           env: TOXENV=py27
         - os: linux
-          python: 3.6
-          env: TOXENV=py36
+          python: 3.5
+          env: TOXENV=py35
         - os: osx
           language: generic
           env: TOXENV=py27
         - os: osx
           language: generic
-          env: TOXENV=py36
+          env: TOXENV=py35
           
 before_script:
     - "export DISPLAY=:99.0"
@@ -54,7 +54,7 @@ install:
         if [[ "$TOXENV" == "py27" ]]; then
             conda create --yes -n test python="2.7";
         else
-            conda create --yes -n test python="3.6";
+            conda create --yes -n test python="3.5";
         fi
       fi
     - source activate test
@@ -65,7 +65,7 @@ install:
     - if [[ "$TOXENV" == "py27" ]]; then
         conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=2.7;
       else
-        conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=3.6;
+        conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=3.5;
       fi
     - python setup.py install
 

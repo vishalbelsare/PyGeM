@@ -23,20 +23,20 @@ class FFDParameters(object):
     :param list n_control_points: number of control points in the x, y, and z
         direction. If not provided it is set to [2, 2, 2].
 
-    :cvar numpy.ndarray length_box: dimension of the FFD bounding box, in the
+    :cvar numpy.ndarray box_length: dimension of the FFD bounding box, in the
         x, y and z direction (local coordinate system).
-    :cvar numpy.ndarray origin_box: the x, y and z coordinates of the origin of
+    :cvar numpy.ndarray box_origin: the x, y and z coordinates of the origin of
         the FFD bounding box.
     :cvar numpy.ndarray rot_angle: rotation angle around x, y and z axis of the
         FFD bounding box.
     :cvar numpy.ndarray n_control_points: the number of control points in the
         x, y, and z direction.
     :cvar numpy.ndarray array_mu_x: collects the displacements (weights) along
-        x, normalized with the box lenght x.
+        x, normalized with the box length x.
     :cvar numpy.ndarray array_mu_y: collects the displacements (weights) along
-        y, normalized with the box lenght y.
+        y, normalized with the box length y.
     :cvar numpy.ndarray array_mu_z: collects the displacements (weights) along
-        z, normalized with the box lenght z.
+        z, normalized with the box length z.
 
     :Example: from file
 
@@ -73,8 +73,8 @@ class FFDParameters(object):
     def __init__(self, n_control_points=None):
         self.conversion_unit = 1.
 
-        self.lenght_box = np.array([1., 1., 1.])
-        self.origin_box = np.array([0., 0., 0.])
+        self.box_length = np.array([1., 1., 1.])
+        self.box_origin = np.array([0., 0., 0.])
         self.rot_angle = np.array([0., 0., 0.])
 
         if n_control_points is None:
@@ -92,7 +92,7 @@ class FFDParameters(object):
 
         :rtype: numpy.ndarray
         """
-        return np.diag(np.reciprocal(self.lenght_box))
+        return np.diag(np.reciprocal(self.box_length))
 
     @property
     def inv_psi_mapping(self):
@@ -101,7 +101,7 @@ class FFDParameters(object):
 
         :rtype: numpy.ndarray
         """
-        return np.diag(self.lenght_box)
+        return np.diag(self.box_length)
 
     @property
     def rotation_matrix(self):
@@ -122,9 +122,9 @@ class FFDParameters(object):
 
         :rtype: numpy.ndarray
         """
-        return self.origin_box + np.vstack([
+        return self.box_origin + np.vstack([
             np.zeros(
-                (1, 3)), self.rotation_matrix.dot(np.diag(self.lenght_box)).T
+                (1, 3)), self.rotation_matrix.dot(np.diag(self.box_length)).T
         ])
 
     def reflect(self, axis=0):
@@ -161,7 +161,7 @@ class FFDParameters(object):
         # double the control points in the given axis -1 (the symmetry plane)
         self.n_control_points[axis] = 2 * self.n_control_points[axis] - 1
         # double the box length
-        self.lenght_box[axis] *= 2
+        self.box_length[axis] *= 2
 
         # we have to reflect the dispacements only along the correct axis
         reflection = np.ones(3)
@@ -209,13 +209,13 @@ class FFDParameters(object):
         self.n_control_points[2] = config.getint('Box info',
                                                  'n control points z')
 
-        self.lenght_box[0] = config.getfloat('Box info', 'box lenght x')
-        self.lenght_box[1] = config.getfloat('Box info', 'box lenght y')
-        self.lenght_box[2] = config.getfloat('Box info', 'box lenght z')
+        self.box_length[0] = config.getfloat('Box info', 'box length x')
+        self.box_length[1] = config.getfloat('Box info', 'box length y')
+        self.box_length[2] = config.getfloat('Box info', 'box length z')
 
-        self.origin_box[0] = config.getfloat('Box info', 'box origin x')
-        self.origin_box[1] = config.getfloat('Box info', 'box origin y')
-        self.origin_box[2] = config.getfloat('Box info', 'box origin z')
+        self.box_origin[0] = config.getfloat('Box info', 'box origin x')
+        self.box_origin[1] = config.getfloat('Box info', 'box origin y')
+        self.box_origin[2] = config.getfloat('Box info', 'box origin z')
 
         self.rot_angle[0] = config.getfloat('Box info', 'rotation angle x')
         self.rot_angle[1] = config.getfloat('Box info', 'rotation angle y')
@@ -267,17 +267,17 @@ class FFDParameters(object):
         output_string += 'n control points z: ' + str(self.n_control_points[
             2]) + '\n'
 
-        output_string += '\n# box lenght indicates the length of the FFD '
+        output_string += '\n# box length indicates the length of the FFD '
         output_string += 'bounding box along the three canonical directions '
         output_string += '(x, y, z).\n'
 
         output_string += '# It uses the local coordinate system.\n'
         output_string += '# For example to create a 2 x 1.5 x 3 meters box '
-        output_string += 'use the following: lenght box: 2.0, 1.5, 3.0\n'
+        output_string += 'use the following: box length: 2.0, 1.5, 3.0\n'
 
-        output_string += 'box lenght x: ' + str(self.lenght_box[0]) + '\n'
-        output_string += 'box lenght y: ' + str(self.lenght_box[1]) + '\n'
-        output_string += 'box lenght z: ' + str(self.lenght_box[2]) + '\n'
+        output_string += 'box length x: ' + str(self.box_length[0]) + '\n'
+        output_string += 'box length y: ' + str(self.box_length[1]) + '\n'
+        output_string += 'box length z: ' + str(self.box_length[2]) + '\n'
 
         output_string += '\n# box origin indicates the x, y, and z coordinates '
         output_string += 'of the origin of the FFD bounding box. That is '
@@ -289,11 +289,11 @@ class FFDParameters(object):
         output_string += '# See section "Parameters weights" for more '
         output_string += 'details.\n'
         output_string += '# For example, if the origin is equal to 0., 0., 0., '
-        output_string += 'use the following: origin box: 0., 0., 0.\n'
+        output_string += 'use the following: box origin: 0., 0., 0.\n'
 
-        output_string += 'box origin x: ' + str(self.origin_box[0]) + '\n'
-        output_string += 'box origin y: ' + str(self.origin_box[1]) + '\n'
-        output_string += 'box origin z: ' + str(self.origin_box[2]) + '\n'
+        output_string += 'box origin x: ' + str(self.box_origin[0]) + '\n'
+        output_string += 'box origin y: ' + str(self.box_origin[1]) + '\n'
+        output_string += 'box origin z: ' + str(self.box_origin[2]) + '\n'
 
         output_string += '\n# rotation angle indicates the rotation angle '
         output_string += 'around the x, y, and z axis of the FFD bounding box '
@@ -331,7 +331,7 @@ class FFDParameters(object):
         output_string += '# |    0    |    0    |    1    |  3.4   |\n'
 
         output_string += '\n# parameter x collects the displacements along x, '
-        output_string += 'normalized with the box lenght x.'
+        output_string += 'normalized with the box length x.'
 
         output_string += '\nparameter x:'
         offset = 1
@@ -344,7 +344,7 @@ class FFDParameters(object):
                     offset = 13
 
         output_string += '\n# parameter y collects the displacements along y, '
-        output_string += 'normalized with the box lenght y.'
+        output_string += 'normalized with the box length y.'
 
         output_string += '\nparameter y:'
         offset = 1
@@ -357,7 +357,7 @@ class FFDParameters(object):
                     offset = 13
 
         output_string += '\n# parameter z collects the displacements along z, '
-        output_string += 'normalized with the box lenght z.'
+        output_string += 'normalized with the box length z.'
 
         output_string += '\nparameter z:'
         offset = 1
@@ -380,8 +380,8 @@ class FFDParameters(object):
         string = ""
         string += 'conversion_unit = {}\n'.format(self.conversion_unit)
         string += 'n_control_points = {}\n\n'.format(self.n_control_points)
-        string += 'lenght_box = {}\n'.format(self.lenght_box)
-        string += 'origin_box = {}\n'.format(self.origin_box)
+        string += 'box_length = {}\n'.format(self.box_length)
+        string += 'box_origin = {}\n'.format(self.box_origin)
         string += 'rot_angle  = {}\n'.format(self.rot_angle)
         string += '\narray_mu_x =\n{}\n'.format(self.array_mu_x)
         string += '\narray_mu_y =\n{}\n'.format(self.array_mu_y)
@@ -417,9 +417,9 @@ class FFDParameters(object):
             **Point Gaussian** representation.
 
         """
-        x = np.linspace(0, self.lenght_box[0], self.n_control_points[0])
-        y = np.linspace(0, self.lenght_box[1], self.n_control_points[1])
-        z = np.linspace(0, self.lenght_box[2], self.n_control_points[2])
+        x = np.linspace(0, self.box_length[0], self.n_control_points[0])
+        y = np.linspace(0, self.box_length[1], self.n_control_points[1])
+        z = np.linspace(0, self.box_length[2], self.n_control_points[2])
 
         lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(y, x,
                                                                            z)
@@ -427,10 +427,10 @@ class FFDParameters(object):
         if write_deformed:
             box_points = np.array([
                 lattice_x_coords.ravel() + self.array_mu_x.ravel() *
-                self.lenght_box[0], lattice_y_coords.ravel() +
-                self.array_mu_y.ravel() * self.lenght_box[1],
+                self.box_length[0], lattice_y_coords.ravel() +
+                self.array_mu_y.ravel() * self.box_length[1],
                 lattice_z_coords.ravel() + self.array_mu_z.ravel() *
-                self.lenght_box[2]
+                self.box_length[2]
             ])
         else:
             box_points = np.array([
@@ -442,7 +442,7 @@ class FFDParameters(object):
 
         box_points = np.dot(
             self.rotation_matrix,
-            box_points) + np.transpose(np.tile(self.origin_box, (n_rows, 1)))
+            box_points) + np.transpose(np.tile(self.box_origin, (n_rows, 1)))
 
         points = vtk.vtkPoints()
 
@@ -489,8 +489,8 @@ class FFDParameters(object):
         min_xyz = np.array([xmin, ymin, zmin])
         max_xyz = np.array([xmax, ymax, zmax])
 
-        self.origin_box = min_xyz
-        self.lenght_box = max_xyz - min_xyz
+        self.box_origin = min_xyz
+        self.box_length = max_xyz - min_xyz
         self.reset_deformation()
 
     def reset_deformation(self):

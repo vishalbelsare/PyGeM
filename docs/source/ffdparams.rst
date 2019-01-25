@@ -13,6 +13,7 @@ FFDParameters
     FFDParameters.inv_psi_mapping
     FFDParameters.rotation_matrix
     FFDParameters.position_vertices
+    FFDParameters.reflect
     FFDParameters.read_parameters
     FFDParameters.write_parameters
     FFDParameters.save_points

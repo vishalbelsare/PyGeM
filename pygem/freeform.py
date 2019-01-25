@@ -84,7 +84,7 @@ class FFD(object):
         execution it sets `self.modified_mesh_points`.
         """
         # translation and then affine transformation
-        translation = self.parameters.origin_box
+        translation = self.parameters.box_origin
 
         physical_frame = self.parameters.position_vertices - translation
         reference_frame = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])

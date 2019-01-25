@@ -19,13 +19,13 @@ class TestFFDParameters(TestCase):
         params = FFDParameters()
         assert params.conversion_unit == 1.
 
-    def test_class_members_default_lenght_box(self):
+    def test_class_members_default_box_length(self):
         params = FFDParameters()
-        assert np.array_equal(params.lenght_box, np.ones(3))
+        assert np.array_equal(params.box_length, np.ones(3))
 
-    def test_class_members_default_origin_box(self):
+    def test_class_members_default_box_origin(self):
         params = FFDParameters()
-        assert np.array_equal(params.origin_box, np.zeros(3))
+        assert np.array_equal(params.box_origin, np.zeros(3))
 
     def test_class_members_default_rot_angle(self):
         params = FFDParameters()
@@ -104,17 +104,17 @@ class TestFFDParameters(TestCase):
     def test_reflect_box_length_1(self):
         params = FFDParameters([2, 3, 5])
         params.reflect(axis=0)
-        assert params.lenght_box[0] == 2 
+        assert params.box_length[0] == 2 
 
     def test_reflect_box_length_2(self):
         params = FFDParameters([2, 3, 5])
         params.reflect(axis=1)
-        assert params.lenght_box[1] == 2 
+        assert params.box_length[1] == 2 
 
     def test_reflect_box_length_3(self):
         params = FFDParameters([2, 3, 5])
         params.reflect(axis=2)
-        assert params.lenght_box[2] == 2 
+        assert params.box_length[2] == 2 
 
     def test_reflect_wrong_axis(self):
         params = FFDParameters([2, 3, 5])
@@ -195,17 +195,17 @@ class TestFFDParameters(TestCase):
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
         assert np.array_equal(params.n_control_points, [3, 2, 2])
 
-    def test_read_parameters_lenght_box_x(self):
+    def test_read_parameters_box_length_x(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        assert np.array_equal(params.lenght_box, [45.0, 90.0, 90.0])
+        assert np.array_equal(params.box_length, [45.0, 90.0, 90.0])
 
-    def test_read_parameters_origin_box(self):
+    def test_read_parameters_box_origin(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
-        origin_box_exact = np.array([-20.0, -55.0, -45.0])
-        np.testing.assert_array_almost_equal(params.origin_box,
-                                             origin_box_exact)
+        box_origin_exact = np.array([-20.0, -55.0, -45.0])
+        np.testing.assert_array_almost_equal(params.box_origin,
+                                             box_origin_exact)
 
     def test_read_parameters_rot_angle_x(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
@@ -266,7 +266,7 @@ class TestFFDParameters(TestCase):
         params = FFDParameters(n_control_points=[3, 2, 2])
         params.read_parameters('tests/test_datasets/parameters_sphere.prm')
         np.testing.assert_array_almost_equal(params.position_vertices[0],
-                                             params.origin_box)
+                                             params.box_origin)
 
     def test_read_parameters_position_vertex_0(self):
         params = FFDParameters(n_control_points=[3, 2, 2])
@@ -363,7 +363,7 @@ class TestFFDParameters(TestCase):
         params = FFDParameters()
         params.build_bounding_box(cube)
 
-        np.testing.assert_array_almost_equal(params.lenght_box, tops, decimal=5)
+        np.testing.assert_array_almost_equal(params.box_length, tops, decimal=5)
 
     def test_build_bounding_box_2(self):
         origin = np.array([0., 0., 0.])
@@ -382,8 +382,8 @@ class TestFFDParameters(TestCase):
                                     [0., 0., 1.]])
         tops = np.array([1., 1., 1.])
         params = FFDParameters()
-        params.origin_box = expected_matrix[0]
-        params.lenght_box = tops - expected_matrix[0]
+        params.box_origin = expected_matrix[0]
+        params.box_length = tops - expected_matrix[0]
         np.testing.assert_almost_equal(
             params.position_vertices, expected_matrix, decimal=5)
 

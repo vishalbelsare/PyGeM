@@ -61,7 +61,7 @@ install:
     - echo $LD_LIBRARY_PATH
     - echo $DYLD_LIBRARY_PATH
     - echo $PATH
-    - conda install numpy scipy matplotlib vtk nose setuptools coveralls
+    - conda install "numpy>=1.12" scipy matplotlib vtk nose setuptools coveralls
     - if [[ "$TOXENV" == "py27" ]]; then
         conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=2.7;
       else

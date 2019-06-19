@@ -120,7 +120,8 @@ class TestStlHandler(TestCase):
         outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
 
         stl_handler.write(mesh_points, outfilename)
-        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        with open(outfilename, 'r') as out, open(outfilename_expected, 'r') as exp:
+            self.assertTrue(out.readlines()[1:] == exp.readlines()[1:])
         self.addCleanup(os.remove, outfilename)
 
     def test_stl_write_binary_from_binary(self):
@@ -178,7 +179,8 @@ class TestStlHandler(TestCase):
         outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
 
         stl_handler.write(mesh_points, outfilename, write_bin=False)
-        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        with open(outfilename, 'r') as out, open(outfilename_expected, 'r') as exp:
+            self.assertTrue(out.readlines()[1:] == exp.readlines()[1:])
         self.addCleanup(os.remove, outfilename)
 
     def test_stl_plot_save_fig(self):

@@ -79,11 +79,25 @@ class FFDParameters(object):
 
         if n_control_points is None:
             n_control_points = [2, 2, 2]
-        self.n_control_points = np.array(n_control_points)
+        self.n_control_points = n_control_points
 
+
+    @property
+    def n_control_points(self):
+        """
+        The number of control points in X, Y and Z directions
+
+        :rtype: numpy.ndarray
+        """
+        return self._n_control_points
+
+    @n_control_points.setter
+    def n_control_points(self, npts):
+        self._n_control_points = np.array(npts)
         self.array_mu_x = np.zeros(self.n_control_points)
         self.array_mu_y = np.zeros(self.n_control_points)
         self.array_mu_z = np.zeros(self.n_control_points)
+        
 
     @property
     def psi_mapping(self):
@@ -391,6 +405,42 @@ class FFDParameters(object):
         string += '\nposition_vertices = {}\n'.format(self.position_vertices)
         return string
 
+
+    def control_points(self, deformed=True):
+        """
+        Method that returns the FFD control points. If the `deformed` flag is
+        set to True the method returns the deformed lattice, otherwise it
+        returns the original undeformed lattice.
+
+        :param bool deformed: flag to select the original or modified FFD
+            control lattice. The default is True.
+        :return: the FFD control points (by row).
+        :rtype: numpy.ndarray
+        """
+        x = np.linspace(0, self.box_length[0], self.n_control_points[0])
+        y = np.linspace(0, self.box_length[1], self.n_control_points[1])
+        z = np.linspace(0, self.box_length[2], self.n_control_points[2])
+
+        y_coords, x_coords, z_coords = np.meshgrid(y, x, z)
+
+        box_points = np.array([
+            x_coords.ravel(), y_coords.ravel(), z_coords.ravel()])
+
+        if deformed:
+            box_points += np.array([
+                self.array_mu_x.ravel() * self.box_length[0],
+                self.array_mu_y.ravel() * self.box_length[1],
+                self.array_mu_z.ravel() * self.box_length[2]
+            ])
+
+        n_rows = box_points.shape[1]
+
+        box_points = np.dot(
+            self.rotation_matrix,
+            box_points) + np.transpose(np.tile(self.box_origin, (n_rows, 1)))
+
+        return box_points.T
+
     def save_points(self, filename, write_deformed=True):
         """
         Method that writes a vtk file containing the FFD lattice. This method
@@ -417,32 +467,7 @@ class FFDParameters(object):
             **Point Gaussian** representation.
 
         """
-        x = np.linspace(0, self.box_length[0], self.n_control_points[0])
-        y = np.linspace(0, self.box_length[1], self.n_control_points[1])
-        z = np.linspace(0, self.box_length[2], self.n_control_points[2])
-
-        lattice_y_coords, lattice_x_coords, lattice_z_coords = np.meshgrid(y, x,
-                                                                           z)
-
-        if write_deformed:
-            box_points = np.array([
-                lattice_x_coords.ravel() + self.array_mu_x.ravel() *
-                self.box_length[0], lattice_y_coords.ravel() +
-                self.array_mu_y.ravel() * self.box_length[1],
-                lattice_z_coords.ravel() + self.array_mu_z.ravel() *
-                self.box_length[2]
-            ])
-        else:
-            box_points = np.array([
-                lattice_x_coords.ravel(), lattice_y_coords.ravel(),
-                lattice_z_coords.ravel()
-            ])
-
-        n_rows = box_points.shape[1]
-
-        box_points = np.dot(
-            self.rotation_matrix,
-            box_points) + np.transpose(np.tile(self.box_origin, (n_rows, 1)))
+        box_points = self.control_points(write_deformed).T
 
         points = vtk.vtkPoints()
 

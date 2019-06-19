@@ -76,7 +76,8 @@ class TestRBFParameters(TestCase):
         outfilename = 'tests/test_datasets/box_test_cube_out.vtk'
         outfilename_expected = 'tests/test_datasets/box_test_cube.vtk'
         params.save_points(outfilename, False)
-        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        with open(outfilename, 'r') as out, open(outfilename_expected, 'r') as exp:
+            self.assertTrue(out.readlines()[1:] == exp.readlines()[1:])
         os.remove(outfilename)
 
     def test_save_points_deformed(self):
@@ -86,7 +87,8 @@ class TestRBFParameters(TestCase):
         outfilename = 'tests/test_datasets/box_test_cube_deformed_out.vtk'
         outfilename_expected = 'tests/test_datasets/box_test_cube_deformed.vtk'
         params.save_points(outfilename, True)
-        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        with open(outfilename, 'r') as out, open(outfilename_expected, 'r') as exp:
+            self.assertTrue(out.readlines()[1:] == exp.readlines()[1:])
         os.remove(outfilename)
 
     def test_write_parameters_failing_filename_type(self):

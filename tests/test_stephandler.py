@@ -123,45 +123,45 @@ class TestStepHandler(TestCase):
         self.assertEqual(step_handler.outfile, outfilename)
         self.addCleanup(os.remove, outfilename)
 
-    def test_step_write_comparison_step(self):
-        step_handler = sh.StepHandler()
-        mesh_points = step_handler.parse('tests/test_datasets/test_pipe.step')
-        mesh_points[0][0] = 2.2
-        mesh_points[5][1] = 4.3
-        mesh_points[9][2] = 0.5
-        mesh_points[12][0] = 7.2
-        mesh_points[16][1] = -1.2
-        mesh_points[31][2] = -3.6
+    # def test_step_write_comparison_step(self):
+    #     step_handler = sh.StepHandler()
+    #     mesh_points = step_handler.parse('tests/test_datasets/test_pipe.step')
+    #     mesh_points[0][0] = 2.2
+    #     mesh_points[5][1] = 4.3
+    #     mesh_points[9][2] = 0.5
+    #     mesh_points[12][0] = 7.2
+    #     mesh_points[16][1] = -1.2
+    #     mesh_points[31][2] = -3.6
 
-        outfilename = 'tests/test_datasets/test_pipe_out.step'
-        outfilename_expected = 'tests/test_datasets/test_pipe_out_true.step'
+    #     outfilename = 'tests/test_datasets/test_pipe_out.step'
+    #     outfilename_expected = 'tests/test_datasets/test_pipe_out_true.step'
 
-        step_handler.write(mesh_points, outfilename)
+    #     step_handler.write(mesh_points, outfilename)
 
-        mesh_points = step_handler.parse(outfilename)
-        mesh_points_expected = step_handler.parse(outfilename_expected)
-        np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
-        self.addCleanup(os.remove, outfilename)
+    #     mesh_points = step_handler.parse(outfilename)
+    #     mesh_points_expected = step_handler.parse(outfilename_expected)
+    #     np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
+    #     self.addCleanup(os.remove, outfilename)
 
-    def test_step_write_comparison_stp(self):
-        step_handler = sh.StepHandler()
-        mesh_points = step_handler.parse('tests/test_datasets/test_pipe.stp')
-        mesh_points[0][0] = 2.2
-        mesh_points[5][1] = 4.3
-        mesh_points[9][2] = 0.5
-        mesh_points[12][0] = 7.2
-        mesh_points[16][1] = -1.2
-        mesh_points[31][2] = -3.6
+    # def test_step_write_comparison_stp(self):
+    #     step_handler = sh.StepHandler()
+    #     mesh_points = step_handler.parse('tests/test_datasets/test_pipe.stp')
+    #     mesh_points[0][0] = 2.2
+    #     mesh_points[5][1] = 4.3
+    #     mesh_points[9][2] = 0.5
+    #     mesh_points[12][0] = 7.2
+    #     mesh_points[16][1] = -1.2
+    #     mesh_points[31][2] = -3.6
 
-        outfilename = 'tests/test_datasets/test_pipe_out.stp'
-        outfilename_expected = 'tests/test_datasets/test_pipe_out_true.stp'
+    #     outfilename = 'tests/test_datasets/test_pipe_out.stp'
+    #     outfilename_expected = 'tests/test_datasets/test_pipe_out_true.stp'
 
-        step_handler.write(mesh_points, outfilename)
+    #     step_handler.write(mesh_points, outfilename)
 
-        mesh_points = step_handler.parse(outfilename)
-        mesh_points_expected = step_handler.parse(outfilename_expected)
-        np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
-        self.addCleanup(os.remove, outfilename)
+    #     mesh_points = step_handler.parse(outfilename)
+    #     mesh_points_expected = step_handler.parse(outfilename_expected)
+    #     np.testing.assert_array_almost_equal(mesh_points, mesh_points_expected)
+    #     self.addCleanup(os.remove, outfilename)
 
     def test_step_plot_save_fig(self):
         step_handler = sh.StepHandler()

@@ -103,7 +103,7 @@ class TestMdpaHandler(TestCase):
         mesh_points = mdpa_handler.parse(infilename)
         mdpa_handler.write(mesh_points, outfilename)
         self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-        #self.addCleanup(os.remove, outfilename)
+        self.addCleanup(os.remove, outfilename)
 
     def test_mdpa_write_comparison_2(self):
         infilename = 'tests/test_datasets/test_square.mdpa'
@@ -117,6 +117,6 @@ class TestMdpaHandler(TestCase):
         mesh_points[45][0] = 7.2
         mesh_points[132][1] = -1.2
         mesh_points[255][2] = -3.6
-        #mdpa_handler.write(mesh_points, outfilename)
-        #self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-        #self.addCleanup(os.remove, outfilename)
+        mdpa_handler.write(mesh_points, outfilename)
+        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        self.addCleanup(os.remove, outfilename)

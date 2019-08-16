@@ -80,18 +80,11 @@ class MdpaHandler(fh.FileHandler):
                     if num == index + 1:
                         if line.startswith('End Nodes'):
                             index = -9
-                            output_file.write(line)
                         else:
-                            output_file.write(3 * ' ' + '{:5d}'.format(i+1))
-                            for j in range(0, 3):
-                                output_file.write(3 * ' ' + '{:.16E}'.format(
-                                    mesh_points[i][j]))
-                            output_file.write('\n')
-#
-#                                line = (line[:5 + 15 * (j)] +
-#                                        '{:15.10f}'.format(mesh_points[i][j]) +
-#                                        line[5 + 15 * (j + 1):])
+                            line = (" {:6d} {:23.16E} {:23.16E} {:23.16E}\n"
+                                    .format(i+1, mesh_points[i][0],
+                                            mesh_points[i][1],
+                                            mesh_points[i][2]))
                             i += 1
                             index = num
-                    else:
-                        output_file.write(line)
+                    output_file.write(line)

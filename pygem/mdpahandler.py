@@ -12,7 +12,7 @@ class MdpaHandler(fh.FileHandler):
     :cvar string infile: name of the input file to be processed.
     :cvar string outfile: name of the output file where to write in.
     :cvar list extensions: extensions of the input/output files. It is equal
-            to '.k'.
+            to '.mdpa'.
     """
 
     def __init__(self):

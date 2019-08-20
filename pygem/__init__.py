@@ -20,4 +20,5 @@ from .nurbshandler import NurbsHandler
 from .stephandler import StepHandler
 from .igeshandler import IgesHandler
 from .khandler import KHandler
+from .mdpahandler import MdpaHandler
 from .params import *

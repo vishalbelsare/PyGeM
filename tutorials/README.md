@@ -17,6 +17,11 @@ Here we present the radial basis functions interpolation technique on a simple c
 #### [Tutorial 5](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-5-idw.ipynb)
 Here we show the inverse distance weighting interpolation technique on a simple cube.
 
+#### [Tutorial 6](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-6-k.ipynb)
+This tutorial shows how to deform a LS-Dyna k file with a prescribed continuity using the free-form deformation.
+
+#### [Tutorial 7](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-7-mdpa.ipynb)
+This tutorial shows how to deform a Kratos Multiphysics mdpa file with a prescribed continuity using the free-form deformation. It is shown how these can then be visualized using the Python library VTK Plotter.
 
 #### More to come...
 We plan to add more tutorials but the time is often against us. If you want to contribute with a notebook on a feature not covered yet we will be very happy and give you support on editing!

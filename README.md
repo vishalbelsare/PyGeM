@@ -177,15 +177,15 @@ The deformations implemented are taken from the following papers:
 ### Recent works with PyGeM
 Here there is a list of the scientific works involving **PyGeM** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Tezzele, Demo, Rozza. *Shape optimization through proper orthogonal decomposition with interpolation and dynamic mode decomposition enhanced by active subspaces*.In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 122-133, 2019.
+* Jiang, Mayeur, Patrouix, Cirette, Witz, Dumont, Brieu. *Patient-Specific Modeling of Pelvic System from MRI for Numerical Simulation: Validation Using a Physical Model*. Computational Biomechanics for Medicine. MICCAI 2019. [[DOI](https://doi.org/10.1007/978-3-030-15923-8_2)].
+
+* Tezzele, Demo, Rozza. *Shape optimization through proper orthogonal decomposition with interpolation and dynamic mode decomposition enhanced by active subspaces*. In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 122-133, 2019.
 [[DOI](https://congress.cimne.com/marine2019/frontal/Doc/EbookMarine2019.pdf)],
-[[arXiv](https://arxiv.org/abs/1905.05483)],
-[bibitem](readme/tezzele2019marine.bib)].
+[[arXiv](https://arxiv.org/abs/1905.05483)], [[bibitem](readme/tezzele2019marine.bib)].
 
 * Demo, Tezzele, Mola, Rozza. *A complete data-driven framework for the efficient solution of parametric shape design and optimisation in naval engineering problems*. In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 111-121, 2019. 
 [[DOI](https://congress.cimne.com/marine2019/frontal/Doc/EbookMarine2019.pdf)],
-[[arXiv](https://arxiv.org/abs/1905.05982)],
-[bibitem](readme/demo2019marine.bib)].
+[[arXiv](https://arxiv.org/abs/1905.05982)], [[bibitem](readme/demo2019marine.bib)].
 
 * Tezzele, Demo, Mola, Rozza. *An integrated data-driven computational pipeline with model order reduction for industrial and applied mathematics*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1810.12364)],
 [[bibitem](readme/tezzele2018ecmi.bib)].

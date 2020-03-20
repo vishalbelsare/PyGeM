@@ -2,8 +2,8 @@ import os
 from unittest import TestCase
 
 import numpy as np
-from OCC.TopoDS import TopoDS_Shape
-from OCC.BRepPrimAPI import BRepPrimAPI_MakeBox
+from OCC.Core.TopoDS import TopoDS_Shape, TopoDS_Compound
+from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeBox
 
 import pygem.stephandler as sh
 
@@ -195,13 +195,13 @@ class TestStepHandler(TestCase):
         step_handler = sh.StepHandler()
         shape = step_handler.load_shape_from_file(
             'tests/test_datasets/test_pipe.step')
-        self.assertEqual(type(shape), TopoDS_Shape)
+        self.assertEqual(type(shape), TopoDS_Compound)
 
     def test_step_load_shape_correct_stp(self):
         step_handler = sh.StepHandler()
         shape = step_handler.load_shape_from_file(
             'tests/test_datasets/test_pipe.stp')
-        self.assertEqual(type(shape), TopoDS_Shape)
+        self.assertEqual(type(shape), TopoDS_Compound)
 
     def test_step_write_shape_to_file_raises_wrong_type(self):
         step_handler = sh.StepHandler()

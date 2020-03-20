@@ -8,17 +8,11 @@ service: docker
 matrix:
     include:
         - os: linux
-          python: 2.7
-          env: TOXENV=py27
-        - os: linux
-          python: 3.5
-          env: TOXENV=py35
+          python: 3.7
+          env: TOXENV=py37
         - os: osx
           language: generic
-          env: TOXENV=py27
-        - os: osx
-          language: generic
-          env: TOXENV=py35
+          env: TOXENV=py37
           
 before_script:
     - "export DISPLAY=:99.0"
@@ -51,22 +45,13 @@ install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         conda create --yes -n test python=$TRAVIS_PYTHON_VERSION;
       else
-        if [[ "$TOXENV" == "py27" ]]; then
-            conda create --yes -n test python="2.7";
-        else
-            conda create --yes -n test python="3.5";
-        fi
+        conda create --yes -n test python="3.7";
       fi
     - source activate test
     - echo $LD_LIBRARY_PATH
     - echo $DYLD_LIBRARY_PATH
     - echo $PATH
-    - conda install "numpy>=1.12" scipy matplotlib vtk nose setuptools coveralls
-    - if [[ "$TOXENV" == "py27" ]]; then
-        conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=2.7;
-      else
-        conda install --yes -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core=0.17 python=3.5;
-      fi
+    - conda install --yes -c conda-forge pythonocc-core=7.4.0 numpy scipy matplotlib vtk nose setuptools coveralls python=3.7
     - python setup.py install
 
 script:

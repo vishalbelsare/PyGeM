@@ -6,25 +6,25 @@ in derived classes.
 """
 import os
 import numpy as np
-from OCC.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
-from OCC.BRepAlgo import brepalgo_IsValid
-from OCC.BRepBuilderAPI import (
+from OCC.Core.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
+from OCC.Core.BRepAlgo import brepalgo_IsValid
+from OCC.Core.BRepBuilderAPI import (
     BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace,
     BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
-from OCC.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
+from OCC.Core.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
 from OCC.Display.SimpleGui import init_display
-from OCC.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
+from OCC.Core.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
                              geomconvert_CurveToBSplineCurve)
-from OCC.gp import gp_Pnt, gp_XYZ
-from OCC.Precision import precision_Confusion
-from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
-from OCC.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
-from OCC.StlAPI import StlAPI_Writer
-from OCC.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
-from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
+from OCC.Core.gp import gp_Pnt, gp_XYZ
+from OCC.Core.Precision import precision_Confusion
+from OCC.Core.ShapeAnalysis import ShapeAnalysis_WireOrder
+from OCC.Core.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
+from OCC.Core.StlAPI import StlAPI_Writer
+from OCC.Core.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
+from OCC.Core.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
                         TopAbs_SHELL)
-from OCC.TopExp import TopExp_Explorer, topexp
-from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell, topods_Edge,
+from OCC.Core.TopExp import TopExp_Explorer, topexp
+from OCC.Core.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell, topods_Edge,
                         topods_Wire, topods, TopoDS_Shape)
 from matplotlib import pyplot
 from mpl_toolkits import mplot3d
@@ -112,7 +112,7 @@ class NurbsHandler(fh.FileHandler):
             bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
 
             # openCascade object
-            occ_face = bspline_face.GetObject()
+            occ_face = bspline_face
 
             # extract the Control Points of each face
             n_poles_u = occ_face.NbUPoles()
@@ -185,7 +185,7 @@ class NurbsHandler(fh.FileHandler):
             face_aux = topods_Face(nurbs_face)
             brep_face = BRep_Tool.Surface(topods_Face(nurbs_face))
             bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
-            occ_face = bspline_face.GetObject()
+            occ_face = bspline_face
 
             n_poles_u = occ_face.NbUPoles()
             n_poles_v = occ_face.NbVPoles()
@@ -205,7 +205,7 @@ class NurbsHandler(fh.FileHandler):
             # construct the deformed wire for the trimmed surfaces
             wire_maker = BRepBuilderAPI_MakeWire()
             tol = ShapeFix_ShapeTolerance()
-            brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(),
+            brep = BRepBuilderAPI_MakeFace(occ_face,
                                            self.tolerance).Face()
             brep_face = BRep_Tool.Surface(brep)
 
@@ -228,7 +228,7 @@ class NurbsHandler(fh.FileHandler):
             wire = wire_maker.Wire()
 
             # trimming the surfaces
-            brep_surf = BRepBuilderAPI_MakeFace(occ_face.GetHandle(),
+            brep_surf = BRepBuilderAPI_MakeFace(occ_face,
                                                 wire).Shape()
             compound_builder.Add(compound, brep_surf)
             n_faces += 1
@@ -303,7 +303,7 @@ class NurbsHandler(fh.FileHandler):
                 h_geom_edge = BRep_Tool_Curve(
                     topods_Edge(bspline_tshape_edge))[0]
                 h_bspline_edge = geomconvert_CurveToBSplineCurve(h_geom_edge)
-                bspline_geom_edge = h_bspline_edge.GetObject()
+                bspline_geom_edge = h_bspline_edge
 
                 nb_poles = bspline_geom_edge.NbPoles()
 
@@ -334,7 +334,7 @@ class NurbsHandler(fh.FileHandler):
         nurbs_face = nurbs_converter.Shape()
         h_geomsurface = BRep_Tool.Surface(topods.Face(nurbs_face))
         h_bsurface = geomconvert_SurfaceToBSplineSurface(h_geomsurface)
-        bsurface = h_bsurface.GetObject()
+        bsurface = h_bsurface
 
         # get access to control points (poles)
         nb_u = bsurface.NbUPoles()
@@ -435,7 +435,7 @@ class NurbsHandler(fh.FileHandler):
         topo_curve = topods_Edge(nurbs_curve)
         h_geomcurve = BRep_Tool.Curve(topo_curve)[0]
         h_bcurve = geomconvert_CurveToBSplineCurve(h_geomcurve)
-        bspline_edge_curve = h_bcurve.GetObject()
+        bspline_edge_curve = h_bcurve
 
         # Edge geometric properties
         nb_cpt = bspline_edge_curve.NbPoles()

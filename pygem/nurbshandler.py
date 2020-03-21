@@ -7,6 +7,7 @@ in derived classes.
 import os
 import numpy as np
 from OCC.Core.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
+from OCC.Core.BRepMesh import BRepMesh_IncrementalMesh
 from OCC.Core.BRepAlgo import brepalgo_IsValid
 from OCC.Core.BRepBuilderAPI import (
     BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace,
@@ -734,7 +735,12 @@ class NurbsHandler(fh.FileHandler):
         stl_writer = StlAPI_Writer()
         # Do not switch SetASCIIMode() from False to True.
         stl_writer.SetASCIIMode(False)
-        stl_writer.Write(shape, 'aux_figure.stl')
+
+        # Necessary to write to STL [to check]
+        stl_mesh = BRepMesh_IncrementalMesh(shape, 0.01)
+        stl_mesh.Perform()
+
+        f = stl_writer.Write(shape, 'aux_figure.stl')
 
         # Create a new plot
         figure = pyplot.figure()

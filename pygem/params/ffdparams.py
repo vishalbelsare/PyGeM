@@ -8,9 +8,9 @@ except ImportError:
     import ConfigParser as configparser
 import os
 import numpy as np
-from OCC.Bnd import Bnd_Box
-from OCC.BRepBndLib import brepbndlib_Add
-from OCC.BRepMesh import BRepMesh_IncrementalMesh
+#from OCC.Bnd import Bnd_Box
+#from OCC.BRepBndLib import brepbndlib_Add
+#from OCC.BRepMesh import BRepMesh_IncrementalMesh
 import vtk
 import pygem.affine as at
 
@@ -482,41 +482,45 @@ class FFDParameters(object):
         writer.SetInputData(data)
         writer.Write()
 
-    def build_bounding_box(self,
-                           shape,
-                           tol=1e-6,
-                           triangulate=False,
-                           triangulate_tol=1e-1):
-        """
-        Builds a bounding box around the given shape. All parameters are set to
-        match the computed box, the deformed FFD points are reset.
-
-        :param shape: the shape to compute the bounding box.
-        :type shape: TopoDS_Shape or its subclass
-        :param float tol: tolerance of the computed bounding box.
-        :param bool triangulate: if True, shape is triangulated before the
-            bouning box creation.
-        :param float triangulate_tol: tolerance of triangulation (size of
-            created triangles).
-
-        .. note::
-
-            Every UV-Surface has to be rectangular. When a solid is created
-            surfaces are trimmed. The trimmed part, however, is still saved
-            inside a file. It is just *invisible* when drawn in a program.
-        """
-        bbox = Bnd_Box()
-        bbox.SetGap(tol)
-        if triangulate:
-            BRepMesh_IncrementalMesh(shape, triangulate_tol)
-        brepbndlib_Add(shape, bbox, triangulate)
-        xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
-        min_xyz = np.array([xmin, ymin, zmin])
-        max_xyz = np.array([xmax, ymax, zmax])
-
-        self.box_origin = min_xyz
-        self.box_length = max_xyz - min_xyz
-        self.reset_deformation()
+    
+# TODO
+# to reimplement avoiding OCC
+#
+#    def build_bounding_box(self,
+#                           shape,
+#                           tol=1e-6,
+#                           triangulate=False,
+#                           triangulate_tol=1e-1):
+#        """
+#        Builds a bounding box around the given shape. All parameters are set to
+#        match the computed box, the deformed FFD points are reset.
+#
+#        :param shape: the shape to compute the bounding box.
+#        :type shape: TopoDS_Shape or its subclass
+#        :param float tol: tolerance of the computed bounding box.
+#        :param bool triangulate: if True, shape is triangulated before the
+#            bouning box creation.
+#        :param float triangulate_tol: tolerance of triangulation (size of
+#            created triangles).
+#
+#        .. note::
+#
+#            Every UV-Surface has to be rectangular. When a solid is created
+#            surfaces are trimmed. The trimmed part, however, is still saved
+#            inside a file. It is just *invisible* when drawn in a program.
+#        """
+#        bbox = Bnd_Box()
+#        bbox.SetGap(tol)
+#        if triangulate:
+#            BRepMesh_IncrementalMesh(shape, triangulate_tol)
+#        brepbndlib_Add(shape, bbox, triangulate)
+#        xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
+#        min_xyz = np.array([xmin, ymin, zmin])
+#        max_xyz = np.array([xmax, ymax, zmax])
+#
+#        self.box_origin = min_xyz
+#        self.box_length = max_xyz - min_xyz
+#        self.reset_deformation()
 
     def reset_deformation(self):
         """

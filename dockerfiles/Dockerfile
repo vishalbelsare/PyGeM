@@ -25,9 +25,6 @@ RUN useradd -m -s /bin/bash -G sudo,docker_env PyGeM && \
     echo "PyGeM:docker" | chpasswd && \
     echo "PyGeM ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN touch /etc/service/syslog-forwarder/down
-COPY set-home-permissions.sh /etc/my_init.d/set-home-permissions.sh
-RUN chmod +x /etc/my_init.d/set-home-permissions.sh
 
 USER PyGeM
 ENV HOME /home/PyGeM
@@ -50,7 +47,7 @@ RUN id PyGeM
 RUN chown -R PyGeM:PyGeM $HOME
 
 RUN cd /tmp  && \
-    wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh  && \
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh  && \
     chmod +x miniconda.sh && \
     bash miniconda.sh -b -p /usr/local/miniconda && \
     rm /tmp/*
@@ -63,7 +60,7 @@ RUN  hash -r  && \
     conda config --set always_yes yes --set changeps1 no  && \
     conda update -q conda  
 RUN  conda info -a  && \
-    conda create --yes -n test python="2.7";
+    conda create --yes -n test python="3.7";
 
 RUN /bin/bash -c 'source  activate test'  
 # The default sip version has api that is not compatible with qt4.
@@ -82,5 +79,3 @@ RUN cd $HOME  && \
     python setup.py install
 
 USER PyGeM
-
-

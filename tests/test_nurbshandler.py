@@ -1,6 +1,6 @@
 from unittest import TestCase
 import unittest
-from pygem.nurbshandler import NurbsHandler
+from pygem.cad.nurbshandler import NurbsHandler
 
 
 class TestNurbsHandler(TestCase):

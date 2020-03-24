@@ -4,7 +4,7 @@ Derived module from filehandler.py to handle iges and igs files.
 from OCC.Core.IGESControl import (IGESControl_Reader, IGESControl_Writer,
                              IGESControl_Controller_Init)
 from OCC.Core.IFSelect import IFSelect_RetDone
-from pygem.nurbshandler import NurbsHandler
+from pygem.cad import NurbsHandler
 
 
 class IgesHandler(NurbsHandler):

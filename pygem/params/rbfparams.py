@@ -8,7 +8,7 @@ except ImportError:
     import ConfigParser as configparser
 import os
 import numpy as np
-import vtk
+#import vtk
 import matplotlib.pyplot as plt
 
 

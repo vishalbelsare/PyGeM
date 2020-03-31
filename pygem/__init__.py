@@ -20,15 +20,16 @@ __mail__ = 'marcotez@gmail.com, demo.nicola@gmail.com'
 __maintainer__ = __author__
 __status__ = "Stable"
 
-from .affine import *
-from .freeform import FFD
-from .radial import RBF
-from .idw import IDW
-from .filehandler import FileHandler
-from .openfhandler import OpenFoamHandler
-from .stlhandler import StlHandler
-from .unvhandler import UnvHandler
-from .vtkhandler import VtkHandler
-from .khandler import KHandler
-from .mdpahandler import MdpaHandler
-from .params import *
+#from .affine import *
+from .deformation import Deformation
+from .ffd import FFD
+#from .radial import RBF
+#from .idw import IDW
+#from .filehandler import FileHandler
+#from .openfhandler import OpenFoamHandler
+#from .stlhandler import StlHandler
+#from .unvhandler import UnvHandler
+#from .vtkhandler import VtkHandler
+#from .khandler import KHandler
+#from .mdpahandler import MdpaHandler
+#from .params import *

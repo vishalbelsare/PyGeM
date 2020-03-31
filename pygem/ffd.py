@@ -1,6 +1,44 @@
 """
-Utilities for reading and writing parameters files to perform FFD
-geometrical morphing.
+Utilities for performing Free Form Deformation (FFD)
+
+:Theoretical Insight:
+
+    Free Form Deformation is a technique for the efficient, smooth and accurate
+    geometrical parametrization. It has been proposed the first time in
+    *Sederberg, Thomas W., and Scott R. Parry. "Free-form deformation of solid
+    geometric models." ACM SIGGRAPH computer graphics 20.4 (1986): 151-160*. It
+    consists in three different step:
+    
+    - Mapping the physical domain to the reference one with map
+      :math:`\\boldsymbol{\\psi}`.  In the code it is named *transformation*.
+
+    - Moving some control points to deform the lattice with :math:`\\hat{T}`.
+      The movement of the control points is basically the weight (or displacement)
+      :math:`\\boldsymbol{\\mu}` we set in the *parameters file*.
+
+    - Mapping back to the physical domain with map
+      :math:`\\boldsymbol{\\psi}^{-1}`.  In the code it is named
+      *inverse_transformation*.
+
+    FFD map (:math:`T`) is the composition of the three maps, that is
+
+    .. math:: T(\\cdot, \\boldsymbol{\\mu}) = (\\Psi^{-1} \\circ \\hat{T} \\circ
+            \\Psi) (\\cdot, \\boldsymbol{\\mu})
+
+    In this way, every point inside the FFD box changes it position according to
+
+    .. math:: \\boldsymbol{P} = \\boldsymbol{\\psi}^{-1} \\left( \\sum_{l=0}^L
+            \\sum_{m=0}^M \\sum_{n=0}^N
+            \\mathsf{b}_{lmn}(\\boldsymbol{\\psi}(\\boldsymbol{P}_0))
+            \\boldsymbol{\\mu}_{lmn} \\right)
+
+    where :math:`\\mathsf{b}_{lmn}` are Bernstein polynomials.  We improve the
+    traditional version by allowing a rotation of the FFD lattice in order to
+    give more flexibility to the tool.
+    
+    You can try to add more shapes to the lattice to allow more and more
+    involved transformations.
+
 """
 try:
     import configparser as configparser
@@ -8,17 +46,20 @@ except ImportError:
     import ConfigParser as configparser
 import os
 import numpy as np
-#from OCC.Bnd import Bnd_Box
-#from OCC.BRepBndLib import brepbndlib_Add
-#from OCC.BRepMesh import BRepMesh_IncrementalMesh
-import vtk
-import pygem.affine as at
+from scipy import special
+
+from pygem import Deformation
+from pygem.utils import fit_affine_transformation, angles2matrix
 
 
-class FFDParameters(object):
+class FFD(Deformation):
     """
-    Class that handles the Free Form Deformation parameters in terms of FFD
-    bounding box and weight of the FFD control points.
+    Class that handles the Free Form Deformation on the mesh points.
+
+    :param FFDParameters ffd_parameters: parameters of the Free Form
+        Deformation.
+    :param numpy.ndarray original_mesh_points: coordinates of the original
+        points of the mesh.
 
     :param list n_control_points: number of control points in the x, y, and z
         direction. If not provided it is set to [2, 2, 2].
@@ -38,37 +79,19 @@ class FFDParameters(object):
     :cvar numpy.ndarray array_mu_z: collects the displacements (weights) along
         z, normalized with the box length z.
 
-    :Example: from file
+    :Example:
 
+        >>> import pygem.freeform as ffd
         >>> import pygem.params as ffdp
-        >>>
-        >>> # Reading an existing file
-        >>> params1 = ffdp.FFDParameters()
-        >>> params1.read_parameters(
-        >>>     filename='tests/test_datasets/parameters_test_ffd_identity.prm')
-        >>> 
-        >>> # Creating a default parameters file with the right dimensions (if the
-        >>> # file does not exists it is created with that name). So it is possible
-        >>> # to manually edit it and read it again.
-        >>> params2 = ffdp.FFDParameters(n_control_points=[2, 3, 2])
-        >>> params2.read_parameters(filename='parameters_test.prm')
-        >>> 
-        >>> # Creating bounding box of the given shape
-        >>> from OCC.IGESControl import IGESControl_Reader
-        >>> params3 = ffdp.FFDParameters()
-        >>> reader = IGESControl_Reader()
-        >>> reader.ReadFile('tests/test_datasets/test_pipe.igs')
-        >>> reader.TransferRoots()
-        >>> shape = reader.Shape()
-        >>> params3.build_bounding_box(shape)
-
-    .. note::
-        Four vertex (non coplanar) are sufficient to uniquely identify a
-        parallelepiped.
-        If the four vertex are coplanar, an assert is thrown when
-        `affine_points_fit` is used.
-
+        >>> import numpy as np
+        >>> ffd_params = ffdp.FFDParameters()
+        >>> ffd_params.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
+        >>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
+        >>> free_form = ffd.FFD(ffd_params, original_mesh_points)
+        >>> free_form.perform()
+        >>> new_mesh_points = free_form.modified_mesh_points
     """
+    reference_frame = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
     def __init__(self, n_control_points=None):
         self.conversion_unit = 1.
@@ -80,7 +103,6 @@ class FFDParameters(object):
         if n_control_points is None:
             n_control_points = [2, 2, 2]
         self.n_control_points = n_control_points
-
 
     @property
     def n_control_points(self):
@@ -97,25 +119,90 @@ class FFDParameters(object):
         self.array_mu_x = np.zeros(self.n_control_points)
         self.array_mu_y = np.zeros(self.n_control_points)
         self.array_mu_z = np.zeros(self.n_control_points)
-        
+
 
     @property
-    def psi_mapping(self):
+    def psi(self):
         """
-        Map from the physical domain to the reference domain.
+        Return the function that map the physical domain to the reference domain.
 
-        :rtype: numpy.ndarray
+        :rtype: callable
         """
-        return np.diag(np.reciprocal(self.box_length))
+        physical_frame = self.position_vertices - self.box_origin
+        return fit_affine_transformation(physical_frame, self.reference_frame)
 
     @property
-    def inv_psi_mapping(self):
+    def inverse_psi(self):
         """
-        Map from the reference domain to the physical domain.
+        Return the function that map the reference domain to the physical domain.
 
-        :rtype: numpy.ndarray
+        :rtype: callable
         """
-        return np.diag(self.box_length)
+        physical_frame = self.position_vertices - self.box_origin
+        return fit_affine_transformation(self.reference_frame, physical_frame)
+
+    @property
+    def T(self):
+        """
+        Return the function that deforms the points within the unit cube, using the 
+
+        :rtype: callable
+        """
+
+        def T_mapping(points):
+            (n_rows, n_cols) = points.shape
+            (dim_n_mu, dim_m_mu, dim_t_mu) = self.array_mu_x.shape
+
+            # Initialization. In order to exploit the contiguity in memory the
+            # following are transposed
+            bernstein_x = np.zeros((dim_n_mu, n_rows))
+            bernstein_y = np.zeros((dim_m_mu, n_rows))
+            bernstein_z = np.zeros((dim_t_mu, n_rows))
+            shift_points = np.zeros((n_cols, n_rows))
+
+            # TODO check no-loop implementation
+            #bernstein_x = (
+            #    np.power(mesh_points[:, 0][:, None], range(dim_n_mu)) * 
+            #    np.power(1 - mesh_points[:, 0][:, None], range(dim_n_mu-1, -1, -1)) *
+            #    special.binom(np.array([dim_n_mu-1]*dim_n_mu), np.arange(dim_n_mu))
+            #)
+            for i in range(0, dim_n_mu):
+                aux1 = np.power((1 - points[:, 0]), dim_n_mu - 1 - i)
+                aux2 = np.power(points[:, 0], i)
+                bernstein_x[i, :] = (
+                    special.binom(dim_n_mu - 1, i) * np.multiply(aux1, aux2))
+
+            for i in range(0, dim_m_mu):
+                aux1 = np.power((1 - points[:, 1]), dim_m_mu - 1 - i)
+                aux2 = np.power(points[:, 1], i)
+                bernstein_y[i, :] = special.binom(dim_m_mu - 1, i) * np.multiply(
+                    aux1, aux2)
+
+            for i in range(0, dim_t_mu):
+                aux1 = np.power((1 - points[:, 2]), dim_t_mu - 1 - i)
+                aux2 = np.power(points[:, 2], i)
+                bernstein_z[i, :] = special.binom(dim_t_mu - 1, i) * np.multiply(
+                    aux1, aux2)
+
+            aux_x = 0.
+            aux_y = 0.
+            aux_z = 0.
+
+            for j in range(0, dim_m_mu):
+                for k in range(0, dim_t_mu):
+                    bernstein_yz = np.multiply(bernstein_y[j, :], bernstein_z[k, :])
+                    for i in range(0, dim_n_mu):
+                        aux = np.multiply(bernstein_x[i, :], bernstein_yz)
+                        aux_x += aux * self.array_mu_x[i, j, k]
+                        aux_y += aux * self.array_mu_y[i, j, k]
+                        aux_z += aux * self.array_mu_z[i, j, k]
+
+            shift_points[0, :] += aux_x
+            shift_points[1, :] += aux_y
+            shift_points[2, :] += aux_z
+            return shift_points.T + points
+        return T_mapping
+
 
     @property
     def rotation_matrix(self):
@@ -125,7 +212,7 @@ class FFDParameters(object):
 
         :rtype: numpy.ndarray
         """
-        return at.angles2matrix(
+        return angles2matrix(
             np.radians(self.rot_angle[2]), np.radians(self.rot_angle[1]),
             np.radians(self.rot_angle[0]))
 
@@ -141,62 +228,13 @@ class FFDParameters(object):
                 (1, 3)), self.rotation_matrix.dot(np.diag(self.box_length)).T
         ])
 
-    def reflect(self, axis=0):
+    def reset_weights(self):
         """
-        Reflect the lattice of control points along the direction defined
-        by `axis`. In particular the origin point of the lattice is preserved.
-        So, for instance, the reflection along x, is made with respect to the
-        face of the lattice in the yz plane that is opposite to the origin.
-        Same for the other directions. Only the weights (mu) along the chosen
-        axis are reflected, while the others are preserved. The symmetry plane
-        can not present deformations along the chosen axis.
-        After the refletcion there will be 2n-1 control points along `axis`,
-        witha doubled box length.
-
-        :param int axis: axis along which the reflection is performed.
-            Default is 0. Possible values are 0, 1, or 2, corresponding
-            to x, y, and z respectively.
+        Set transformation parameters to arrays of zeros.
         """
-        # check axis value
-        if axis not in (0, 1, 2):
-            raise ValueError(
-                "The axis has to be 0, 1, or 2. Current value {}.".format(axis))
-
-        # check that the plane of symmetry is undeformed
-        if (axis == 0 and np.count_nonzero(self.array_mu_x[-1, :, :]) != 0) or (
-                axis == 1 and np.count_nonzero(self.array_mu_y[:, -1, :]) != 0
-        ) or (axis == 2 and np.count_nonzero(self.array_mu_z[:, :, -1]) != 0):
-            raise RuntimeError(
-                "If you want to reflect the FFD bounding box along axis " + \
-                "{} you can not diplace the control ".format(axis) + \
-                "points in the symmetry plane along that axis."
-                )
-
-        # double the control points in the given axis -1 (the symmetry plane)
-        self.n_control_points[axis] = 2 * self.n_control_points[axis] - 1
-        # double the box length
-        self.box_length[axis] *= 2
-
-        # we have to reflect the dispacements only along the correct axis
-        reflection = np.ones(3)
-        reflection[axis] = -1
-
-        # we select all the indeces but the ones in the plane of symmetry
-        indeces = [slice(None), slice(None), slice(None)]  # = [:, :, :]
-        indeces[axis] = slice(1, None)  # = [1:]
-        indeces = tuple(indeces)
-
-        # we append along the given axis all the displacements reflected
-        # and in the reverse order
-        self.array_mu_x = np.append(
-            self.array_mu_x,
-            reflection[0] * np.flip(self.array_mu_x, axis)[indeces], axis=axis)
-        self.array_mu_y = np.append(
-            self.array_mu_y,
-            reflection[1] * np.flip(self.array_mu_y, axis)[indeces], axis=axis)
-        self.array_mu_z = np.append(
-            self.array_mu_z,
-            reflection[2] * np.flip(self.array_mu_z, axis)[indeces], axis=axis)
+        self.array_mu_x.fill(0.0)
+        self.array_mu_y.fill(0.0)
+        self.array_mu_z.fill(0.0)
 
     def read_parameters(self, filename='parameters.prm'):
         """
@@ -400,7 +438,6 @@ class FFDParameters(object):
         string += '\narray_mu_x =\n{}\n'.format(self.array_mu_x)
         string += '\narray_mu_y =\n{}\n'.format(self.array_mu_y)
         string += '\narray_mu_z =\n{}\n'.format(self.array_mu_z)
-        string += '\npsi_mapping = \n{}\n'.format(self.psi_mapping)
         string += '\nrotation_matrix = \n{}\n'.format(self.rotation_matrix)
         string += '\nposition_vertices = {}\n'.format(self.position_vertices)
         return string
@@ -441,91 +478,86 @@ class FFDParameters(object):
 
         return box_points.T
 
-    def save_points(self, filename, write_deformed=True):
+
+    def reflect(self, axis=0):
         """
-        Method that writes a vtk file containing the FFD lattice. This method
-        allows to visualize where the FFD control points are located before the
-        geometrical morphing. If the `write_deformed` flag is set to True the
-        method writes out the deformed lattice, otherwise it writes the
-        original undeformed lattice.
+        Reflect the lattice of control points along the direction defined
+        by `axis`. In particular the origin point of the lattice is preserved.
+        So, for instance, the reflection along x, is made with respect to the
+        face of the lattice in the yz plane that is opposite to the origin.
+        Same for the other directions. Only the weights (mu) along the chosen
+        axis are reflected, while the others are preserved. The symmetry plane
+        can not present deformations along the chosen axis.
+        After the refletcion there will be 2n-1 control points along `axis`,
+        witha doubled box length.
 
-        :param str filename: name of the output file.
-        :param bool write_deformed: flag to write the original or modified FFD
-            control lattice. The default is True.
-
-        :Example:
-
-            >>> from pygem.params import FFDParameters
-            >>> 
-            >>> params = FFDParameters()
-            >>> params.read_parameters(
-            >>>     filename='tests/test_datasets/parameters_test_ffd_sphere.prm')
-            >>> params.save_points('tests/test_datasets/box_test_sphere.vtk')
-
-        .. note::
-            In order to visualize the points in Paraview, please select the
-            **Point Gaussian** representation.
-
+        :param int axis: axis along which the reflection is performed.
+            Default is 0. Possible values are 0, 1, or 2, corresponding
+            to x, y, and z respectively.
         """
-        box_points = self.control_points(write_deformed).T
+        # check axis value
+        if axis not in (0, 1, 2):
+            raise ValueError(
+                "The axis has to be 0, 1, or 2. Current value {}.".format(axis))
 
-        points = vtk.vtkPoints()
+        # check that the plane of symmetry is undeformed
+        if (axis == 0 and np.count_nonzero(self.array_mu_x[-1, :, :]) != 0) or (
+                axis == 1 and np.count_nonzero(self.array_mu_y[:, -1, :]) != 0
+        ) or (axis == 2 and np.count_nonzero(self.array_mu_z[:, :, -1]) != 0):
+            raise RuntimeError(
+                "If you want to reflect the FFD bounding box along axis " + \
+                "{} you can not diplace the control ".format(axis) + \
+                "points in the symmetry plane along that axis."
+                )
 
-        for box_point in box_points.T:
-            points.InsertNextPoint(box_point[0], box_point[1], box_point[2])
+        # double the control points in the given axis -1 (the symmetry plane)
+        self.n_control_points[axis] = 2 * self.n_control_points[axis] - 1
+        # double the box length
+        self.box_length[axis] *= 2
 
-        data = vtk.vtkPolyData()
-        data.SetPoints(points)
+        # we have to reflect the dispacements only along the correct axis
+        reflection = np.ones(3)
+        reflection[axis] = -1
 
-        writer = vtk.vtkPolyDataWriter()
-        writer.SetFileName(filename)
-        writer.SetInputData(data)
-        writer.Write()
+        # we select all the indeces but the ones in the plane of symmetry
+        indeces = [slice(None), slice(None), slice(None)]  # = [:, :, :]
+        indeces[axis] = slice(1, None)  # = [1:]
+        indeces = tuple(indeces)
 
-    
-# TODO
-# to reimplement avoiding OCC
-#
-#    def build_bounding_box(self,
-#                           shape,
-#                           tol=1e-6,
-#                           triangulate=False,
-#                           triangulate_tol=1e-1):
-#        """
-#        Builds a bounding box around the given shape. All parameters are set to
-#        match the computed box, the deformed FFD points are reset.
-#
-#        :param shape: the shape to compute the bounding box.
-#        :type shape: TopoDS_Shape or its subclass
-#        :param float tol: tolerance of the computed bounding box.
-#        :param bool triangulate: if True, shape is triangulated before the
-#            bouning box creation.
-#        :param float triangulate_tol: tolerance of triangulation (size of
-#            created triangles).
-#
-#        .. note::
-#
-#            Every UV-Surface has to be rectangular. When a solid is created
-#            surfaces are trimmed. The trimmed part, however, is still saved
-#            inside a file. It is just *invisible* when drawn in a program.
-#        """
-#        bbox = Bnd_Box()
-#        bbox.SetGap(tol)
-#        if triangulate:
-#            BRepMesh_IncrementalMesh(shape, triangulate_tol)
-#        brepbndlib_Add(shape, bbox, triangulate)
-#        xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
-#        min_xyz = np.array([xmin, ymin, zmin])
-#        max_xyz = np.array([xmax, ymax, zmax])
-#
-#        self.box_origin = min_xyz
-#        self.box_length = max_xyz - min_xyz
-#        self.reset_deformation()
+        # we append along the given axis all the displacements reflected
+        # and in the reverse order
+        self.array_mu_x = np.append(
+            self.array_mu_x,
+            reflection[0] * np.flip(self.array_mu_x, axis)[indeces], axis=axis)
+        self.array_mu_y = np.append(
+            self.array_mu_y,
+            reflection[1] * np.flip(self.array_mu_y, axis)[indeces], axis=axis)
+        self.array_mu_z = np.append(
+            self.array_mu_z,
+            reflection[2] * np.flip(self.array_mu_z, axis)[indeces], axis=axis)
 
-    def reset_deformation(self):
+
+
+    def __call__(self, src_pts):
         """
-        Set transformation parameters to arrays of zeros.
+        This method performs the deformation on the mesh pts. After the
+        execution it sets `self.modified_mesh_pts`.
         """
-        self.array_mu_x.fill(0.0)
-        self.array_mu_y.fill(0.0)
-        self.array_mu_z.fill(0.0)
+        def is_inside(pts, boundaries):
+             return np.all(np.logical_and(
+                 pts >= boundaries[0], pts <= boundaries[1]), axis=1)
+
+        # map to the reference domain
+        src_reference_frame_pts = self.psi(src_pts - self.box_origin)
+
+        # apply deformation for all the pts in the unit cube
+        index_pts_inside = is_inside(
+                src_reference_frame_pts, np.array([[0., 0., 0.], [1., 1., 1.]]))
+        shifted_reference_frame_pts = self.T(src_reference_frame_pts[index_pts_inside])
+
+        # map to the physical domain
+        shifted_pts = self.inverse_psi(shifted_reference_frame_pts) + self.box_origin 
+
+        dst_pts = src_pts.copy()
+        dst_pts[index_pts_inside] = shifted_pts
+        return dst_pts

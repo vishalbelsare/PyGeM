@@ -1,22 +1,78 @@
 """
-Utilities for reading and writing parameters files to perform RBF
-geometrical morphing.
+Module focused on the implementation of the Radial Basis Functions interpolation
+technique.  This technique is still based on the use of a set of parameters, the
+so-called control points, as for FFD, but RBF is interpolatory. Another
+important key point of RBF strategy relies in the way we can locate the control
+points: in fact, instead of FFD where control points need to be placed inside a
+regular lattice, with RBF we hano no more limitations. So we have the
+possibility to perform localized control points refiniments.
+The module is analogous to the freeform one.
+
+:Theoretical Insight:
+
+    As reference please consult M.D. Buhmann, Radial Basis Functions, volume 12
+    of Cambridge monographs on applied and computational mathematics. Cambridge
+    University Press, UK, 2003.  This implementation follows D. Forti and G.
+    Rozza, Efficient geometrical parametrization techniques of interfaces for
+    reduced order modelling: application to fluid-structure interaction coupling
+    problems, International Journal of Computational Fluid Dynamics.
+
+    RBF shape parametrization technique is based on the definition of a map,
+    :math:`\\mathcal{M}(\\boldsymbol{x}) : \\mathbb{R}^n \\rightarrow
+    \\mathbb{R}^n`, that allows the possibility of transferring data across
+    non-matching grids and facing the dynamic mesh handling. The map introduced
+    is defines as follows
+
+    .. math::
+        \\mathcal{M}(\\boldsymbol{x}) = p(\\boldsymbol{x}) + 
+        \\sum_{i=1}^{\\mathcal{N}_C} \\gamma_i
+        \\varphi(\\| \\boldsymbol{x} - \\boldsymbol{x_{C_i}} \\|)
+
+    where :math:`p(\\boldsymbol{x})` is a low_degree polynomial term,
+    :math:`\\gamma_i` is the weight, corresponding to the a-priori selected
+    :math:`\\mathcal{N}_C` control points, associated to the :math:`i`-th basis
+    function, and :math:`\\varphi(\\| \\boldsymbol{x} - \\boldsymbol{x_{C_i}}
+    \\|)` a radial function based on the Euclidean distance between the control
+    points position :math:`\\boldsymbol{x_{C_i}}` and :math:`\\boldsymbol{x}`.
+    A radial basis function, generally, is a real-valued function whose value
+    depends only on the distance from the origin, so that
+    :math:`\\varphi(\\boldsymbol{x}) = \\tilde{\\varphi}(\\| \\boldsymbol{x}
+    \\|)`.
+
+    The matrix version of the formula above is:
+
+    .. math::
+        \\mathcal{M}(\\boldsymbol{x}) = \\boldsymbol{c} +
+        \\boldsymbol{Q}\\boldsymbol{x} +
+        \\boldsymbol{W^T}\\boldsymbol{d}(\\boldsymbol{x})
+
+    The idea is that after the computation of the weights and the polynomial
+    terms from the coordinates of the control points before and after the
+    deformation, we can deform all the points of the mesh accordingly.  Among
+    the most common used radial basis functions for modelling 2D and 3D shapes,
+    we consider Gaussian splines, Multi-quadratic biharmonic splines, Inverted
+    multi-quadratic biharmonic splines, Thin-plate splines, Beckert and
+    Wendland :math:`C^2` basis and Polyharmonic splines all defined and
+    implemented below.
 """
-try:
-    import configparser as configparser
-except ImportError:
-    import ConfigParser as configparser
 import os
 import numpy as np
-#import vtk
-import matplotlib.pyplot as plt
+
+from scipy.spatial.distance import cdist
+
+from .rbf_factory import RBFFactory
 
 
-class RBFParameters(object):
+class RBF(object):
     """
-    Class that handles the Radial Basis Functions parameters in terms of RBF
-    control points and basis functions.
+    Class that handles the Radial Basis Functions interpolation on the mesh
+    points.
 
+    :cvar numpy.matrix weights: the matrix formed by the weights corresponding
+        to the a-priori selected N control points, associated to the basis
+        functions and c and Q terms that describe the polynomial of order one
+        p(x) = c + Qx.  The shape is (n_control_points+1+3)-by-3. It is computed
+        internally.
     :cvar string basis: name of the basis functions to use in the
         transformation. The functions implemented so far are: gaussian spline,
         multi quadratic biharmonic spline, inv multi quadratic biharmonic
@@ -26,29 +82,54 @@ class RBFParameters(object):
     :cvar float radius: the scaling parameter r that affects the shape of the
         basis functions.  For details see the class
         :class:`~pygem.radialbasis.RBF`. The default value is 0.5.
-    :cvar int power: the power parameter that affects the shape of the basis
-        functions.  For details see the class :class:`~pygem.radialbasis.RBF`.
-        The default value is 2.
-    :cvar numpy.ndarray original_control_points: *n_control_points*-by-3 array
-        with the coordinates of the original interpolation control points
-        before the deformation. The default values are the coordinates of unit
-        cube vertices.
-    :cvar numpy.ndarray deformed_control_points: it is an
-        `n_control_points`-by-3 array with the coordinates of the
-        interpolation control points after the deformation. The default values
-        are the coordinates of the unit cube vertices.
+    :Example:
+
+        >>> from pygem import RBF
+        >>> import numpy as np
+        >>> rbf = RBF('gaussian_spline')
+        >>> xv = np.linspace(0, 1, 20)
+        >>> yv = np.linspace(0, 1, 20)
+        >>> zv = np.linspace(0, 1, 20)
+        >>> z, y, x = np.meshgrid(zv, yv, xv)
+        >>> mesh = np.array([x.ravel(), y.ravel(), z.ravel()])
+        >>> deformed_mesh = rbf(mesh)
     """
 
-    def __init__(self):
-        self.basis = 'gaussian_spline'
-        self.radius = 0.5
-        self.power = 2
-        self.original_control_points = np.array(
-            [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-             [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
-        self.deformed_control_points = np.array(
-            [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-             [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+    def __init__(self, 
+                 original_control_points=None, 
+                 deformed_control_points=None,
+                 func='gaussian_spline',
+                 radius=0.5,
+                 extra_parameter=None):
+
+        if callable(func):
+            self.basis = func
+        elif isinstance(func, str):
+            self.basis = RBFFactory(func)
+        else:
+            raise TypeError('`func` is not valid.')
+
+        self.radius = radius
+
+        if original_control_points is None:
+            self.original_control_points = np.array(
+                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
+                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+        else:
+            self.original_control_points = original_control_points
+
+        if deformed_control_points is None:
+            self.deformed_control_points = np.array(
+                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
+                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+        else:
+            self.deformed_control_points = deformed_control_points
+
+        self.extra = extra_parameter if extra_parameter else dict()
+
+        self.weights = self._get_weights(
+            self.original_control_points,
+            self.deformed_control_points)
 
     @property
     def n_control_points(self):
@@ -58,6 +139,36 @@ class RBFParameters(object):
         :rtype: int
         """
         return self.original_control_points.shape[0]
+
+    def _get_weights(self, X, Y):
+        """
+        This private method, given the original control points and the deformed
+        ones, returns the matrix with the weights and the polynomial terms, that
+        is :math:`W`, :math:`c^T` and :math:`Q^T`. The shape is
+        (n_control_points+1+3)-by-3.
+
+        :param numpy.ndarray X: it is an n_control_points-by-3 array with the
+            coordinates of the original interpolation control points before the
+            deformation.
+        :param numpy.ndarray Y: it is an n_control_points-by-3 array with the
+            coordinates of the interpolation control points after the
+            deformation.
+
+        :return: weights: the matrix with the weights and the polynomial terms.
+        :rtype: numpy.matrix
+        """
+        npts, dim = X.shape
+        H = np.zeros((npts + 3 + 1, npts + 3 + 1))
+        H[:npts, :npts] = self.basis(cdist(X, X), self.radius, **self.extra)
+        H[npts, :npts] = 1.0
+        H[:npts, npts] = 1.0
+        H[:npts, -3:] = X
+        H[-3:, :npts] = X.T
+
+        rhs = np.zeros((npts + 3 + 1, dim))
+        rhs[:npts, :] = Y
+        weights = np.linalg.solve(H, rhs)
+        return weights
 
     def read_parameters(self, filename='parameters_rbf.prm'):
         """
@@ -81,7 +192,6 @@ class RBFParameters(object):
 
         self.basis = config.get('Radial Basis Functions', 'basis function')
         self.radius = config.getfloat('Radial Basis Functions', 'radius')
-        self.power = config.getint('Radial Basis Functions', 'power')
 
         ctrl_points = config.get('Control points', 'original control points')
         lines = ctrl_points.split('\n')
@@ -143,10 +253,6 @@ class RBFParameters(object):
         output_string += '# of the class RBF for details.\n'
         output_string += 'radius: {}\n'.format(str(self.radius))
 
-        output_string += '\n# The power parameter k for polyharmonic spline'
-        output_string += '\n# See the documentation for details\n'
-        output_string += 'power: {}\n'.format(self.power)
-
         output_string += '\n\n[Control points]\n'
         output_string += '# This section describes the RBF control points.\n'
 
@@ -187,52 +293,11 @@ class RBFParameters(object):
         string = ''
         string += 'basis function = {}\n'.format(self.basis)
         string += 'radius = {}\n'.format(self.radius)
-        string += 'power = {}\n'.format(self.power)
         string += '\noriginal control points =\n'
         string += '{}\n'.format(self.original_control_points)
         string += '\ndeformed control points =\n'
         string += '{}\n'.format(self.deformed_control_points)
         return string
-
-    def save_points(self, filename, write_deformed=True):
-        """
-        Method that writes a vtk file containing the control points. This method
-        allows to visualize where the RBF control points are located before the
-        geometrical morphing. If the `write_deformed` flag is set to True the
-        method writes out the deformed points, otherwise it writes one the
-        original points.
-
-        :param str filename: name of the output file.
-        :param bool write_deformed: flag to write the original or modified
-            control lattice. The default is set to True.
-
-        :Example:
-
-            >>> from pygem.params import RBFParameters
-            >>>
-            >>> params = RBFParameters()
-            >>> params.read_parameters(
-            >>>     filename='tests/test_datasets/parameters_rbf_cube.prm')
-            >>> params.save_points('tests/test_datasets/box_cube.vtk')
-
-        .. note::
-            In order to visualize the points in Paraview, please select the
-            **Point Gaussian** representation.
-
-        """
-        box_points = self.deformed_control_points if write_deformed else self.original_control_points
-        points = vtk.vtkPoints()
-
-        for box_point in box_points:
-            points.InsertNextPoint(box_point[0], box_point[1], box_point[2])
-
-        data = vtk.vtkPolyData()
-        data.SetPoints(points)
-
-        writer = vtk.vtkPolyDataWriter()
-        writer.SetFileName(filename)
-        writer.SetInputData(data)
-        writer.Write()
 
     def plot_points(self, filename=None):
         """
@@ -273,3 +338,16 @@ class RBFParameters(object):
             plt.show()
         else:
             fig.savefig(filename)
+
+    def __call__(self, src_pts):
+        """
+        This method performs the deformation of the mesh points. After the
+        execution it sets `self.modified_mesh_points`.
+        """
+        H = np.zeros((n_mesh_points, self.n_control_points+3+1))
+        H[:, :self.n_control_points] = self.basis(
+            cdist(src_pts, self.original_control_points),
+            self.radius, **self.extra)
+        H[:, n_control_points] = 1.0
+        H[:, -3:] = self.original_mesh_points
+        self.modified_mesh_points = np.asarray(np.dot(H, self.weights))

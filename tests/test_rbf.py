@@ -3,74 +3,103 @@ import unittest
 import numpy as np
 import filecmp
 import os
-
-from pygem import RBFParameters
+from pygem import RBF
 
 unit_cube = np.array([[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
                       [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
 
+class TestRBF(TestCase):
+    def get_cube_mesh_points(self):
+        # Points that define a cube
+        nx, ny, nz = (20, 20, 20)
+        mesh = np.zeros((nx * ny * nz, 3))
+        xv = np.linspace(0, 1, nx)
+        yv = np.linspace(0, 1, ny)
+        zv = np.linspace(0, 1, nz)
+        z, y, x = np.meshgrid(zv, yv, xv)
+        mesh = np.array([x.ravel(), y.ravel(), z.ravel()])
+        original_mesh_points = mesh.T
+        return original_mesh_points
 
-class TestRBFParameters(TestCase):
+    def test_rbf_weights_member(self):
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_cube.prm')
+        weights_true = np.load('tests/test_datasets/weights_rbf_cube.npy')
+        np.testing.assert_array_almost_equal(rbf.weights, weights_true)
+
+    def test_rbf_cube_mod(self):
+        mesh_points_ref = np.load(
+            'tests/test_datasets/meshpoints_cube_mod_rbf.npy')
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_cube.prm')
+        deformed_mesh = rbf(self.get_cube_mesh_points())
+        np.testing.assert_array_almost_equal(deformed_mesh, mesh_points_ref)
+
+    def test_wrong_basis(self):
+        rbf = RBF()
+        with self.assertRaises(NameError):
+            rbf.read_parameters(
+                    'tests/test_datasets/parameters_rbf_bugged_02.prm')
+
     def test_class_members_default_basis(self):
-        params = RBFParameters()
-        assert params.basis == 'gaussian_spline'
+        rbf = RBF()
 
     def test_class_members_default_radius(self):
-        params = RBFParameters()
-        assert params.radius == 0.5
+        rbf = RBF()
+        assert rbf.radius == 0.5
 
     def test_class_members_default_n_control_points(self):
-        params = RBFParameters()
-        assert params.n_control_points == 8
+        rbf = RBF()
+        assert rbf.n_control_points == 8
 
     def test_class_members_default_original_control_points(self):
-        params = RBFParameters()
-        np.testing.assert_array_equal(params.original_control_points, unit_cube)
+        rbf = RBF()
+        np.testing.assert_array_equal(rbf.original_control_points, unit_cube)
 
     def test_class_members_default_deformed_control_points(self):
-        params = RBFParameters()
-        np.testing.assert_array_equal(params.deformed_control_points, unit_cube)
+        rbf = RBF()
+        np.testing.assert_array_equal(rbf.deformed_control_points, unit_cube)
 
     def test_read_parameters_basis(self):
-        params = RBFParameters()
-        params.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
-        assert params.basis == 'gaussian_spline'
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
+        assert rbf.basis == RBFFactory('gaussian_spline')
 
     def test_read_parameters_radius(self):
-        params = RBFParameters()
-        params.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
-        assert params.radius == 0.5
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
+        assert rbf.radius == 0.5
 
     def test_read_parameters_n_control_points(self):
-        params = RBFParameters()
-        params.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
-        assert params.n_control_points == 8
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
+        assert rbf.n_control_points == 8
 
     def test_read_parameters_original_control_points(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
         np.testing.assert_array_almost_equal(params.original_control_points,
                                              unit_cube)
 
     def test_read_parameters_deformed_control_points(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
         np.testing.assert_array_almost_equal(params.deformed_control_points,
                                              unit_cube)
 
     def test_read_parameters_failing_filename_type(self):
-        params = RBFParameters()
+        params = RBF()
         with self.assertRaises(TypeError):
             params.read_parameters(3)
 
     def test_read_parameters_failing_number_deformed_control_points(self):
-        params = RBFParameters()
+        params = RBF()
         with self.assertRaises(TypeError):
             params.read_parameters(
                 'tests/test_datasets/parameters_rbf_bugged_01.prm')
 
     def test_save_points(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters(
             filename='tests/test_datasets/parameters_rbf_cube.prm')
         outfilename = 'tests/test_datasets/box_test_cube_out.vtk'
@@ -81,7 +110,7 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_save_points_deformed(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters(
             filename='tests/test_datasets/parameters_rbf_cube.prm')
         outfilename = 'tests/test_datasets/box_test_cube_deformed_out.vtk'
@@ -92,12 +121,12 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_write_parameters_failing_filename_type(self):
-        params = RBFParameters()
+        params = RBF()
         with self.assertRaises(TypeError):
             params.write_parameters(5)
 
     def test_write_parameters_filename_default_existance(self):
-        params = RBFParameters()
+        params = RBF()
         params.basis = 'inv_multi_quadratic_biharmonic_spline'
         params.radius = 0.1
         params.original_control_points = np.array(
@@ -110,7 +139,7 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_write_parameters_filename_default(self):
-        params = RBFParameters()
+        params = RBF()
         params.basis = 'gaussian_spline'
         params.radius = 0.5
         params.power = 2
@@ -125,7 +154,7 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_write_parameters(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters('tests/test_datasets/parameters_rbf_cube.prm')
 
         outfilename = 'tests/test_datasets/parameters_rbf_cube_out.prm'
@@ -136,7 +165,7 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_read_parameters_filename_default(self):
-        params = RBFParameters()
+        params = RBF()
         params.read_parameters()
         outfilename = 'parameters_rbf.prm'
         outfilename_expected = 'tests/test_datasets/parameters_rbf_default.prm'
@@ -145,5 +174,5 @@ class TestRBFParameters(TestCase):
         os.remove(outfilename)
 
     def test_print_info(self):
-        params = RBFParameters()
+        params = RBF()
         print(params)

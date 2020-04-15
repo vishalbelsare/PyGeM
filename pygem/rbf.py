@@ -60,10 +60,11 @@ import numpy as np
 
 from scipy.spatial.distance import cdist
 
+from .deformation import Deformation
 from .rbf_factory import RBFFactory
 
 
-class RBF(object):
+class RBF(Deformation):
     """
     Class that handles the Radial Basis Functions interpolation on the mesh
     points.

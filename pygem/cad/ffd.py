@@ -325,7 +325,7 @@ class FFD(OriginalFFD):
                 modified_edge= BRepBuilderAPI_MakeEdge(occ_edge.GetHandle()).Edge()
                 shapesList.Append(modified_edge)
                 #if new_curve.IsClosed()==False:
-                    #fixer_edge = BRepBuilderAPI_MakeEdge(new_curve.Value(new_curve.LastParameter()),new_curve.Value(new_curve.FirstParameter())).Edge()
+               #fixer_edge = BRepBuilderAPI_MakeEdge(new_curve.Value(new_curve.LastParameter()),new_curve.Value(new_curve.FirstParameter())).Edge()
                     #shapesList.Append(fixer_edge)
                 #display.DisplayShape(modified_edge,update=True,color="BLUE1")
                 
@@ -359,54 +359,17 @@ class FFD(OriginalFFD):
             # finally, we get our trimmed face with all its holes
             brep_surf = face_maker.Face()
             #brep_surf = faceFilling.Face()
-            IGESControl_Controller_Init()
-            writer = IGESControl_Writer()
-            writer.AddShape(brep_surf)
-            nomefile = nomedir+"trimmed_face"+str(faceCount)+".iges"
-            writer.Write(nomefile)
+            #IGESControl_Controller_Init()
+            #writer = IGESControl_Writer()
+            #writer.AddShape(brep_surf)
+            #nomefile = nomedir+"trimmed_face"+str(faceCount)+".iges"
+            #writer.Write(nomefile)
             
-            # we add the face to the comound of the color we are working on
-            compound_builder.Add(compound, brep_surf)
-            face_list.append(brep_surf)
             
             # and move to the next face
             faceCount += 1
             faces_explorer.Next()
-
-        #sew = BRepBuilderAPI_Sewing(100.0)
-        #for sh in face_list:
-            #sew.Add(sh)
-            #print("??")
-        #sew.SetNonManifoldMode(True)
-        #sew.Perform()
-        #shell = sew.SewedShape()
-        #if shell.ShapeType() == TopAbs_SHELL:
-            #print("It's a shell")
-        #else:
-            #print("No luck here")
-        ##shell = sew_shapes( face_list, 0.1 )
             
-
-        # after looping on all the faces of a color to modifiy them, we save the color compound in an iges file
-        IGESControl_Controller_Init()
-        writer = IGESControl_Writer()
-        writer.AddShape(compound)
-        nomefile = nomedir+"Color_"+str(color_count)+".iges"
-        writer.Write(nomefile)
-        #display.DisplayShape(compound,update=True,color="RED")
-        print(faceCount)
-        colors_mod.append(compound)
-    else:
-        # if the color was not to be modified with this procedure (like the top and transom), we just skip them
-        print("Non modified color")
-        #IGESControl_Controller_Init()
-        #writer = IGESControl_Writer()
-        #writer.AddShape(color)
-        #nomefile = nomedir+"Color_"+str(color_count)+".iges"
-        #writer.Write(nomefile)
-        ##display.DisplayShape(compound,update=True,color="RED")
-        print(color_count)
-        colors_mod.append(color)
 
 
         ## END SURFACES #######################################################

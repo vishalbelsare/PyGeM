@@ -16,6 +16,9 @@
     <a href="https://www.codacy.com/app/mathLab/PyGeM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/PyGeM&amp;utm_campaign=Badge_Grade" target="_blank">
         <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/7299abd9d61c4aa586903d80cea01c82">
     </a>
+    <a href="https://registry.hub.docker.com/r/sissamathlab/pygem">	
+	<img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/sissamathlab/pygem">
+	</a>
 </p>
 
 [PyGeM](http://mathlab.github.io/PyGeM/) (Python Geometrical Morphing) is a python package that allows you to deform a given geometry or mesh with different deformation techniques such as FFD, RBF and IDW.
@@ -38,7 +41,7 @@
 **PyGeM** is a python package using **Free Form Deformation**, **Radial Basis Functions** and **Inverse Distance Weighting** to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:
 
 - Computer Aided Design files (in .iges, .step, and .stl formats)
-- Mesh files (in .unv and OpenFOAM formats)
+- Mesh files (in .unv, Elmer, and OpenFOAM formats)
 - Output files (in .vtk format)
 - LS-Dyna Keyword files (.k format)
 
@@ -83,25 +86,25 @@ Docker containers are extremely lightweight, secure, and are based on open stand
 Install Docker for your platform by following [these instructions](https://docs.docker.com/engine/getstarted/step_one/).
 If using the Docker Toolbox (macOS versions < 10.10 or Windows versions < 10), make sure you run all commands inside the Docker Quickstart Terminal.
 
-Now we will pull the docker.io/pygemdocker/pygem image from our cloud infrastructure:
+Now we will pull the sissamathlab/pygem image from our cloud infrastructure:
 ```bash
->  docker pull docker.io/pygemdocker/pygem:latest
+>  docker pull sissamathlab/pygem:latest
 ```
 Docker will pull the latest tag of the image pygemdocker/pygem from docker.io. The download is around 3.246 GB. The  image is a great place to start experimenting with PyGeM and includes all dependencies already compiled for you.
 Once the download is complete you can start PyGeM for the first time. Just run:
 ```bash
->  docker run -ti  pygemdocker/pygem:latest
+>  docker run -ti  sissamathlab/pygem:latest
 ```
 To facilitate the devoloping, using the text editor,version control and other tools already installed on your computers,
 it is possible to share files from the host into the container:
 
 ```bash
->  docker run -ti -v $(pwd):/home/PyGeM/shared  pygemdocker/pygem:latest
+>  docker run -ti -v $(pwd):/home/PyGeM/shared  sissamathlab/pygem:latest
 ```
 To allow the X11 forwarding in the container, on Linux system just run:
 
 ```bash
->  docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix  -v $(pwd):/home/PyGeM/shared  pygemdocker/pygem:latest
+>  docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix  -v $(pwd):/home/PyGeM/shared  sissamathlab/pygem:latest
 ```
 
 For Windows system, you need to install Cygwin/X version and running the command in Cygwin terminal. While for mac system, you need to install xquartz. 

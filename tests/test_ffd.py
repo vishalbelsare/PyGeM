@@ -6,6 +6,7 @@ import numpy as np
 from pygem import FFD
 
 
+
 class TestFFD(TestCase):
     def test_class_members_default_n_control_points(self):
         params = FFD()
@@ -382,3 +383,27 @@ class TestFFD(TestCase):
             'tests/test_datasets/meshpoints_sphere_mod.npy')
         mesh_points_test = ffd(mesh_points)
         np.testing.assert_array_almost_equal(mesh_points_test, mesh_points_ref)
+        
+        
+        
+    def test_ffd_iges_pipe_mod_through_files(self):
+        from pygem.cad import FFD
+        ffd = FFD()
+        ffd.read_parameters(
+            filename='tests/test_datasets/parameters_test_ffd_iges.prm')
+        ffd('tests/test_datasets/test_pipe.iges','tests/test_datasets/test_pipe_result.iges')
+        
+        
+        
+    def test_ffd_iges_pipe_mod_through_topods_shape(self):
+        from pygem.cad.igeshandler import IgesHandler
+        from pygem.cad import FFD
+        from OCC.TopoDS import TopoDS_Shape
+        iges_handler = IgesHandler()
+        orig_shape = iges_handler.load_shape_from_file('tests/test_datasets/test_pipe.iges')
+        ffd = FFD()
+        ffd.read_parameters(
+            filename='tests/test_datasets/parameters_test_ffd_iges.prm')
+        mod_shape = ffd(orig_shape)
+        iges_handler.write_shape_to_file(mod_shape, 'tests/test_datasets/test_pipe_result_2.iges')
+

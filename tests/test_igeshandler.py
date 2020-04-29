@@ -2,8 +2,9 @@ import os
 from unittest import TestCase
 
 import numpy as np
-from OCC.Core.TopoDS import TopoDS_Shape, TopoDS_Compound
-from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeBox
+
+from OCC.TopoDS import TopoDS_Shape, TopoDS_Compound, topods_Compound
+from OCC.BRepPrimAPI import BRepPrimAPI_MakeBox
 
 from pygem.cad.igeshandler import IgesHandler
 
@@ -195,13 +196,13 @@ class TestIgesHandler(TestCase):
         iges_handler = IgesHandler()
         shape = iges_handler.load_shape_from_file(
             'tests/test_datasets/test_pipe.iges')
-        self.assertEqual(type(shape), TopoDS_Compound)
+        self.assertEqual(type(topods_Compound(shape)), TopoDS_Compound)
 
     def test_iges_load_shape_correct_igs(self):
         iges_handler = IgesHandler()
         shape = iges_handler.load_shape_from_file(
             'tests/test_datasets/test_pipe.igs')
-        self.assertEqual(type(shape), TopoDS_Compound)
+        self.assertEqual(type(topods_Compound(shape)), TopoDS_Compound)
 
     def test_iges_write_shape_to_file_raises_wrong_type(self):
         iges_handler = IgesHandler()

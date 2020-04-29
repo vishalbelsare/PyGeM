@@ -3,7 +3,6 @@ Utilities for the affine transformations of the bounding box of the Free Form
 Deformation.
 """
 import math
-import sys
 from functools import reduce
 import numpy as np
 
@@ -93,28 +92,30 @@ def fit_affine_transformation(points_start, points_end):
         raise RuntimeError(
             "Too few starting points => under-determined system.")
 
-    n = points_start.shape[0]
     def pad_column_ones(x):
         """ Add right column of 1.0 to the given 2D numpy array """
         return np.hstack([x, np.ones((x.shape[0], 1))])
 
     def unpad_column(x):
         """ Remove last column to the given 2D numpy array """
-        return x[:,:-1]
-
+        return x[:, :-1]
 
     def transform(src):
-        
+
         shape = src.shape
-        
+
         X = pad_column_ones(points_start)
         Y = pad_column_ones(points_end)
 
-        A, res, rank, s = np.linalg.lstsq(X, Y, rcond=None)
+        A, res, rank, _ = np.linalg.lstsq(X, Y, rcond=None)
         # TODO add check condition number
         #if np.linalg.cond(A) >= 1 / sys.float_info.epsilon:
         #    raise RuntimeError(
         #            "Error: singular matrix. Points are probably coplanar.")
-        return unpad_column(np.dot(pad_column_ones(np.atleast_2d(src)), A)).reshape(shape)
+        return unpad_column(
+                np.dot(
+                    pad_column_ones(np.atleast_2d(src)),
+                    A)
+                ).reshape(shape)
 
     return transform

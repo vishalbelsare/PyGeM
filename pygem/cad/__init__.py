@@ -1,3 +1,6 @@
+"""
+PyGeM CAD init
+"""
 
 try:
     import OCC

@@ -95,9 +95,8 @@ class RBF(Deformation):
         >>> mesh = np.array([x.ravel(), y.ravel(), z.ravel()])
         >>> deformed_mesh = rbf(mesh)
     """
-
-    def __init__(self, 
-                 original_control_points=None, 
+    def __init__(self,
+                 original_control_points=None,
                  deformed_control_points=None,
                  func='gaussian_spline',
                  radius=0.5,
@@ -113,24 +112,27 @@ class RBF(Deformation):
         self.radius = radius
 
         if original_control_points is None:
-            self.original_control_points = np.array(
-                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+            self.original_control_points = np.array([[0., 0., 0.], [0., 0., 1.],
+                                                     [0., 1., 0.], [1., 0., 0.],
+                                                     [0., 1., 1.], [1., 0., 1.],
+                                                     [1., 1., 0.], [1., 1.,
+                                                                    1.]])
         else:
             self.original_control_points = original_control_points
 
         if deformed_control_points is None:
-            self.deformed_control_points = np.array(
-                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+            self.deformed_control_points = np.array([[0., 0., 0.], [0., 0., 1.],
+                                                     [0., 1., 0.], [1., 0., 0.],
+                                                     [0., 1., 1.], [1., 0., 1.],
+                                                     [1., 1., 0.], [1., 1.,
+                                                                    1.]])
         else:
             self.deformed_control_points = deformed_control_points
 
         self.extra = extra_parameter if extra_parameter else dict()
 
-        self.weights = self._get_weights(
-            self.original_control_points,
-            self.deformed_control_points)
+        self.weights = self._get_weights(self.original_control_points,
+                                         self.deformed_control_points)
 
     @property
     def n_control_points(self):
@@ -310,29 +312,26 @@ class RBF(Deformation):
         """
         fig = plt.figure(1)
         axes = fig.add_subplot(111, projection='3d')
-        orig = axes.scatter(
-            self.original_control_points[:, 0],
-            self.original_control_points[:, 1],
-            self.original_control_points[:, 2],
-            c='blue',
-            marker='o')
-        defor = axes.scatter(
-            self.deformed_control_points[:, 0],
-            self.deformed_control_points[:, 1],
-            self.deformed_control_points[:, 2],
-            c='red',
-            marker='x')
+        orig = axes.scatter(self.original_control_points[:, 0],
+                            self.original_control_points[:, 1],
+                            self.original_control_points[:, 2],
+                            c='blue',
+                            marker='o')
+        defor = axes.scatter(self.deformed_control_points[:, 0],
+                             self.deformed_control_points[:, 1],
+                             self.deformed_control_points[:, 2],
+                             c='red',
+                             marker='x')
 
         axes.set_xlabel('X axis')
         axes.set_ylabel('Y axis')
         axes.set_zlabel('Z axis')
 
-        plt.legend(
-            (orig, defor), ('Original', 'Deformed'),
-            scatterpoints=1,
-            loc='lower left',
-            ncol=2,
-            fontsize=10)
+        plt.legend((orig, defor), ('Original', 'Deformed'),
+                   scatterpoints=1,
+                   loc='lower left',
+                   ncol=2,
+                   fontsize=10)
 
         # Show the plot to the screen
         if filename is None:
@@ -345,10 +344,10 @@ class RBF(Deformation):
         This method performs the deformation of the mesh points. After the
         execution it sets `self.modified_mesh_points`.
         """
-        H = np.zeros((n_mesh_points, self.n_control_points+3+1))
+        H = np.zeros((n_mesh_points, self.n_control_points + 3 + 1))
         H[:, :self.n_control_points] = self.basis(
-            cdist(src_pts, self.original_control_points),
-            self.radius, **self.extra)
+            cdist(src_pts, self.original_control_points), self.radius,
+            **self.extra)
         H[:, n_control_points] = 1.0
         H[:, -3:] = self.original_mesh_points
         self.modified_mesh_points = np.asarray(np.dot(H, self.weights))

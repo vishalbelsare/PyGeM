@@ -1,13 +1,14 @@
 """
 PyGeM init
 """
-# __all__ = [
-#     'affine', 'filehandler', 'freeform', 'radial', 'openfhandler', 'elmerhandler',
-#     'stlhandler', 'unvhandler', 'vtkhandler', 'nurbshandler', 'stephandler',
-#     'igeshandler', 'utils', 'gui', 'khandler', 'idw'
-# ]
+from .deformation import Deformation
+from .ffd import FFD
+from .rbf import RBF
+from .idw import IDW
+from .rbf_factory import RBFFactory
 
 def get_current_year():
+    """ Return current year """
     from datetime import datetime
     return datetime.now().year
 
@@ -19,10 +20,3 @@ __version__ = "2.0.0"
 __mail__ = 'marcotez@gmail.com, demo.nicola@gmail.com'
 __maintainer__ = __author__
 __status__ = "Stable"
-
-#from .affine import *
-from .deformation import Deformation
-from .ffd import FFD
-from .rbf import RBF
-from .idw import IDW
-from .rbf_factory import RBFFactory

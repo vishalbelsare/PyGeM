@@ -13,8 +13,8 @@ Utilities for performing Free Form Deformation (FFD)
       :math:`\\boldsymbol{\\psi}`.  In the code it is named *transformation*.
 
     - Moving some control points to deform the lattice with :math:`\\hat{T}`.
-      The movement of the control points is basically the weight (or displacement)
-      :math:`\\boldsymbol{\\mu}` we set in the *parameters file*.
+      The movement of the control points is basically the weight (or
+      displacement) :math:`\\boldsymbol{\\mu}` we set in the *parameters file*.
 
     - Mapping back to the physical domain with map
       :math:`\\boldsymbol{\\psi}^{-1}`.  In the code it is named
@@ -35,7 +35,7 @@ Utilities for performing Free Form Deformation (FFD)
     where :math:`\\mathsf{b}_{lmn}` are Bernstein polynomials.  We improve the
     traditional version by allowing a rotation of the FFD lattice in order to
     give more flexibility to the tool.
-    
+ 
     You can try to add more shapes to the lattice to allow more and more
     involved transformations.
 
@@ -81,15 +81,14 @@ class FFD(Deformation):
 
     :Example:
 
-        >>> import pygem.freeform as ffd
-        >>> import pygem.params as ffdp
+        >>> from pygem import FFD
         >>> import numpy as np
-        >>> ffd_params = ffdp.FFDParameters()
-        >>> ffd_params.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
-        >>> original_mesh_points = np.load('tests/test_datasets/meshpoints_sphere_orig.npy')
-        >>> free_form = ffd.FFD(ffd_params, original_mesh_points)
-        >>> free_form.perform()
-        >>> new_mesh_points = free_form.modified_mesh_points
+        >>> ffd = FFD()
+        >>> ffd.read_parameters(
+        >>>        'tests/test_datasets/parameters_test_ffd_sphere.prm')
+        >>> original_mesh_points = np.load(
+        >>>         'tests/test_datasets/meshpoints_sphere_orig.npy')
+        >>> new_mesh_points = ffd(original_mesh_points)
     """
     reference_frame = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
@@ -99,6 +98,10 @@ class FFD(Deformation):
         self.box_length = np.array([1., 1., 1.])
         self.box_origin = np.array([0., 0., 0.])
         self.rot_angle = np.array([0., 0., 0.])
+
+        self.array_mu_x = None
+        self.array_mu_y = None
+        self.array_mu_z = None
 
         if n_control_points is None:
             n_control_points = [2, 2, 2]
@@ -120,11 +123,11 @@ class FFD(Deformation):
         self.array_mu_y = np.zeros(self.n_control_points)
         self.array_mu_z = np.zeros(self.n_control_points)
 
-
     @property
     def psi(self):
         """
-        Return the function that map the physical domain to the reference domain.
+        Return the function that map the physical domain to the reference
+        domain.
 
         :rtype: callable
         """
@@ -134,7 +137,8 @@ class FFD(Deformation):
     @property
     def inverse_psi(self):
         """
-        Return the function that map the reference domain to the physical domain.
+        Return the function that map the reference domain to the physical
+        domain.
 
         :rtype: callable
         """
@@ -144,11 +148,10 @@ class FFD(Deformation):
     @property
     def T(self):
         """
-        Return the function that deforms the points within the unit cube, using the 
+        Return the function that deforms the points within the unit cube.
 
         :rtype: callable
         """
-
         def T_mapping(points):
             (n_rows, n_cols) = points.shape
             (dim_n_mu, dim_m_mu, dim_t_mu) = self.array_mu_x.shape
@@ -162,27 +165,27 @@ class FFD(Deformation):
 
             # TODO check no-loop implementation
             #bernstein_x = (
-            #    np.power(mesh_points[:, 0][:, None], range(dim_n_mu)) * 
+            #    np.power(mesh_points[:, 0][:, None], range(dim_n_mu)) *
             #    np.power(1 - mesh_points[:, 0][:, None], range(dim_n_mu-1, -1, -1)) *
             #    special.binom(np.array([dim_n_mu-1]*dim_n_mu), np.arange(dim_n_mu))
             #)
             for i in range(0, dim_n_mu):
                 aux1 = np.power((1 - points[:, 0]), dim_n_mu - 1 - i)
                 aux2 = np.power(points[:, 0], i)
-                bernstein_x[i, :] = (
-                    special.binom(dim_n_mu - 1, i) * np.multiply(aux1, aux2))
+                bernstein_x[i, :] = (special.binom(dim_n_mu - 1, i) *
+                                     np.multiply(aux1, aux2))
 
             for i in range(0, dim_m_mu):
                 aux1 = np.power((1 - points[:, 1]), dim_m_mu - 1 - i)
                 aux2 = np.power(points[:, 1], i)
-                bernstein_y[i, :] = special.binom(dim_m_mu - 1, i) * np.multiply(
-                    aux1, aux2)
+                bernstein_y[i, :] = special.binom(dim_m_mu - 1,
+                                                  i) * np.multiply(aux1, aux2)
 
             for i in range(0, dim_t_mu):
                 aux1 = np.power((1 - points[:, 2]), dim_t_mu - 1 - i)
                 aux2 = np.power(points[:, 2], i)
-                bernstein_z[i, :] = special.binom(dim_t_mu - 1, i) * np.multiply(
-                    aux1, aux2)
+                bernstein_z[i, :] = special.binom(dim_t_mu - 1,
+                                                  i) * np.multiply(aux1, aux2)
 
             aux_x = 0.
             aux_y = 0.
@@ -190,7 +193,8 @@ class FFD(Deformation):
 
             for j in range(0, dim_m_mu):
                 for k in range(0, dim_t_mu):
-                    bernstein_yz = np.multiply(bernstein_y[j, :], bernstein_z[k, :])
+                    bernstein_yz = np.multiply(bernstein_y[j, :],
+                                               bernstein_z[k, :])
                     for i in range(0, dim_n_mu):
                         aux = np.multiply(bernstein_x[i, :], bernstein_yz)
                         aux_x += aux * self.array_mu_x[i, j, k]
@@ -201,8 +205,8 @@ class FFD(Deformation):
             shift_points[1, :] += aux_y
             shift_points[2, :] += aux_z
             return shift_points.T + points
-        return T_mapping
 
+        return T_mapping
 
     @property
     def rotation_matrix(self):
@@ -212,9 +216,9 @@ class FFD(Deformation):
 
         :rtype: numpy.ndarray
         """
-        return angles2matrix(
-            np.radians(self.rot_angle[2]), np.radians(self.rot_angle[1]),
-            np.radians(self.rot_angle[0]))
+        return angles2matrix(np.radians(self.rot_angle[2]),
+                             np.radians(self.rot_angle[1]),
+                             np.radians(self.rot_angle[0]))
 
     @property
     def position_vertices(self):
@@ -224,8 +228,8 @@ class FFD(Deformation):
         :rtype: numpy.ndarray
         """
         return self.box_origin + np.vstack([
-            np.zeros(
-                (1, 3)), self.rotation_matrix.dot(np.diag(self.box_length)).T
+            np.zeros((1, 3)),
+            self.rotation_matrix.dot(np.diag(self.box_length)).T
         ])
 
     def reset_weights(self):
@@ -312,12 +316,12 @@ class FFD(Deformation):
         output_string += ' points in each direction (x, y, z).\n'
         output_string += '# For example, to create a 2 x 3 x 2 grid, use the'
         output_string += ' following: n control points: 2, 3, 2\n'
-        output_string += 'n control points x: ' + str(self.n_control_points[
-            0]) + '\n'
-        output_string += 'n control points y: ' + str(self.n_control_points[
-            1]) + '\n'
-        output_string += 'n control points z: ' + str(self.n_control_points[
-            2]) + '\n'
+        output_string += 'n control points x: ' + str(
+            self.n_control_points[0]) + '\n'
+        output_string += 'n control points y: ' + str(
+            self.n_control_points[1]) + '\n'
+        output_string += 'n control points z: ' + str(
+            self.n_control_points[2]) + '\n'
 
         output_string += '\n# box length indicates the length of the FFD '
         output_string += 'bounding box along the three canonical directions '
@@ -391,8 +395,8 @@ class FFD(Deformation):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_x[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_x[i][j][k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter y collects the displacements along y, '
@@ -404,8 +408,8 @@ class FFD(Deformation):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_y[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_y[i][j][k]) + '\n'
                     offset = 13
 
         output_string += '\n# parameter z collects the displacements along z, '
@@ -417,8 +421,8 @@ class FFD(Deformation):
             for j in range(0, self.n_control_points[1]):
                 for k in range(0, self.n_control_points[2]):
                     output_string += offset * ' ' + str(i) + '   ' + str(
-                        j) + '   ' + str(k) + '   ' + str(self.array_mu_z[i][j][
-                            k]) + '\n'
+                        j) + '   ' + str(k) + '   ' + str(
+                            self.array_mu_z[i][j][k]) + '\n'
                     offset = 13
 
         with open(filename, 'w') as f:
@@ -442,7 +446,6 @@ class FFD(Deformation):
         string += '\nposition_vertices = {}\n'.format(self.position_vertices)
         return string
 
-
     def control_points(self, deformed=True):
         """
         Method that returns the FFD control points. If the `deformed` flag is
@@ -460,8 +463,10 @@ class FFD(Deformation):
 
         y_coords, x_coords, z_coords = np.meshgrid(y, x, z)
 
-        box_points = np.array([
-            x_coords.ravel(), y_coords.ravel(), z_coords.ravel()])
+        box_points = np.array(
+            [x_coords.ravel(),
+             y_coords.ravel(),
+             z_coords.ravel()])
 
         if deformed:
             box_points += np.array([
@@ -472,12 +477,10 @@ class FFD(Deformation):
 
         n_rows = box_points.shape[1]
 
-        box_points = np.dot(
-            self.rotation_matrix,
-            box_points) + np.transpose(np.tile(self.box_origin, (n_rows, 1)))
+        box_points = np.dot(self.rotation_matrix, box_points) + np.transpose(
+            np.tile(self.box_origin, (n_rows, 1)))
 
         return box_points.T
-
 
     def reflect(self, axis=0):
         """
@@ -526,17 +529,18 @@ class FFD(Deformation):
 
         # we append along the given axis all the displacements reflected
         # and in the reverse order
-        self.array_mu_x = np.append(
-            self.array_mu_x,
-            reflection[0] * np.flip(self.array_mu_x, axis)[indeces], axis=axis)
-        self.array_mu_y = np.append(
-            self.array_mu_y,
-            reflection[1] * np.flip(self.array_mu_y, axis)[indeces], axis=axis)
-        self.array_mu_z = np.append(
-            self.array_mu_z,
-            reflection[2] * np.flip(self.array_mu_z, axis)[indeces], axis=axis)
-
-
+        self.array_mu_x = np.append(self.array_mu_x,
+                                    reflection[0] *
+                                    np.flip(self.array_mu_x, axis)[indeces],
+                                    axis=axis)
+        self.array_mu_y = np.append(self.array_mu_y,
+                                    reflection[1] *
+                                    np.flip(self.array_mu_y, axis)[indeces],
+                                    axis=axis)
+        self.array_mu_z = np.append(self.array_mu_z,
+                                    reflection[2] *
+                                    np.flip(self.array_mu_z, axis)[indeces],
+                                    axis=axis)
 
     def __call__(self, src_pts):
         """
@@ -544,19 +548,25 @@ class FFD(Deformation):
         execution it sets `self.modified_mesh_pts`.
         """
         def is_inside(pts, boundaries):
-             return np.all(np.logical_and(
-                 pts >= boundaries[0], pts <= boundaries[1]), axis=1)
+            """ 
+            Check is `pts` is inside the ranges provided by `boundaries`.
+            """
+            return np.all(np.logical_and(pts >= boundaries[0],
+                                         pts <= boundaries[1]),
+                          axis=1)
 
         # map to the reference domain
         src_reference_frame_pts = self.psi(src_pts - self.box_origin)
 
         # apply deformation for all the pts in the unit cube
-        index_pts_inside = is_inside(
-                src_reference_frame_pts, np.array([[0., 0., 0.], [1., 1., 1.]]))
-        shifted_reference_frame_pts = self.T(src_reference_frame_pts[index_pts_inside])
+        index_pts_inside = is_inside(src_reference_frame_pts,
+                                     np.array([[0., 0., 0.], [1., 1., 1.]]))
+        shifted_reference_frame_pts = self.T(
+            src_reference_frame_pts[index_pts_inside])
 
         # map to the physical domain
-        shifted_pts = self.inverse_psi(shifted_reference_frame_pts) + self.box_origin 
+        shifted_pts = self.inverse_psi(
+            shifted_reference_frame_pts) + self.box_origin
 
         dst_pts = src_pts.copy()
         dst_pts[index_pts_inside] = shifted_pts

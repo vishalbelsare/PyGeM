@@ -2,11 +2,14 @@
 """
 import numpy as np
 
+
 class classproperty(object):
     def __init__(self, f):
         self.f = f
+
     def __get__(self, obj, owner):
         return self.f(owner)
+
 
 class RBFFactory(object):
     """
@@ -150,7 +153,6 @@ class RBFFactory(object):
                           np.power(r_sc, k) * np.log(r_sc))
         return result
 
-
     ############################################################################
     ##                                                                        ##
     ## BASIS FUNCTION dictionary                                              ##
@@ -160,17 +162,15 @@ class RBFFactory(object):
     ############################################################################
     __bases = {
         'gaussian_spline': gaussian_spline,
-        'multi_quadratic_biharmonic_spline':
-            multi_quadratic_biharmonic_spline,
+        'multi_quadratic_biharmonic_spline': multi_quadratic_biharmonic_spline,
         'inv_multi_quadratic_biharmonic_spline':
-            inv_multi_quadratic_biharmonic_spline,
+        inv_multi_quadratic_biharmonic_spline,
         'thin_plate_spline': thin_plate_spline,
         'beckert_wendland_c2_basis': beckert_wendland_c2_basis,
         'polyharmonic_spline': polyharmonic_spline
     }
 
     def __new__(self, fname):
-
 
         # to make the str callable we have to use a dictionary with all the
         # implemented radial basis functions
@@ -188,5 +188,3 @@ class RBFFactory(object):
         The available basis functions.
         """
         return list(self.__bases.keys())
-
-

@@ -76,23 +76,26 @@ class IDW(Deformation):
     >>> idw.read_parameters('tests/test_datasets/parameters_idw_cube.prm')
     >>> new_mesh_points = idw(mesh_points.T)
     """
-
     def __init__(self,
-            original_control_points=None,
-            deformed_control_points=None,
-            power=2):
+                 original_control_points=None,
+                 deformed_control_points=None,
+                 power=2):
 
         if original_control_points is None:
-            self.original_control_points = np.array(
-                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+            self.original_control_points = np.array([[0., 0., 0.], [0., 0., 1.],
+                                                     [0., 1., 0.], [1., 0., 0.],
+                                                     [0., 1., 1.], [1., 0., 1.],
+                                                     [1., 1., 0.], [1., 1.,
+                                                                    1.]])
         else:
             self.original_control_points = original_control_points
 
         if deformed_control_points is None:
-            self.deformed_control_points = np.array(
-                [[0., 0., 0.], [0., 0., 1.], [0., 1., 0.], [1., 0., 0.],
-                 [0., 1., 1.], [1., 0., 1.], [1., 1., 0.], [1., 1., 1.]])
+            self.deformed_control_points = np.array([[0., 0., 0.], [0., 0., 1.],
+                                                     [0., 1., 0.], [1., 0., 0.],
+                                                     [0., 1., 1.], [1., 0., 1.],
+                                                     [1., 1., 0.], [1., 1.,
+                                                                    1.]])
         else:
             self.deformed_control_points = deformed_control_points
 
@@ -103,7 +106,6 @@ class IDW(Deformation):
         This method performs the deformation of the mesh points. After the
         execution it sets `self.modified_mesh_points`.
         """
-
         def distance(u, v):
             """ Norm of u - v """
             return np.linalg.norm(u - v, ord=self.power)

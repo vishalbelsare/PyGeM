@@ -1,6 +1,9 @@
-from setuptools import setup, find_packages, Command
+"""
+PyGeM setup.py
+"""
 import os
 import sys
+from setuptools import setup, find_packages, Command
 import pygem
 
 # Package meta-data.
@@ -10,7 +13,7 @@ URL = 'https://github.com/mathLab/PyGeM'
 MAIL = pygem.__mail__
 AUTHOR = pygem.__author__
 VERSION = pygem.__version__
-KEYWORDS='dimension_reduction mathematics ffd morphing iges stl vtk openfoam'
+KEYWORDS = 'dimension_reduction mathematics ffd morphing iges stl vtk openfoam'
 
 REQUIRED = [
     'future', 'numpy', 'scipy',	'matplotlib',
@@ -48,9 +51,11 @@ class UploadCommand(Command):
         print('\033[1m{0}\033[0m'.format(s))
 
     def initialize_options(self):
+        """ void """
         pass
 
     def finalize_options(self):
+        """ void """
         pass
 
     def run(self):
@@ -79,14 +84,14 @@ setup(
     long_description=LDESCRIPTION,
     author=AUTHOR,
     author_email=MAIL,
-	classifiers=[
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics'
-	],
+    ],
     keywords=KEYWORDS,
     url=URL,
     license='MIT',

@@ -44,24 +44,26 @@ try:
     import configparser as configparser
 except ImportError:
     import ConfigParser as configparser
-import os
 import numpy as np
-from scipy import special
-from OCC.TopoDS import TopoDS_Shape, topods_Compound, TopoDS_Compound, topods_Face, TopoDS_Face, topods_Wire, TopoDS_Wire, topods_Edge, TopoDS_Edge
-from OCC.BRep import (BRep_Builder)
-from OCC.TopExp import TopExp_Explorer
-from OCC.TopAbs import TopAbs_VERTEX, TopAbs_EDGE, TopAbs_FACE, TopAbs_WIRE
-from OCC.TopTools import TopTools_ListOfShape
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeFace, BRepBuilderAPI_MakeWire, BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeVertex, BRepBuilderAPI_NurbsConvert
-from OCC.BRep import BRep_Tool, BRep_Tool_Curve
-from OCC.GeomConvert import geomconvert_SurfaceToBSplineSurface, geomconvert_CurveToBSplineCurve, GeomConvert_CompCurveToBSplineCurve
-from OCC.gp import gp_Pnt
-from OCC.BRepTools import breptools_OuterWire
- 
- 
-from OCC.IGESControl import IGESControl_Reader, IGESControl_Writer
- 
- 
+from OCC.Core.TopoDS import (TopoDS_Shape, topods_Compound, \
+                             TopoDS_Compound, topods_Face,  \
+                             TopoDS_Face, topods_Wire,      \
+                             TopoDS_Wire, topods_Edge)
+from OCC.Core.BRep import BRep_Builder
+from OCC.Core.TopExp import TopExp_Explorer
+from OCC.Core.TopAbs import (TopAbs_EDGE, TopAbs_FACE, TopAbs_WIRE)
+from OCC.Core.TopTools import TopTools_ListOfShape
+from OCC.Core.BRepBuilderAPI import (BRepBuilderAPI_MakeFace,    \
+                                     BRepBuilderAPI_MakeWire,    \
+                                     BRepBuilderAPI_MakeEdge,    \
+                                     BRepBuilderAPI_NurbsConvert)
+from OCC.Core.BRep import BRep_Tool, BRep_Tool_Curve
+from OCC.Core.GeomConvert import (geomconvert_SurfaceToBSplineSurface, \
+                                  geomconvert_CurveToBSplineCurve,     \
+                                  GeomConvert_CompCurveToBSplineCurve)
+from OCC.Core.gp import gp_Pnt
+from OCC.Core.BRepTools import breptools_OuterWire
+
 from pygem import FFD as OriginalFFD
 from pygem.cad.igeshandler import IgesHandler
 
@@ -99,11 +101,12 @@ class FFD(OriginalFFD):
         >>> import numpy as np
         >>> ffd = FFD()
         >>> ffd.read_parameters('tests/test_datasets/parameters_test_ffd_sphere.prm')
-        # TODO
-        >>> new = free_form.modified_mesh_points
+        >>> input_cad_file_name = "input.iges"
+        >>> modified_cad_file_name = "output.iges"
+        >>> ffd(input_cad_file_name,modified_cad_file_name)
     """
 
-    def __call__(self, obj,dst=None):
+    def __call__(self, obj, dst=None):
         """
         This method performs the deformation on the CAD file.
         """
@@ -121,7 +124,7 @@ class FFD(OriginalFFD):
         print("Modifying faces")
 
 
-        tol = 1e-5
+
         
         #create compound to store modified faces
         compound_builder = BRep_Builder()
@@ -133,40 +136,32 @@ class FFD(OriginalFFD):
         # init some quantities
         faceCount = 0
         face_list = []
-        control_point_position = [0]
         faces_explorer = TopExp_Explorer(shape, TopAbs_FACE)
-        mesh_points = np.zeros(shape=(0, 3))
 
         while faces_explorer.More():
-            points_orig = []
-            points_def = []
             # performing some conversions to get the right format (BSplineSurface)
-            print("Processing face ",faceCount) 
+            print("Processing face ", faceCount)
             face = topods_Face(faces_explorer.Current())
             nurbs_converter = BRepBuilderAPI_NurbsConvert(face)
-            nurbs_converter.Perform(face)
             nurbs_face = nurbs_converter.Shape()
             face_aux = topods_Face(nurbs_face)
             brep_face = BRep_Tool.Surface(topods_Face(nurbs_face))
-            old_brep_face = BRep_Tool.Surface(topods_Face(nurbs_face))
-            
             bounds = 0.0
-            bounds = brep_face.GetObject().Bounds()
-            #print("Bounds: ", bounds)
-            bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
+            bounds = brep_face.Bounds()
 
+            bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
             # we will then add an amount of nodes that will grant us our prescribed resolution both along u and v
-            uKnotsToAdd = 20;
-            vKnotsToAdd = 20;
-            print("Added U knots: ", uKnotsToAdd )
-            print("Added V knots: ", vKnotsToAdd )
+            uKnotsToAdd = 30;
+            vKnotsToAdd = 30;
+            print("Added U knots: ", uKnotsToAdd)
+            print("Added V knots: ", vKnotsToAdd)
             for i in range(uKnotsToAdd):
-                bspline_face.GetObject().InsertUKnot(bounds[0]+i*(bounds[1]-bounds[0])/uKnotsToAdd,1,1e-7)
+                bspline_face.InsertUKnot(bounds[0]+i*(bounds[1]-bounds[0])/uKnotsToAdd, 1, 1e-7)
             for i in range(vKnotsToAdd):
-                bspline_face.GetObject().InsertVKnot(bounds[2]+i*(bounds[3]-bounds[2])/vKnotsToAdd,1,1e-7)
+                bspline_face.InsertVKnot(bounds[2]+i*(bounds[3]-bounds[2])/vKnotsToAdd, 1, 1e-7)
 
             # openCascade object
-            occ_face = bspline_face.GetObject()
+            occ_face = bspline_face
 
             bounds = 0.0
             bounds = occ_face.Bounds()
@@ -175,7 +170,7 @@ class FFD(OriginalFFD):
             v_min = bounds[2]
             v_max = bounds[3]
             center = occ_face.Value((u_min+u_max)/2.0,(v_min+v_max)/2.0)
-            print("Face Center: ",center.X(),center.Y(),center.Z())
+            print("Face Center: ", center.X(), center.Y(), center.Z())
 
             # extract the Control Points of each face
             n_poles_u = occ_face.NbUPoles()
@@ -192,7 +187,7 @@ class FFD(OriginalFFD):
                     control_point_coordinates.Y(),\
                     control_point_coordinates.Z()]
                     i+=1
-                    
+
             ## SURFACES PHASE #####################################################
             src_pts = control_polygon_coordinates
             new_pts = super().__call__(src_pts) # dont touch this line
@@ -209,9 +204,11 @@ class FFD(OriginalFFD):
             # we now need to obtain the curves (actually, the WIRES) that define the bounds of the surface and TRIM the surface
             # with them, to obtain the new face
             
-            # we start creating a face with the modified surface. we will cut this new face with all the wires
+            # we start creating a face with the modified surface. we will later cut this new face with all the wires
             # that the original face had
-            brep = BRepBuilderAPI_MakeFace(occ_face.GetHandle(), tol).Face()
+            # this tolerance can be moved among the function parameters
+            tolerance = 1e-2
+            brep = BRepBuilderAPI_MakeFace(occ_face, tolerance).Face()
 
             
             # we here start looping on the wires of the original face
@@ -239,13 +236,11 @@ class FFD(OriginalFFD):
             wire_explorer = TopExp_Explorer(face_aux, TopAbs_WIRE)
             while wire_explorer.More():
                 wire = topods_Wire(wire_explorer.Current())
-                wire_count += 1
                 h_bspline_edge = GeomConvert_CompCurveToBSplineCurve()
                 edge_explorer = TopExp_Explorer(wire, TopAbs_EDGE)
                 edgesCount=0
                 while edge_explorer.More():
                     # performing some conversions to get the right format (BSplineSurface)
-                    #print("Edge in curve: ", edgesCount)
                     edge = topods_Edge(edge_explorer.Current())
                     if (BRep_Tool.Degenerated(edge) == False):
                         bspline_converter = BRepBuilderAPI_NurbsConvert(edge)
@@ -253,18 +248,18 @@ class FFD(OriginalFFD):
                         bspline_tshape_edge = bspline_converter.Shape()
                         h_geom_edge, a, b = BRep_Tool_Curve(topods_Edge(bspline_tshape_edge))
                         this_bspline_edge = geomconvert_CurveToBSplineCurve(h_geom_edge)
-                        bspline_geom_edge = this_bspline_edge.GetObject()
-                        h_bspline_edge.Add(this_bspline_edge,1e-4)
+                        bspline_geom_edge = this_bspline_edge
+                        h_bspline_edge.Add(this_bspline_edge,tolerance)
                     edgesCount += 1
-                    #print("Curve ", curve_count, "added edge ", edgesCount)
+
                     edge_explorer.Next()
                 
                 bspline_geom_hedge = h_bspline_edge.BSplineCurve()
-                bspline_geom_edge = bspline_geom_hedge.GetObject()
+                bspline_geom_edge = bspline_geom_hedge
                 unified_edge = BRepBuilderAPI_MakeEdge(bspline_geom_hedge).Edge()
 
                 # number of knots is enriched here: this can become a user prescribed parameter for the class
-                knotsToAdd = 200
+                knotsToAdd = 30
                 firstParam = bspline_geom_edge.FirstParameter()
                 lastParam = bspline_geom_edge.LastParameter()
                 for i in range(knotsToAdd):
@@ -301,17 +296,18 @@ class FFD(OriginalFFD):
                     occ_edge.SetPole(pole + 1, control_point)
                     i += 1
                         
-                modified_edge= BRepBuilderAPI_MakeEdge(occ_edge.GetHandle()).Edge()
+                modified_edge= BRepBuilderAPI_MakeEdge(occ_edge).Edge()
                 shapesList.Append(modified_edge)
 
                 wire_maker = BRepBuilderAPI_MakeWire()
                 wire_maker.Add(shapesList)
                 result_wire = wire_maker.Wire()
-                
+                iges_handler = IgesHandler()
+                iges_handler.write_shape_to_file(result_wire, "face_"+str(faceCount)+"_wire_"+str(wire_count)+".iges")
 
-                # now, the wire can be oute or inner. we store the outer and (possible) inner ones in different lists
+                # now, the wire can be outer or inner. we store the outer and (possible) inner ones in different lists
                 # this is because we first need to trim the surface using the outer wire, and then we can trim it
-                # with the wires corresponding to al the holse. if this is not done, the procedure will not work
+                # with the wires corresponding to all the holes. if this is not done, the procedure will not work
                 if (wire == breptools_OuterWire(face_aux)):
                     outer_wires.append(result_wire)
                 else:
@@ -321,11 +317,12 @@ class FFD(OriginalFFD):
 
 
             # so once we finished looping on all the wires to modify them, we use the only outer one to trim the surface
-            face_maker = BRepBuilderAPI_MakeFace(occ_face.GetHandle(),outer_wires[0])
+            face_maker = BRepBuilderAPI_MakeFace(occ_face,outer_wires[0])
 
             # and then add all other inner wires for the holes
             for inner_wire in inner_wires:
                 face_maker.Add(inner_wire)
+
                             
             # finally, we get our trimmed face with all its holes
             brep_surf = face_maker.Face()

@@ -398,7 +398,7 @@ class TestFFD(TestCase):
     def test_ffd_iges_pipe_mod_through_topods_shape(self):
         from pygem.cad.igeshandler import IgesHandler
         from pygem.cad import FFD
-        from OCC.TopoDS import TopoDS_Shape
+        from OCC.Core.TopoDS import TopoDS_Shape
         iges_handler = IgesHandler()
         orig_shape = iges_handler.load_shape_from_file('tests/test_datasets/test_pipe.iges')
         ffd = FFD()

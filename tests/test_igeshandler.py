@@ -3,8 +3,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from OCC.TopoDS import TopoDS_Shape, TopoDS_Compound, topods_Compound
-from OCC.BRepPrimAPI import BRepPrimAPI_MakeBox
+from OCC.Core.TopoDS import TopoDS_Shape, TopoDS_Compound, topods_Compound
+from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeBox
 
 from pygem.cad.igeshandler import IgesHandler
 

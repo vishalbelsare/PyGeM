@@ -96,11 +96,30 @@ class FFD(OriginalFFD):
         >>> import pygem.params as ffdp
         >>> import numpy as np
         >>> ffd = FFD()
-        >>> ffd.read_parameters('tests/test_datasets/test_pipe.iges')
+        >>> ffd.read_parameters(
+        >>>        'tests/test_datasets/parameters_test_ffd_iges.prm')
         >>> input_cad_file_name = "input.iges"
         >>> modified_cad_file_name = "output.iges"
         >>> ffd(input_cad_file_name,modified_cad_file_name)
     """
+    def __init__(self, n_control_points=None):
+        self.conversion_unit = 1.
+
+        self.box_length = np.array([1., 1., 1.])
+        self.box_origin = np.array([0., 0., 0.])
+        self.rot_angle = np.array([0., 0., 0.])
+
+        self.array_mu_x = None
+        self.array_mu_y = None
+        self.array_mu_z = None
+
+        if n_control_points is None:
+            n_control_points = [2, 2, 2]
+        self.n_control_points = n_control_points
+        self.uKnotsToAdd = 30
+        self.vKnotsToAdd = 30
+        self.knotsToAdd = 30
+        self.tolerance = 1e-4
 
     def __call__(self, obj, dst=None):
         """
@@ -119,9 +138,6 @@ class FFD(OriginalFFD):
 
         print("Modifying faces")
 
-
-
-
         #create compound to store modified faces
         compound_builder = BRep_Builder()
         compound = TopoDS_Compound()
@@ -137,7 +153,6 @@ class FFD(OriginalFFD):
         while faces_explorer.More():
             # performing some conversions to get the right
             # format (BSplineSurface)
-            print("Processing face ", faceCount)
             face = topods_Face(faces_explorer.Current())
             nurbs_converter = BRepBuilderAPI_NurbsConvert(face)
             nurbs_face = nurbs_converter.Shape()
@@ -149,28 +164,15 @@ class FFD(OriginalFFD):
             bspline_face = geomconvert_SurfaceToBSplineSurface(brep_face)
             # we will then add an amount of nodes that will grant
             # us our prescribed resolution both along u and v
-            uKnotsToAdd = 30
-            vKnotsToAdd = 30
-            print("Added U knots: ", uKnotsToAdd)
-            print("Added V knots: ", vKnotsToAdd)
-            for i in range(uKnotsToAdd):
+            for i in range(self.uKnotsToAdd):
                 bspline_face.InsertUKnot(bounds[0]+ \
-                    i*(bounds[1]-bounds[0])/uKnotsToAdd, 1, 1e-7)
-            for i in range(vKnotsToAdd):
+                    i*(bounds[1]-bounds[0])/self.uKnotsToAdd, 1, self.tolerance)
+            for i in range(self.vKnotsToAdd):
                 bspline_face.InsertVKnot(bounds[2]+ \
-                    i*(bounds[3]-bounds[2])/vKnotsToAdd, 1, 1e-7)
+                    i*(bounds[3]-bounds[2])/self.vKnotsToAdd, 1, self.tolerance)
 
             # openCascade object
             occ_face = bspline_face
-
-            bounds = 0.0
-            bounds = occ_face.Bounds()
-            u_min = bounds[0]
-            u_max = bounds[1]
-            v_min = bounds[2]
-            v_max = bounds[3]
-            center = occ_face.Value((u_min+u_max)/2.0, (v_min+v_max)/2.0)
-            print("Face Center: ", center.X(), center.Y(), center.Z())
 
             # extract the Control Points of each face
             n_poles_u = occ_face.NbUPoles()
@@ -212,8 +214,7 @@ class FFD(OriginalFFD):
             #later cut this new face with all the wires that the original
             # face had this tolerance can be moved among the function
             # parameters
-            tolerance = 1e-2
-            brep = BRepBuilderAPI_MakeFace(occ_face, tolerance).Face()
+            brep = BRepBuilderAPI_MakeFace(occ_face, self.tolerance).Face()
 
 
             # we here start looping on the wires of the original face
@@ -230,7 +231,6 @@ class FFD(OriginalFFD):
                     print("Wire", wire_count+1, "is outer wire")
                 wire_count += 1
                 wire_explorer.Next()
-            print("This face has ", wire_count, " wires")
 
             #we now start really looping on the wires
             #we will create a single curve joining all the edges in the wire
@@ -259,7 +259,7 @@ class FFD(OriginalFFD):
                         this_bspline_edge = \
                             geomconvert_CurveToBSplineCurve(h_geom_edge)
                         bspline_geom_edge = this_bspline_edge
-                        h_bspline_edge.Add(this_bspline_edge, tolerance)
+                        h_bspline_edge.Add(this_bspline_edge, self.tolerance)
                     edgesCount += 1
 
                     edge_explorer.Next()
@@ -269,12 +269,12 @@ class FFD(OriginalFFD):
 
                 # number of knots is enriched here: this can become a user
                 # prescribed parameter for the class
-                knotsToAdd = 30
                 firstParam = bspline_geom_edge.FirstParameter()
                 lastParam = bspline_geom_edge.LastParameter()
-                for i in range(knotsToAdd):
+                for i in range(self.knotsToAdd):
                     bspline_geom_edge.InsertKnot(firstParam+ \
-                               i*(lastParam-firstParam)/knotsToAdd, 1, 1e-7)
+                               i*(lastParam-firstParam)/self.knotsToAdd, 1, \
+                               self.tolerance)
                 shapesList = TopTools_ListOfShape()
                 # openCascade object
                 occ_edge = bspline_geom_edge
@@ -314,10 +314,6 @@ class FFD(OriginalFFD):
                 wire_maker = BRepBuilderAPI_MakeWire()
                 wire_maker.Add(shapesList)
                 result_wire = wire_maker.Wire()
-                iges_handler = IgesHandler()
-                iges_handler.write_shape_to_file(result_wire, "face_"+ \
-                                 str(faceCount)+"_wire_"+ \
-                                 str(wire_count)+".iges")
 
                 # now, the wire can be outer or inner. we store the outer
                 # and (possible) inner ones in different lists

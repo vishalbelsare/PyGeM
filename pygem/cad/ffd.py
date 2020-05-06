@@ -103,19 +103,7 @@ class FFD(OriginalFFD):
         >>> ffd(input_cad_file_name,modified_cad_file_name)
     """
     def __init__(self, n_control_points=None):
-        self.conversion_unit = 1.
-
-        self.box_length = np.array([1., 1., 1.])
-        self.box_origin = np.array([0., 0., 0.])
-        self.rot_angle = np.array([0., 0., 0.])
-
-        self.array_mu_x = None
-        self.array_mu_y = None
-        self.array_mu_z = None
-
-        if n_control_points is None:
-            n_control_points = [2, 2, 2]
-        self.n_control_points = n_control_points
+        super().__init__(n_control_points=None)
         self.uKnotsToAdd = 30
         self.vKnotsToAdd = 30
         self.knotsToAdd = 30
@@ -136,7 +124,6 @@ class FFD(OriginalFFD):
         else:
             raise TypeError
 
-        print("Modifying faces")
 
         #create compound to store modified faces
         compound_builder = BRep_Builder()

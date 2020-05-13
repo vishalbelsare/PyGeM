@@ -44,7 +44,8 @@ Utilities for performing Free Form Deformation (FFD)
 import numpy as np
 from OCC.Core.TopoDS import (TopoDS_Shape, topods_Wire,     \
                              TopoDS_Compound, topods_Face,  \
-                             topods_Edge)
+                             topods_Edge, TopoDS_Face,      \
+                             TopoDS_Wire)
 from OCC.Core.BRep import BRep_Builder
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopAbs import (TopAbs_EDGE, TopAbs_FACE, TopAbs_WIRE)
@@ -54,6 +55,7 @@ from OCC.Core.BRepBuilderAPI import (BRepBuilderAPI_MakeFace,    \
                                      BRepBuilderAPI_MakeEdge,    \
                                      BRepBuilderAPI_NurbsConvert)
 from OCC.Core.BRep import BRep_Tool, BRep_Tool_Curve
+from OCC.Core.Geom import Geom_BSplineCurve, Geom_BSplineSurface
 from OCC.Core.GeomConvert import (geomconvert_SurfaceToBSplineSurface, \
                                   geomconvert_CurveToBSplineCurve,     \
                                   GeomConvert_CompCurveToBSplineCurve)
@@ -102,12 +104,197 @@ class FFD(OriginalFFD):
         >>> modified_cad_file_name = "output.iges"
         >>> ffd(input_cad_file_name,modified_cad_file_name)
     """
-    def __init__(self, n_control_points=None):
+    def __init__(self,
+                 n_control_points=None,
+                 u_knots_to_add=30,
+                 v_knots_to_add=30,
+                 t_knots_to_add=30,
+                 tolerance=1e-4):
         super().__init__(n_control_points=None)
-        self.uKnotsToAdd = 30
-        self.vKnotsToAdd = 30
-        self.knotsToAdd = 30
-        self.tolerance = 1e-4
+        self.u_knots_to_add = u_knots_to_add
+        self.v_knots_to_add = v_knots_to_add
+        self.t_knots_to_add = t_knots_to_add
+        self.tolerance = tolerance
+
+    def _bspline_surface_from_face(self, face):
+        """
+        Takes a TopoDS_Face and transforms it into a Bspline_Surface.
+
+        :face TopoDS_Face to be converted
+        :rtype:  Geom_BSplineSurface
+        """
+        if not isinstance(face, TopoDS_Face):
+            raise TypeError("face must be a TopoDS_Face")
+        # TopoDS_Face converted to Nurbs
+        nurbs_face = topods_Face(BRepBuilderAPI_NurbsConvert(face).Shape())
+        # GeomSurface obtained from Nurbs face
+        surface = BRep_Tool.Surface(nurbs_face)
+        # surface is now further converted to a bspline surface
+        bspline_surface = geomconvert_SurfaceToBSplineSurface(surface)
+        return bspline_surface
+
+
+    def _bspline_curve_from_wire(self, wire):
+        """
+        Takes a TopoDS_Wire and transforms it into a Bspline_Curve.
+
+        :wire TopoDS_Wire to be converted
+        :rtype:  Geom_BSplineCurve
+        """
+        if not isinstance(wire, TopoDS_Wire):
+            raise TypeError("face must be a TopoDS_Wire")
+        # joining all the wire edges in a single curve here
+        # composite curve builder (can only join Bspline curves)
+        composite_curve_builder = GeomConvert_CompCurveToBSplineCurve()
+        # iterator to edges in the TopoDS_Wire
+        edge_explorer = TopExp_Explorer(wire, TopAbs_EDGE)
+        while edge_explorer.More():
+            # getting the edge from the iterator
+            edge = topods_Edge(edge_explorer.Current())
+            # edge can be joined only if it is not degenerated (zero
+            # length)
+            if not BRep_Tool.Degenerated(edge):
+                # the edge must be converted to Nurbs edge
+                # the Nurbs edge converter class
+                nurbs_converter = BRepBuilderAPI_NurbsConvert(edge)
+                nurbs_converter.Perform(edge)
+                # the Nurbs edge
+                nurbs_edge = topods_Edge(nurbs_converter.Shape())
+                # here we extract the underlying curve from the Nurbs
+                # edge
+                nurbs_curve, _, _ = BRep_Tool_Curve(nurbs_edge)
+                # we convert the Nurbs curve to Bspline curve
+                bspline_curve = \
+                    geomconvert_CurveToBSplineCurve(nurbs_curve)
+                # we can now add the Bspline curve to
+                # the composite wire curve
+                composite_curve_builder.Add(bspline_curve,
+                                            self.tolerance)
+            edge_explorer.Next()
+
+        # GeomCurve obtained by the builder after edges are joined
+        comp_curve = composite_curve_builder.BSplineCurve()
+        return comp_curve
+
+    def _enrich_curve_knots(self, bsp_curve):
+        """
+        Takes a Geom_BSplineCurve and adds self.t_knots_to_add poles to it.
+
+        :bsp_curve Geom_BSplineCurve to be enriched
+        """
+        if not isinstance(bsp_curve, Geom_BSplineCurve):
+            raise TypeError("bsp_curve must be a Geom_BSplineCurve")
+        # number of knots is enriched here, if required, to
+        # enhance precision
+        # start parameter of composite curve
+        first_param = bsp_curve.FirstParameter()
+        # end parameter of composite curve
+        last_param = bsp_curve.LastParameter()
+        for i in range(self.t_knots_to_add):
+            bsp_curve.InsertKnot(first_param+ \
+                           i*(last_param-first_param)/self.t_knots_to_add, 1, \
+                           self.tolerance)
+
+
+    def _enrich_surface_knots(self, bsp_surface):
+        """
+        Takes a Geom_Bspline_Surface and adds self.u_knots_to_add
+        and self.v_knots_to_add knots to it in u and v direction respectively.
+
+        :bsp_surface Geom_Bspline_Surface to be enriched
+        """
+        if not isinstance(bsp_surface, Geom_BSplineSurface):
+            raise TypeError("bsp_surface must be a Geom_BSplineSurface")
+        # we will add the prescribed amount of nodes
+        # both along u and v parametric directions
+
+        # bounds (in surface parametric space) of the surface
+        bounds = bsp_surface.Bounds()
+
+        for i in range(self.u_knots_to_add):
+            bsp_surface.InsertUKnot(bounds[0]+ \
+                i*(bounds[1]-bounds[0])/self.u_knots_to_add, 1, self.tolerance)
+        for i in range(self.v_knots_to_add):
+            bsp_surface.InsertVKnot(bounds[2]+ \
+                i*(bounds[3]-bounds[2])/self.v_knots_to_add, 1, self.tolerance)
+
+    def _deform_bspline_curve(self, bsp_curve):
+        """
+        Takes a Geom_Bspline_Curve and deforms it through FFD.
+
+        :bsp_curve Geom_Bspline_Curve to be deformed
+        """
+        if not isinstance(bsp_curve, Geom_BSplineCurve):
+            raise TypeError("bsp_curve must be a Geom_BSplineCurve")
+        # we first extract the poles of the curve
+        # poles number
+        n_poles = bsp_curve.NbPoles()
+        # array containing the poles coordinates
+        poles_coordinates = np.zeros(shape=(n_poles, 3))
+        # cycle over the poles to get their coordinates
+
+        for pole_id in range(n_poles):
+            # gp_Pnt corresponding to the pole
+            pole = bsp_curve.Pole(pole_id + 1)
+            # coordinates are added to array
+            poles_coordinates[pole_id, :] = [pole.X(), pole.Y(), pole.Z()]
+
+
+        # the new poles positions are computed through FFD
+        new_pts = super().__call__(poles_coordinates)
+
+        # the Bspline curve is now looped again to
+        # set the poles positions  to new_points
+        i = 0
+        for pole in range(n_poles):
+            # gp_Point corresponding to the new pole coordinates
+            control_point = gp_Pnt(new_pts[i, 0],
+                                   new_pts[i, 1],
+                                   new_pts[i, 2])
+            bsp_curve.SetPole(pole + 1, control_point)
+            i += 1
+
+    def _deform_bspline_surface(self, bsp_surface):
+        """
+        Takes a Geom_Bspline_Surface and deforms it through FFD.
+
+        :bsp_surface Geom_Bspline_Surface to be deformed
+        """
+        if not isinstance(bsp_surface, Geom_BSplineSurface):
+            raise TypeError("bsp_surface must be a Geom_BSplineSurface")
+        # we first extract the poles of the curve
+        # number of poles in u direction
+        n_poles_u = bsp_surface.NbUPoles()
+        # number of poles in v direction
+        n_poles_v = bsp_surface.NbVPoles()
+        # array which will contain the coordinates of the poles
+        poles_coordinates = np.zeros(shape=(n_poles_u * n_poles_v, 3))
+        # cycle over the poles to get their coordinates
+        i = 0
+        for pole_u_direction in range(n_poles_u):
+            for pole_v_direction in range(n_poles_v):
+                # gp_Pnt containing the current pole
+                pole = bsp_surface.Pole(pole_u_direction + 1,
+                                        pole_v_direction + 1)
+                poles_coordinates[i, :] = [pole.X(), pole.Y(), pole.Z()]
+                i += 1
+
+        # the new poles positions are computed through FFD
+        new_pts = super().__call__(poles_coordinates)
+
+        # the surface is now looped again to
+        # set the new poles positions
+        i = 0
+        for pole_u_direction in range(n_poles_u):
+            for pole_v_direction in range(n_poles_v):
+                new_pole = gp_Pnt(new_pts[i, 0],
+                                  new_pts[i, 1],
+                                  new_pts[i, 2])
+                bsp_surface.SetPole(pole_u_direction + 1,
+                                    pole_v_direction + 1,
+                                    new_pole)
+                i += 1
+
 
     def __call__(self, obj, dst=None):
         """
@@ -139,73 +326,22 @@ class FFD(OriginalFFD):
         while faces_explorer.More():
             # performing some conversions to get the right
             # format (BSplineSurface)
-
             # TopoDS_Face obtained from iterator
             face = topods_Face(faces_explorer.Current())
-            # TopoDS_Face converted to Nurbs
-            nurbs_face = topods_Face(BRepBuilderAPI_NurbsConvert(face).Shape())
-            # GeomSurface obtained from Nurbs face
-            surface = BRep_Tool.Surface(nurbs_face)
+            # performing some conversions to get the right
+            # format (BSplineSurface)
+            bspline_surface = self._bspline_surface_from_face(face)
 
-            # surface is now further converted to a bspline surface
-            bspline_surface = geomconvert_SurfaceToBSplineSurface(surface)
-            # bounds (in surface parametric space) of the surface
-            bounds = surface.Bounds()
+            # add the required amount of poles in u and v directions
+            self._enrich_surface_knots(bspline_surface)
 
-            # we will then add the prescribed amount of nodes
-            # both along u and v parametric directions
-            for i in range(self.uKnotsToAdd):
-                bspline_surface.InsertUKnot(bounds[0]+ \
-                    i*(bounds[1]-bounds[0])/self.uKnotsToAdd, 1, self.tolerance)
-            for i in range(self.vKnotsToAdd):
-                bspline_surface.InsertVKnot(bounds[2]+ \
-                    i*(bounds[3]-bounds[2])/self.vKnotsToAdd, 1, self.tolerance)
+            # deform the Bspline surface through FFD
+            self._deform_bspline_surface(bspline_surface)
 
-
-            # extract the Control Points of each face
-
-            # number of poles in u direction 
-            n_poles_u = bspline_surface.NbUPoles()
-            # number of poles in v direction
-            n_poles_v = bspline_surface.NbVPoles()
-            # array which will contain the coordinates of the poles
-            poles_coordinates = np.zeros(shape=(n_poles_u * n_poles_v, 3))
-            # cycle over the poles to get their coordinates
-            i = 0
-            for pole_u_direction in range(n_poles_u):
-                for pole_v_direction in range(n_poles_v):
-                    # gp_Pnt containing the current pole
-                    pole = bspline_surface.Pole(pole_u_direction + 1,
-                                                pole_v_direction + 1)
-                    poles_coordinates[i, :] = [pole.X(), pole.Y(), pole.Z()]
-                    i += 1
-
-            # the new poles positions are computed through FFD
-            new_pts = super().__call__(poles_coordinates)
-
-            # the surface is now looped again to
-            # set the new poles positions  
-            i = 0
-            for pole_u_direction in range(n_poles_u):
-                for pole_v_direction in range(n_poles_v):
-                    new_pole = gp_Pnt(new_pts[i, 0],
-                                      new_pts[i, 1],
-                                      new_pts[i, 2])
-                    bspline_surface.SetPole(pole_u_direction + 1,
-                                            pole_v_direction + 1,
-                                            new_pole)
-                    i += 1
             # through moving the control points, we now changed the SURFACE
-            # underlying FACE we are processing. we now need to obtain the curves
-            # (actually, the WIRES) that define the bounds of the surface and
-            # TRIM the surface with them, to obtain the new FACE
-
-            # we start creating a face with the modified surface. we will
-            #later cut this new face with all the wires that the original
-            # face had this tolerance can be moved among the function
-            # parameters
-            untrimmed_face = BRepBuilderAPI_MakeFace(bspline_surface,
-                                                     self.tolerance).Face()
+            # underlying FACE we are processing. we now need to obtain the
+            # curves (actually, the WIRES) that define the bounds of the
+            # surface and TRIM the surface with them, to obtain the new FACE
 
 
             #we now start really looping on the wires
@@ -218,100 +354,38 @@ class FFD(OriginalFFD):
             # list that will contain all the inner wires (holes) of the face
             inner_wires = []
             # iterator to loop over TopoDS_Wire in the original (undeformed)
-            # nurbs_face
-            wire_explorer = TopExp_Explorer(nurbs_face, TopAbs_WIRE)
+            # face
+            wire_explorer = TopExp_Explorer(face, TopAbs_WIRE)
             while wire_explorer.More():
                 # wire obtained from the iterator
                 wire = topods_Wire(wire_explorer.Current())
 
-                # joining all the wire edges in a single curve here
-                # composite curve builder (can only join Bspline curves)
-                composite_curve_builder = GeomConvert_CompCurveToBSplineCurve()
-                # iterator to edges in the TopoDS_Wire
-                edge_explorer = TopExp_Explorer(wire, TopAbs_EDGE)
-                while edge_explorer.More():
-                    # getting the edge from the iterator
-                    edge = topods_Edge(edge_explorer.Current())
-                    # edge can be joined only if it is not degenerated (zero
-                    # length)
-                    if not BRep_Tool.Degenerated(edge):
-                        # the edge must be converted to Nurbs edge
-                        # the Nurbs edge converter class
-                        nurbs_converter = BRepBuilderAPI_NurbsConvert(edge)
-                        nurbs_converter.Perform(edge)
-                        # the Nurbs edge
-                        nurbs_edge = topods_Edge(nurbs_converter.Shape())
-                        # here we extract the underlying curve from the Nurbs
-                        # edge
-                        nurbs_curve, a, b = BRep_Tool_Curve(nurbs_edge)
-                        # we convert the Nurbs curve to Bspline curve
-                        bspline_curve = \
-                            geomconvert_CurveToBSplineCurve(nurbs_curve)
-                        # we can now add the Bspline curve to
-                        # the composite wire curve
-                        composite_curve_builder.Add(bspline_curve,
-                                                    self.tolerance)
+                # getting a bpline curve joining all the edges of the wire
+                composite_curve = self._bspline_curve_from_wire(wire)
 
-                    edge_explorer.Next()
-                # GeomCurve obtained by the builder after edges are joined 
-                composite_curve = composite_curve_builder.BSplineCurve()
+                # adding all the required knots to the Bspline curve
+                self._enrich_curve_knots(composite_curve)
 
+                # deforming the Bspline curve through FFD
+                self._deform_bspline_curve(composite_curve)
 
-                # number of knots is enriched here, if required, to
-                # enhance precision
-                # start parameter of composite curve
-                firstParam = composite_curve.FirstParameter()
-                # end parameter of composite curve
-                lastParam = composite_curve.LastParameter()
-                for i in range(self.knotsToAdd):
-                    composite_curve.InsertKnot(firstParam+ \
-                               i*(lastParam-firstParam)/self.knotsToAdd, 1, \
-                               self.tolerance)
-
-                # extract the Control Points of each face
-                # poles number
-                n_poles = composite_curve.NbPoles()
-                # array containing the poles coordinates
-                poles_coordinates = np.zeros(shape=(n_poles, 3))
-                # cycle over the poles to get their coordinates
-                i = 0
-                for p in range(n_poles):
-                    # gp_Pnt corresponding to the pole
-                    pole = composite_curve.Pole(p + 1)
-                    # coordinates are added to array
-                    poles_coordinates[i, :] = [pole.X(), pole.Y(), pole.Z()]
-                    i += 1
-
-                # the new poles positions are computed through FFD
-                new_pts = super().__call__(poles_coordinates)
-
-                # the Bspline curve is now looped again to
-                # set the poles positions  to new_points
-                i = 0
-                for pole in range(n_poles):
-                    # gp_Point corresponding to the new pole coordinates
-                    control_point = gp_Pnt(new_pts[i, 0],
-                                           new_pts[i, 1],
-                                           new_pts[i, 2])
-                    composite_curve.SetPole(pole + 1, control_point)
-                    i += 1
                 # the GeomCurve corresponding to the whole edge has now
                 # been deformed. Now we must make it become an proper
                 # wire
 
-                # list of shapes (needed by the wire generator) 
-                shapesList = TopTools_ListOfShape()
+                # list of shapes (needed by the wire generator)
+                shapes_list = TopTools_ListOfShape()
 
                 # edge (to be converted to wire) obtained from the modified
                 # Bspline curve
                 modified_composite_edge = \
                     BRepBuilderAPI_MakeEdge(composite_curve).Edge()
-                # modified edge is added to shapeList
-                shapesList.Append(modified_composite_edge)
+                # modified edge is added to shapes_list
+                shapes_list.Append(modified_composite_edge)
 
                 # wire builder
                 wire_maker = BRepBuilderAPI_MakeWire()
-                wire_maker.Add(shapesList)
+                wire_maker.Add(shapes_list)
                 # deformed wire is finally obtained
                 modified_wire = wire_maker.Wire()
 
@@ -321,7 +395,7 @@ class FFD(OriginalFFD):
                 # using the outer wire, and then we can trim it
                 # with the wires corresponding to all the holes.
                 # the wire order is important, in the trimming process
-                if wire == breptools_OuterWire(nurbs_face):
+                if wire == breptools_OuterWire(face):
                     outer_wires.append(modified_wire)
                 else:
                     inner_wires.append(modified_wire)
@@ -331,7 +405,8 @@ class FFD(OriginalFFD):
             # so once we finished looping on all the wires to modify them,
             # we first use the only outer one to trim the surface
             # face builder object
-            face_maker = BRepBuilderAPI_MakeFace(bspline_surface, outer_wires[0])
+            face_maker = BRepBuilderAPI_MakeFace(bspline_surface,
+                                                 outer_wires[0])
 
             # and then add all other inner wires for the holes
             for inner_wire in inner_wires:
@@ -350,10 +425,6 @@ class FFD(OriginalFFD):
 
 
         ## END SURFACES #################################################
-
-
-
-
 
 
         if isinstance(dst, str): # if a input filename is passed

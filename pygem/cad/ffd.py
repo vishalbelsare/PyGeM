@@ -118,8 +118,9 @@ class FFD(OriginalFFD):
 
     def _bspline_surface_from_face(self, face):
         """
-        :param TopoDS_Face face: the input snapshots.
-        :return: Takes a TopoDS_Face and transforms it into a Bspline_Surface.
+        Takes a TopoDS_Face and transforms it into a Bspline_Surface.
+        :param TopoDS_Face face: the face to be converted.
+        :return: the output Bspline surface
         :rtype:  Geom_BSplineSurface
         """
         if not isinstance(face, TopoDS_Face):
@@ -135,8 +136,9 @@ class FFD(OriginalFFD):
 
     def _bspline_curve_from_wire(self, wire):
         """
+        Takes a TopoDS_Wire and transforms it into a Bspline_Curve.
         :param TopoDS_Wire wire: the wire to be converted.
-        :return: Takes a TopoDS_Wire and transforms it into a Bspline_Curve.
+        :return: The output Bspline curve
         :rtype:  Geom_BSplineCurve
         """
         if not isinstance(wire, TopoDS_Wire):
@@ -176,9 +178,9 @@ class FFD(OriginalFFD):
 
     def _enrich_curve_knots(self, bsp_curve):
         """
-        :param Geom_BSplineCurve bsp_curve: Bspline curve to be enriched.
-        :return: Takes a Geom_BSplineCurve and adds self.t_knots_to_add
+        Takes a Geom_BSplineCurve and adds self.t_knots_to_add
         poles to it.
+        :param Geom_BSplineCurve bsp_curve: Bspline curve to be enriched.
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
             raise TypeError("bsp_curve must be a Geom_BSplineCurve")
@@ -196,9 +198,9 @@ class FFD(OriginalFFD):
 
     def _enrich_surface_knots(self, bsp_surface):
         """
-        :param Geom_BSplineSurface bsp_surface: Bspline curve to be enriched.
-        :return: Takes a Geom_Bspline_Surface and adds self.u_knots_to_add
+        Takes a Geom_Bspline_Surface and adds self.u_knots_to_add
         and self.v_knots_to_add knots to it in u and v direction respectively.
+        :param Geom_BSplineSurface bsp_surface: Bspline curve to be enriched.
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):
             raise TypeError("bsp_surface must be a Geom_BSplineSurface")
@@ -217,8 +219,8 @@ class FFD(OriginalFFD):
 
     def _deform_bspline_curve(self, bsp_curve):
         """
+        Takes a Geom_BSplineCurve and deforms it through FFD.
         :param Geom_BSplineCurve bsp_curve: Bspline curve to be deformed.
-        :return: Takes a Geom_BSplineCurve and deforms it through FFD.
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
             raise TypeError("bsp_curve must be a Geom_BSplineCurve")
@@ -252,8 +254,8 @@ class FFD(OriginalFFD):
 
     def _deform_bspline_surface(self, bsp_surface):
         """
+        Takes a Geom_BSplineSurface and deforms it through FFD.
         :param Geom_BSplineSurface bsp_surface: Bspline curve to be deformed.
-        :return: Takes a Geom_BSplineSurface and deforms it through FFD.
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):
             raise TypeError("bsp_surface must be a Geom_BSplineSurface")
@@ -293,7 +295,7 @@ class FFD(OriginalFFD):
 
     def __call__(self, obj, dst=None):
         """
-        :return:This method performs the deformation on the CAD file.
+        This method performs the deformation on the CAD file.
         """
 
         # Manage input

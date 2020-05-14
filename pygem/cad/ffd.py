@@ -119,6 +119,7 @@ class FFD(OriginalFFD):
     def _bspline_surface_from_face(self, face):
         """
         Takes a TopoDS_Face and transforms it into a Bspline_Surface.
+
         :param TopoDS_Face face: the face to be converted.
         :return: the output Bspline surface
         :rtype:  Geom_BSplineSurface
@@ -137,6 +138,7 @@ class FFD(OriginalFFD):
     def _bspline_curve_from_wire(self, wire):
         """
         Takes a TopoDS_Wire and transforms it into a Bspline_Curve.
+
         :param TopoDS_Wire wire: the wire to be converted.
         :return: The output Bspline curve
         :rtype:  Geom_BSplineCurve
@@ -180,6 +182,7 @@ class FFD(OriginalFFD):
         """
         Takes a Geom_BSplineCurve and adds self.t_knots_to_add
         poles to it.
+
         :param Geom_BSplineCurve bsp_curve: Bspline curve to be enriched.
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
@@ -200,6 +203,7 @@ class FFD(OriginalFFD):
         """
         Takes a Geom_Bspline_Surface and adds self.u_knots_to_add
         and self.v_knots_to_add knots to it in u and v direction respectively.
+
         :param Geom_BSplineSurface bsp_surface: Bspline curve to be enriched.
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):
@@ -220,6 +224,7 @@ class FFD(OriginalFFD):
     def _deform_bspline_curve(self, bsp_curve):
         """
         Takes a Geom_BSplineCurve and deforms it through FFD.
+
         :param Geom_BSplineCurve bsp_curve: Bspline curve to be deformed.
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
@@ -243,18 +248,18 @@ class FFD(OriginalFFD):
 
         # the Bspline curve is now looped again to
         # set the poles positions  to new_points
-        i = 0
         for pole in range(n_poles):
             # gp_Point corresponding to the new pole coordinates
-            control_point = gp_Pnt(new_pts[i, 0],
-                                   new_pts[i, 1],
-                                   new_pts[i, 2])
+            control_point = gp_Pnt(new_pts[pole, 0],
+                                   new_pts[pole, 1],
+                                   new_pts[pole, 2])
             bsp_curve.SetPole(pole + 1, control_point)
-            i += 1
+
 
     def _deform_bspline_surface(self, bsp_surface):
         """
         Takes a Geom_BSplineSurface and deforms it through FFD.
+
         :param Geom_BSplineSurface bsp_surface: Bspline curve to be deformed.
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):

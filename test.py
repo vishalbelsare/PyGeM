@@ -21,9 +21,7 @@ test_defaults = [
 
 
 test_cad = [
-    'tests/test_igeshandler.py',
-    'tests/test_nurbshandler.py',
-    'tests/test_stephandler.py',
+    'tests/test_ffdcad.py',
 ]
 
 default_argv = ['--tests'] + test_defaults

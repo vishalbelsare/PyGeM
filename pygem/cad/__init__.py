@@ -16,3 +16,6 @@ from .nurbshandler import NurbsHandler
 from .stephandler import StepHandler
 from .igeshandler import IgesHandler
 from .ffd import FFD
+from .rbf import RBF
+from .idw import IDW
+from .cad_deformation import CADDeformation

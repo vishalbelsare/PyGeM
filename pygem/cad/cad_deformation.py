@@ -1,12 +1,11 @@
 """
+Module for generic deformation for CAD file.
 """
 import os
 import numpy as np
 from itertools import product
-from OCC.Core.TopoDS import (TopoDS_Shape, topods_Wire,
-                             TopoDS_Compound, topods_Face,
-                             topods_Edge, TopoDS_Face,
-                             TopoDS_Wire)
+from OCC.Core.TopoDS import (TopoDS_Shape, topods_Wire, TopoDS_Compound,
+                             topods_Face, topods_Edge, TopoDS_Face, TopoDS_Wire)
 from OCC.Core.BRep import BRep_Builder
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopAbs import (TopAbs_EDGE, TopAbs_FACE, TopAbs_WIRE)
@@ -24,17 +23,61 @@ from OCC.Core.gp import gp_Pnt
 from OCC.Core.BRepTools import breptools_OuterWire
 from OCC.Core.IFSelect import IFSelect_RetDone
 from OCC.Core.Interface import Interface_Static_SetCVal
-from OCC.Core.STEPControl import STEPControl_Writer, STEPControl_Reader, STEPControl_AsIs
-from OCC.Core.IGESControl import IGESControl_Writer, IGESControl_Reader, IGESControl_Controller_Init
+from OCC.Core.STEPControl import (STEPControl_Writer, STEPControl_Reader,
+                                  STEPControl_AsIs)
+from OCC.Core.IGESControl import (IGESControl_Writer, IGESControl_Reader,
+                                  IGESControl_Controller_Init)
 
 
 class CADDeformation():
     """
+    Base class for applting deformation to CAD geometries.
+    
+    :param int u_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `u` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files. Default is 0.
+    :param int v_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `v` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files.  Default is 0.
+    :param int t_knots_to_add: the number of knots to add to the NURBS curves
+        before the deformation. This parameter is useful whenever the gradient
+        of the imposed deformation present spatial scales that are smaller than
+        the local distance among the original poles of the surface/curve.
+        Enriching the poles will allow for a more accurate application of the
+        deformation, and might also reduce possible mismatches between
+        bordering faces. On the orther hand, it might result in higher
+        computational cost and bigger output files. Default is 0.
+    :param float tolerance: the tolerance involved in several internal
+        operations of the procedure (joining wires in a single curve before
+        deformation and placing new poles on curves and surfaces). Change the
+        default value only if the input file scale is significantly different
+        form mm, making some of the aforementioned operations fail. Default is
+        0.0001.
+        
+    :cvar int u_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `u` direction before the deformation.   
+    :cvar int v_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `v` direction before the deformation.
+    :cvar int t_knots_to_add: the number of knots to add to the NURBS curves
+        before the deformation.
+    :cvar float tolerance: the tolerance involved in several internal
+        operations of the procedure (joining wires in a single curve before
+        deformation and placing new poles on curves and surfaces).
     """
     def __init__(self,
-                 u_knots_to_add=30,
-                 v_knots_to_add=30,
-                 t_knots_to_add=30,
+                 u_knots_to_add=0,
+                 v_knots_to_add=0,
+                 t_knots_to_add=0,
                  tolerance=1e-4):
         self.u_knots_to_add = u_knots_to_add
         self.v_knots_to_add = v_knots_to_add
@@ -43,6 +86,17 @@ class CADDeformation():
 
     @staticmethod
     def read_shape(filename):
+        """
+    	Static method to load the `topoDS_Shape` from a file.
+    	Supported extensions are: ".iges", ".step".
+    	
+    	:param str filename: the name of the file containing the geometry.
+    	
+    	Example:
+    	   
+    	   >>> from pygem.cad import CADDeformation as CAD
+    	   >>> shape = CAD.read_shape('example.iges')
+    	"""
 
         file_extension = os.path.splitext(filename)[1]
 
@@ -55,7 +109,7 @@ class CADDeformation():
         if reader_class is None:
             raise ValueError('Unable to open the input file')
         reader = reader_class()
-        
+
         return_reader = reader.ReadFile(filename)
         # check status
         if return_reader == IFSelect_RetDone:
@@ -71,14 +125,26 @@ class CADDeformation():
 
     @staticmethod
     def write_shape(filename, shape):
-
+        """
+    	Static method to save a `topoDS_Shape` object to a file.
+    	Supported extensions are: ".iges", ".step".
+    	
+    	:param str filename: the name of the file where the shape will be saved.
+    	
+    	Example:
+    	   
+    	   >>> from pygem.cad import CADDeformation as CAD
+    	   >>> CAD.read_shape('example.step', my_shape)
+    	"""
         def write_iges(filename, shape):
+            """ IGES writer """
             IGESControl_Controller_Init()
             writer = IGESControl_Writer()
             writer.AddShape(shape)
             writer.Write(filename)
 
         def write_step(filename, shape):
+            """ STEP writer """
             step_writer = STEPControl_Writer()
             # Changes write schema to STEP standard AP203
             # It is considered the most secure standard for STEP.
@@ -88,7 +154,6 @@ class CADDeformation():
             step_writer.Write(filename)
 
         file_extension = os.path.splitext(filename)[1]
-        print(file_extension)
 
         av_writers = {
             '.step': write_step,
@@ -99,14 +164,14 @@ class CADDeformation():
         if writer is None:
             raise ValueError('Unable to open the output file')
         writer(filename, shape)
-        
 
     def _bspline_surface_from_face(self, face):
         """
-        Takes a TopoDS_Face and transforms it into a Bspline_Surface.
-
-        :face TopoDS_Face to be converted
-        :rtype:  Geom_BSplineSurface
+        Private method that takes a TopoDS_Face and transforms it into a
+        Bspline_Surface.
+        
+    	:param TopoDS_Face face: the TopoDS_Face to be converted
+        :rtype: Geom_BSplineSurface
         """
         if not isinstance(face, TopoDS_Face):
             raise TypeError("face must be a TopoDS_Face")
@@ -120,10 +185,11 @@ class CADDeformation():
 
     def _bspline_curve_from_wire(self, wire):
         """
-        Takes a TopoDS_Wire and transforms it into a Bspline_Curve.
+        Private method that takes a TopoDS_Wire and transforms it into a
+        Bspline_Curve.
 
-        :wire TopoDS_Wire to be converted
-        :rtype:  Geom_BSplineCurve
+        :param TopoDS_Wire wire: the TopoDS_Face to be converted
+        :rtype: Geom_BSplineSurface
         """
         if not isinstance(wire, TopoDS_Wire):
             raise TypeError("wire must be a TopoDS_Wire")
@@ -162,9 +228,10 @@ class CADDeformation():
 
     def _enrich_curve_knots(self, bsp_curve):
         """
-        Takes a Geom_BSplineCurve and adds self.t_knots_to_add poles to it.
-
-        :bsp_curve Geom_BSplineCurve to be enriched
+        Private method that adds `self.t_knots_to_add` poles to the passed
+        curve.
+        
+        :param Geom_BSplineCurve bsp_curve: the NURBS curve to enrich
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
             raise TypeError("bsp_curve must be a Geom_BSplineCurve")
@@ -174,19 +241,17 @@ class CADDeformation():
         first_param = bsp_curve.FirstParameter()
         # end parameter of composite curve
         last_param = bsp_curve.LastParameter()
-        print(self.t_knots_to_add)
         for i in range(self.t_knots_to_add):
             bsp_curve.InsertKnot(first_param+ \
                            i*(last_param-first_param)/self.t_knots_to_add, 1, \
                            self.tolerance)
 
-
     def _enrich_surface_knots(self, bsp_surface):
         """
-        Takes a Geom_Bspline_Surface and adds self.u_knots_to_add
-        and self.v_knots_to_add knots to it in u and v direction respectively.
+        Private method that adds `self.u_knots_to_add` and `self.v_knots_to_add`
+        knots to the input surface `bsp_surface`, in u and v direction respectively.
 
-        :bsp_surface Geom_Bspline_Surface to be enriched
+        :param Geom_BSplineCurve bsp_surface: the NURBS surface to enrich
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):
             raise TypeError("bsp_surface must be a Geom_BSplineSurface")
@@ -207,16 +272,17 @@ class CADDeformation():
         """ Extract component from gp_Pnt """
         return pole.X(), pole.Y(), pole.Z()
 
-    def _pole_set_components(self,components):
+    def _pole_set_components(self, components):
         """ Return a gp_Pnt with the passed components """
         assert len(components) == 3
         return gp_Pnt(*components)
-        
+
     def _deform_bspline_curve(self, bsp_curve):
         """
-        Takes a Geom_Bspline_Curve and deforms it through FFD.
+        Private method that deforms the control points of `bsp_curve` using the
+        inherited method. All the changes are performed in place.
 
-        :bsp_curve Geom_Bspline_Curve to be deformed
+        :param Geom_Bspline_Curve bsp_curve: the curve to deform
         """
         if not isinstance(bsp_curve, Geom_BSplineCurve):
             raise TypeError("bsp_curve must be a Geom_BSplineCurve")
@@ -230,7 +296,7 @@ class CADDeformation():
         for pole_id in range(n_poles):
             # gp_Pnt corresponding to the pole
             pole = bsp_curve.Pole(pole_id + 1)
-            poles_coordinates[pole_id, :] = self._pole_get_components(pole) 
+            poles_coordinates[pole_id, :] = self._pole_get_components(pole)
 
         # the new poles positions are computed through FFD
         new_pts = super().__call__(poles_coordinates)
@@ -240,11 +306,13 @@ class CADDeformation():
         for pole_id in range(n_poles):
             new_pole = self._pole_set_components(new_pts[pole_id, :])
             bsp_curve.SetPole(pole_id + 1, new_pole)
+
     def _deform_bspline_surface(self, bsp_surface):
         """
-        Takes a Geom_Bspline_Surface and deforms it through FFD.
+        Private method that deforms the control points of `surface` using the
+        inherited method. All the changes are performed in place.
 
-        :bsp_surface Geom_Bspline_Surface to be deformed
+        :param Geom_Bspline_Surface bsp_surface: the surface to deform
         """
         if not isinstance(bsp_surface, Geom_BSplineSurface):
             raise TypeError("bsp_surface must be a Geom_BSplineSurface")
@@ -259,8 +327,8 @@ class CADDeformation():
         # cycle over the poles to get their coordinates
         pole_ids = product(range(n_poles_u), range(n_poles_v))
         for pole_id, (u, v) in enumerate(pole_ids):
-            pole = bsp_surface.Pole(u+1, v+1)
-            poles_coordinates[pole_id, :] = self._pole_get_components(pole) 
+            pole = bsp_surface.Pole(u + 1, v + 1)
+            poles_coordinates[pole_id, :] = self._pole_get_components(pole)
 
         # the new poles positions are computed through FFD
         new_pts = super().__call__(poles_coordinates)
@@ -269,16 +337,26 @@ class CADDeformation():
         pole_ids = product(range(n_poles_u), range(n_poles_v))
         for pole_id, (u, v) in enumerate(pole_ids):
             new_pole = self._pole_set_components(new_pts[pole_id, :])
-            bsp_surface.SetPole(u+1, v+1, new_pole)
-
-
+            bsp_surface.SetPole(u + 1, v + 1, new_pole)
 
     def __call__(self, obj, dst=None):
         """
-        This method performs the deformation on the CAD file.
+        This method performs the deformation on the CAD geometry. If `obj` is a
+        TopoDS_Shape, the method returns a TopoDS_Shape containing the deformed
+        geometry. If `obj` is a filename, the method deforms the geometry
+        contained in the file and writes the deformed shape to `dst` (which has
+        to be set).
+        
+        :param obj: the input geometry.
+        :type obj: str or TopoDS_Shape
+        :param str dst: if `obj` is a string containing the input filename,
+            `dst` refers to the file where the deformed geometry is saved.
         """
         # Manage input
-        if isinstance(obj, str): # if a input filename is passed
+        if isinstance(obj, str):  # if a input filename is passed
+            if dst is None:
+                raise ValueError(
+                    'Source file is provided, but no destination specified')
             shape = self._read_shape(obj)
         elif isinstance(obj, TopoDS_Shape):
             shape = obj
@@ -286,12 +364,10 @@ class CADDeformation():
         else:
             raise TypeError
 
-
         #create compound to store modified faces
         compound_builder = BRep_Builder()
         compound = TopoDS_Compound()
         compound_builder.MakeCompound(compound)
-
 
         # cycle on the faces to get the control points
 
@@ -317,7 +393,6 @@ class CADDeformation():
             # underlying FACE we are processing. we now need to obtain the
             # curves (actually, the WIRES) that define the bounds of the
             # surface and TRIM the surface with them, to obtain the new FACE
-
 
             #we now start really looping on the wires
             #we will create a single curve joining all the edges in the wire
@@ -376,7 +451,6 @@ class CADDeformation():
                     inner_wires.append(modified_wire)
                 wire_explorer.Next()
 
-
             # so once we finished looping on all the wires to modify them,
             # we first use the only outer one to trim the surface
             # face builder object
@@ -387,7 +461,6 @@ class CADDeformation():
             for inner_wire in inner_wires:
                 face_maker.Add(inner_wire)
 
-
             # finally, we get our trimmed face with all its holes
             trimmed_modified_face = face_maker.Face()
 
@@ -397,14 +470,10 @@ class CADDeformation():
             # and move to the next face
             faces_explorer.Next()
 
-
-
         ## END SURFACES #################################################
 
-
-        if isinstance(dst, str): # if a input filename is passed
+        if isinstance(dst, str):  # if a input filename is passed
             # save the shape exactly to the filename, aka `dst`
             self._write_shape(dst, compound)
         else:
             return compound
-

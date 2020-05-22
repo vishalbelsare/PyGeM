@@ -1,5 +1,5 @@
 """
-Utilities for performing Free Form Deformation (FFD)
+Utilities for performing Free Form Deformation (FFD).
 
 :Theoretical Insight:
 
@@ -56,14 +56,9 @@ class FFD(Deformation):
     """
     Class that handles the Free Form Deformation on the mesh points.
 
-    :param FFDParameters ffd_parameters: parameters of the Free Form
-        Deformation.
-    :param numpy.ndarray original_mesh_points: coordinates of the original
-        points of the mesh.
-
     :param list n_control_points: number of control points in the x, y, and z
-        direction. If not provided it is set to [2, 2, 2].
-
+        direction. Default is [2, 2, 2].
+        
     :cvar numpy.ndarray box_length: dimension of the FFD bounding box, in the
         x, y and z direction (local coordinate system).
     :cvar numpy.ndarray box_origin: the x, y and z coordinates of the origin of
@@ -93,7 +88,7 @@ class FFD(Deformation):
     reference_frame = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
     def __init__(self, n_control_points=None):
-        self.conversion_unit = 1.
+        self.conversion_unit = 1. # TODO: unused at the moment
 
         self.box_length = np.array([1., 1., 1.])
         self.box_origin = np.array([0., 0., 0.])
@@ -544,8 +539,14 @@ class FFD(Deformation):
 
     def __call__(self, src_pts):
         """
-        This method performs the deformation on the mesh pts. After the
-        execution it sets `self.modified_mesh_pts`.
+        This method performs the FFD to `src_pts` and return the deformed
+        points.
+        
+        :param numpy.ndarray src_pts: the array of dimensions (*n_points*, *3*)
+            containing the points to deform. The points have to be arranged by
+            row.
+        :return: the deformed points
+        :rtype: numpy.ndarray (with shape = (*n_points*, *3*))
         """
         def is_inside(pts, boundaries):
             """ 

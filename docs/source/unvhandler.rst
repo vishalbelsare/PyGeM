@@ -8,9 +8,6 @@ Unvhandler
 .. autosummary::
 	:toctree: _summaries
 	:nosignatures:
-	
-	UnvHandler.parse
-	UnvHandler.write
 
 .. autoclass:: UnvHandler
 	:members:

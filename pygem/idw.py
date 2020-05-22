@@ -51,15 +51,25 @@ class IDW(Deformation):
     """
     Class that perform the Inverse Distance Weighting (IDW).
 
+    :param int power: the power parameter. The default value is 2.
+    :param numpy.ndarray original_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the original
+        interpolation control points before the deformation. The default is the
+        vertices of the unit cube.
+    :param numpy.ndarray deformed_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the
+        interpolation control points after the deformation. The default is the
+        vertices of the unit cube.
+        
     :cvar int power: the power parameter. The default value is 2.
     :cvar numpy.ndarray original_control_points: it is an
-        `n_control_points`-by-3 array with the coordinates of the original
+        (*n_control_points*, *3*) array with the coordinates of the original
         interpolation control points before the deformation. The default is the
         vertices of the unit cube.
     :cvar numpy.ndarray deformed_control_points: it is an
-        `n_control_points`-by-3 array with the coordinates of the interpolation
-        control points after the deformation. The default is the vertices of
-        the unit cube.
+        (*n_control_points*, *3*) array with the coordinates of the
+        interpolation control points after the deformation. The default is the
+        vertices of the unit cube.
 
     :Example:
 

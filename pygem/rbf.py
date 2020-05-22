@@ -69,20 +69,43 @@ class RBF(Deformation):
     Class that handles the Radial Basis Functions interpolation on the mesh
     points.
 
-    :cvar numpy.matrix weights: the matrix formed by the weights corresponding
+    :param numpy.ndarray original_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the original
+        interpolation control points before the deformation. The default is the
+        vertices of the unit cube.
+    :param numpy.ndarray deformed_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the
+        interpolation control points after the deformation. The default is the
+        vertices of the unit cube.
+    :param func: the basis function to use in the transformation. Several basis
+        function are already implemented and they are available through the
+        :py:class:`~pygem.rbf.RBF` by passing the name of the right
+        function (see class documentation for the updated list of basis
+        function).  A callable object can be passed as basis function.
+    :param float radius: the scaling parameter r that affects the shape of the
+        basis functions.  For details see the class
+        :class:`RBF`. The default value is 0.5.
+    :param dict extra_parameter: the additional parameters that may be passed to
+    	the kernel function. Default is None.
+        
+    :cvar numpy.ndarray weights: the matrix formed by the weights corresponding
         to the a-priori selected N control points, associated to the basis
         functions and c and Q terms that describe the polynomial of order one
-        p(x) = c + Qx.  The shape is (n_control_points+1+3)-by-3. It is computed
-        internally.
-    :cvar string basis: name of the basis functions to use in the
-        transformation. The functions implemented so far are: gaussian spline,
-        multi quadratic biharmonic spline, inv multi quadratic biharmonic
-        spline, thin plate spline, beckert wendland c2 basis, polyharmonic
-        splines. For a comprehensive list with details see the class
-        :class:`~pygem.radialbasis.RBF`. The default value is 'gaussian_spline'.
-    :cvar float radius: the scaling parameter r that affects the shape of the
-        basis functions.  For details see the class
-        :class:`~pygem.radialbasis.RBF`. The default value is 0.5.
+        p(x) = c + Qx.  The shape is (*n_control_points+1+3*, *3*). It is
+        computed internally.
+    :cvar numpy.ndarray original_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the original
+        interpolation control points before the deformation.
+    :cvar numpy.ndarray deformed_control_points: it is an
+        (*n_control_points*, *3*) array with the coordinates of the
+        interpolation control points after the deformation.
+    :cvar callable basis: the basis functions to use in the
+        transformation.
+    :cvar float radius: the scaling parameter that affects the shape of the
+        basis functions.
+    :cvar dict extra_parameter: the additional parameters that may be passed to
+    	the kernel function.
+        
     :Example:
 
         >>> from pygem import RBF
@@ -148,7 +171,7 @@ class RBF(Deformation):
         This private method, given the original control points and the deformed
         ones, returns the matrix with the weights and the polynomial terms, that
         is :math:`W`, :math:`c^T` and :math:`Q^T`. The shape is
-        (n_control_points+1+3)-by-3.
+        (*n_control_points+1+3*, *3*).
 
         :param numpy.ndarray X: it is an n_control_points-by-3 array with the
             coordinates of the original interpolation control points before the
@@ -157,8 +180,8 @@ class RBF(Deformation):
             coordinates of the interpolation control points after the
             deformation.
 
-        :return: weights: the matrix with the weights and the polynomial terms.
-        :rtype: numpy.matrix
+        :return: weights: the 2D array with the weights and the polynomial terms.
+        :rtype: numpy.ndarray
         """
         npts, dim = X.shape
         H = np.zeros((npts + 3 + 1, npts + 3 + 1))

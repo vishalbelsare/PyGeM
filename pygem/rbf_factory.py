@@ -1,4 +1,5 @@
 """
+Factory class for radial basis functions
 """
 import numpy as np
 

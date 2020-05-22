@@ -1,5 +1,5 @@
 """
-Utilities for performing Free Form Deformation (FFD)
+Utilities for performing Free Form Deformation (FFD) to CAD geometries.
 
 :Theoretical Insight:
 
@@ -47,15 +47,40 @@ from .cad_deformation import CADDeformation
 
 class FFD(CADDeformation, OriginalFFD):
     """
-    Class that handles the Free Form Deformation on the mesh points.
-
-    :param FFDParameters ffd_parameters: parameters of the Free Form
-        Deformation.
-    :param numpy.ndarray original_mesh_points: coordinates of the original
-        points of the mesh.
+    Class that handles the Free Form Deformation on CAD geometries.
 
     :param list n_control_points: number of control points in the x, y, and z
         direction. If not provided it is set to [2, 2, 2].
+    :param int u_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `u` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files. Default is 0.
+    :param int v_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `v` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files.  Default is 0.
+    :param int t_knots_to_add: the number of knots to add to the NURBS curves
+        before the deformation. This parameter is useful whenever the gradient
+        of the imposed deformation present spatial scales that are smaller than
+        the local distance among the original poles of the surface/curve.
+        Enriching the poles will allow for a more accurate application of the
+        deformation, and might also reduce possible mismatches between
+        bordering faces. On the orther hand, it might result in higher
+        computational cost and bigger output files. Default is 0.
+    :param float tolerance: the tolerance involved in several internal
+        operations of the procedure (joining wires in a single curve before
+        deformation and placing new poles on curves and surfaces). Change the
+        default value only if the input file scale is significantly different
+        form mm, making some of the aforementioned operations fail. Default is
+        0.0001.
 
     :cvar numpy.ndarray box_length: dimension of the FFD bounding box, in the
         x, y and z direction (local coordinate system).
@@ -71,24 +96,54 @@ class FFD(CADDeformation, OriginalFFD):
         y, normalized with the box length y.
     :cvar numpy.ndarray array_mu_z: collects the displacements (weights) along
         z, normalized with the box length z.
+    :cvar int u_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `u` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files. Default is 0.
+    :cvar int v_knots_to_add: the number of knots to add to the NURBS surfaces
+        along `v` direction before the deformation. This parameter is useful
+        whenever the gradient of the imposed deformation present spatial scales
+        that are smaller than the local distance among the original poles of
+        the surface/curve. Enriching the poles will allow for a more accurate
+        application of the deformation, and might also reduce possible
+        mismatches between bordering faces. On the orther hand, it might result
+        in higher computational cost and bigger output files.  Default is 0.
+    :cvar int t_knots_to_add: the number of knots to add to the NURBS curves
+        before the deformation. This parameter is useful whenever the gradient
+        of the imposed deformation present spatial scales that are smaller than
+        the local distance among the original poles of the surface/curve.
+        Enriching the poles will allow for a more accurate application of the
+        deformation, and might also reduce possible mismatches between
+        bordering faces. On the orther hand, it might result in higher
+        computational cost and bigger output files. Default is 0.
+    :cvar float tolerance: the tolerance involved in several internal
+        operations of the procedure (joining wires in a single curve before
+        deformation and placing new poles on curves and surfaces). Change the
+        default value only if the input file scale is significantly different
+        form mm, making some of the aforementioned operations fail. Default is
+        0.0001.
 
     :Example:
 
-        >>> import pygem.freeform as ffd
-        >>> import pygem.params as ffdp
-        >>> import numpy as np
+        >>> from pygem.cad import FFD
+        >>> from pygem.cad import CADDeformation
         >>> ffd = FFD()
-        >>> ffd.read_parameters(
-        >>>        'tests/test_datasets/parameters_test_ffd_iges.prm')
+        >>> ffd.read_parameters('parameters_test_ffd_iges.prm')
         >>> input_cad_file_name = "input.iges"
         >>> modified_cad_file_name = "output.iges"
         >>> ffd(input_cad_file_name, modified_cad_file_name)
+        >>> # is equivalent to
+        >>> new_shape = ffd(CADDeformation.read_shape(input_cad_file_name))
     """
     def __init__(self,
                  n_control_points=None,
-                 u_knots_to_add=30,
-                 v_knots_to_add=30,
-                 t_knots_to_add=30,
+                 u_knots_to_add=0,
+                 v_knots_to_add=0,
+                 t_knots_to_add=0,
                  tolerance=1e-4):
         OriginalFFD.__init__(self,
                              n_control_points=n_control_points)

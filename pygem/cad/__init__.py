@@ -12,10 +12,8 @@ except ModuleNotFoundError as e:
     raise e
 
 
-from .nurbshandler import NurbsHandler
-from .stephandler import StepHandler
-from .igeshandler import IgesHandler
 from .ffd import FFD
 from .rbf import RBF
 from .idw import IDW
+from .custom_deformation import CustomDeformation
 from .cad_deformation import CADDeformation

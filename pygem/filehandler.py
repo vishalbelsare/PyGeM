@@ -1,7 +1,13 @@
 """
-Base module with the base class for reading and writing different CAD files.
+Base module with the base class for reading and writing different files.
+
+.. warning::
+    This module will be deprecated in next releases. Follow updates on
+    https://github.com/mathLab for news about file handling. 
 """
 import os
+import warnings
+warnings.warn("This module will be deprecated in next releases", DeprecationWarning)
 
 
 class FileHandler(object):

@@ -34,6 +34,7 @@ class TestPackage(TestCase):
         import pygem as pg
         vtkh = pg.vtkhandler.VtkHandler()
 
+    """
     def test_import_pg_8(self):
         import pygem as pg
         igesh = pg.igeshandler.IgesHandler()
@@ -46,7 +47,6 @@ class TestPackage(TestCase):
         import pygem as pg
         stph = pg.stephandler.StepHandler()
 
-    """
     def test_modules_name(self):
         # it checks that __all__ includes all the .py files in pygem folder
         import pygem

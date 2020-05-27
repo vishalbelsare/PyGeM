@@ -9,10 +9,6 @@ Stlhandler
 	:toctree: _summaries
 	:nosignatures:
 
-	StlHandler.parse
-	StlHandler.plot
-	StlHandler.write
-
 .. autoclass:: StlHandler
 	:members:
 	:private-members:

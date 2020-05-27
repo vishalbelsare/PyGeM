@@ -1,8 +1,14 @@
 """
 Derived module from filehandler.py to handle Universal (unv) files.
+
+.. warning::
+    This module will be deprecated in next releases. Follow updates on
+    https://github.com/mathLab for news about file handling. 
 """
 import numpy as np
 import pygem.filehandler as fh
+import warnings
+warnings.warn("This module will be deprecated in next releases", DeprecationWarning)
 
 
 class UnvHandler(fh.FileHandler):

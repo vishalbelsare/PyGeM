@@ -1,11 +1,17 @@
 """
 Derived module from filehandler.py to handle vtk files.
+
+.. warning::
+    This module will be deprecated in next releases. Follow updates on
+    https://github.com/mathLab for news about file handling. 
 """
 import numpy as np
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d as a3
 import vtk
 import pygem.filehandler as fh
+import warnings
+warnings.warn("This module will be deprecated in next releases", DeprecationWarning)
 
 
 class VtkHandler(fh.FileHandler):

@@ -3,3 +3,7 @@
 
 # compiled python codes
 *.pyc
+
+build/
+dist/
+pygem.egg-info/

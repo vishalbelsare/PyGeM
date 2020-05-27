@@ -9,11 +9,6 @@ Vtkhandler
 	:toctree: _summaries
 	:nosignatures:
 
-	VtkHandler.parse
-	VtkHandler.plot
-	VtkHandler.show
-	VtkHandler.write
-
 .. autoclass:: VtkHandler
 	:members:
 	:private-members:

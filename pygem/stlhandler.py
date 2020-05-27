@@ -1,5 +1,9 @@
 """
 Derived module from filehandler.py to handle STereoLithography files.
+
+.. warning::
+    This module will be deprecated in next releases. Follow updates on
+    https://github.com/mathLab for news about file handling. 
 """
 import numpy as np
 from mpl_toolkits import mplot3d
@@ -7,6 +11,8 @@ import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d as a3
 import pygem.filehandler as fh
 import vtk
+import warnings
+warnings.warn("This module will be deprecated in next releases", DeprecationWarning)
 
 
 class StlHandler(fh.FileHandler):

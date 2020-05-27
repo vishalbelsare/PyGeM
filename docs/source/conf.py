@@ -23,14 +23,9 @@ import sphinx_rtd_theme
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../..'))
+import pygem
 
 # -- General configuration ------------------------------------------------
-
-# If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '1.4'
-if needs_sphinx > sphinx.__display_version__:
-    message = 'This project needs at least Sphinx v{0!s}'.format(needs_sphinx)
-    raise VersionRequirementError(message)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -49,7 +44,7 @@ extensions = [
     'sphinx.ext.ifconfig',
 ]
 
-intersphinx_mapping = {'python': ('http://docs.python.org/2', None),
+intersphinx_mapping = {'python': ('http://docs.python.org/3', None),
                        'numpy': ('http://docs.scipy.org/doc/numpy/', None),
                        'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
                        'matplotlib': ('http://matplotlib.sourceforge.net/', None)}
@@ -69,9 +64,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PyGeM'
-copyright = u'2016-2018, PyGeM contributors'
-author = u'PyGeM contributors'
+project = pygem.__project__
+copyright = pygem.__copyright__
+author = pygem.__author__
 
 # autoclass
 autoclass_content = 'both'
@@ -81,7 +76,7 @@ autoclass_content = 'both'
 # built documents.
 #
 # The short X.Y version.
-version = '1.1'
+version = pygem.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -288,7 +283,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pygem', u'pygem Documentation',
+    (master_doc, pygem.__title__, u'PyGeM Documentation',
      [author], 1)
 ]
 
@@ -318,3 +313,4 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+autodoc_member_order = 'bysource'

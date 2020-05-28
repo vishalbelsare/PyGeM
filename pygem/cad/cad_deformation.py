@@ -357,7 +357,7 @@ class CADDeformation():
             if dst is None:
                 raise ValueError(
                     'Source file is provided, but no destination specified')
-            shape = self._read_shape(obj)
+            shape = self.read_shape(obj)
         elif isinstance(obj, TopoDS_Shape):
             shape = obj
         # Maybe do we need to handle also Compound?
@@ -474,6 +474,6 @@ class CADDeformation():
 
         if isinstance(dst, str):  # if a input filename is passed
             # save the shape exactly to the filename, aka `dst`
-            self._write_shape(dst, compound)
+            self.write_shape(dst, compound)
         else:
             return compound

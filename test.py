@@ -6,13 +6,10 @@ import nose
 test_defaults = [
     'tests/test_freeform.py',
     'tests/test_idwparams.py',
-    'tests/test_affine.py',
     'tests/test_idw.py',
     'tests/test_khandler.py',
     'tests/test_mdpahandler.py',
     'tests/test_openfhandler.py',
-    'tests/test_package.py',
-    'tests/test_radial.py',
     'tests/test_rbfparams.py',
     'tests/test_stlhandler.py',
     'tests/test_unvhandler.py',
@@ -27,15 +24,15 @@ test_cad = [
 default_argv = ['--tests'] + test_defaults
 cad_argv = ['--tests'] + test_cad
 
+return_value = 0 # Success
+
 try:
     import pygem.cad
-    nose.run(argv=cad_argv)
+    return_value = 1 if nose.run(argv=cad_argv) is False else 0
 except:
     print('module OCC not found, skip tests for CAD')
 
-nose.run(argv=default_argv)
+return_value = 1 if nose.run(argv=default_argv) is False else 0
 
-
-
-
-
+import sys
+sys.exit(int(return_value))

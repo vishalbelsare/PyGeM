@@ -28,6 +28,7 @@ jobs:
     - name: Create the new documentation
       uses: ammaraskar/sphinx-action@master
       with:
+        pre-build-command: "python -m pip install pip sphinx_rtd_theme -U"
         docs-folder: "docs/"
 
     - name: Deploy

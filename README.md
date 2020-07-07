@@ -50,14 +50,21 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 
 ## Dependencies and installation
-**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `numpy-stl`, `sphinx` (for the documentation) and `nose` (for local test). They can be easily installed via `pip`. The code is compatible with Python 2.7 and Python 3.6.
-Moreover **PyGeM** depends on `OCC`. These requirements cannot be satisfied through `pip`.
-Please see the table below for instructions on how to satisfy the `OCC` requirements. You can also refer to `pythonocc.org` or `github.com/tpaviot/pythonocc-core` for further instructions.
-
-| Package | Version     | How to install (precompiled binaries via conda)                                                          |
-|---------|-------------|----------------------------------------------------------------------------------------------------------|
-| OCC     | ==0.17.3    | Python2.7 `conda install -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17 python=2.7` |
-| OCC     | ==0.17.3    | Python3.6 `conda install -c conda-forge -c dlr-sc -c pythonocc -c oce pythonocc-core==0.17 python=3.6` |
+**PyGeM** requires `numpy`, `scipy`, `matplotlib`, `sphinx` (for the
+documentation) and `nose` (for local test). They can be easily installed via
+`pip`. The code has been tested with Python3.7 version, but it should be
+compatible with Python3. The Python2 support is no longer maintained.
+To enable the `CAD`
+[submodule](https://github.com/mathLab/PyGeM/tree/master/pygem/cad), the
+module `pythonocc-core` is required to deal with IGES files. This requirement
+cannot be satisfied through `pip`, but the precompiled binaries are available
+on `conda` using the command:
+```bash
+conda install -c conda-forge pythonocc-core=7.4.0
+```
+For additional information about the compilation and installation of
+`pythonocc`, we refer the original
+[repository](https://github.com/tpaviot/pythonocc-core).
 
 
 The official distribution is on GitHub, and you can clone the repository using

@@ -11,7 +11,7 @@ from pygem.cad import CADDeformation
 class TestFFDCAD(TestCase):
 
     def test_ffd_iges_pipe_mod_through_files(self):
-        ffd = FFD()
+        ffd = FFD(None,30,30,30,1e-4)
         ffd.read_parameters(
             filename='tests/test_datasets/parameters_test_ffd_iges.prm')
         ffd('tests/test_datasets/test_pipe.iges', 'test_pipe_result.iges')
@@ -27,7 +27,7 @@ class TestFFDCAD(TestCase):
     def test_ffd_iges_pipe_mod_through_topods_shape(self):
         filename = 'tests/test_datasets/test_pipe_hollow.iges'
         orig_shape = CADDeformation.read_shape(filename)
-        ffd = FFD()
+        ffd = FFD(None,30,30,30,1e-4)
         ffd.read_parameters(
             filename='tests/test_datasets/parameters_test_ffd_iges.prm')
         mod_shape = ffd(orig_shape)

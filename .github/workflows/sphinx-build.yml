@@ -36,6 +36,7 @@ jobs:
         #pre-build-command: "ls -l /usr/share"
         #build-command: "sphinx-build -b html -d build/doctrees  --keep-going --no-color -w '/tmp/sphinx-log' source build/html"
 
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:

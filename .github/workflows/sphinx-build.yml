@@ -19,17 +19,23 @@ jobs:
 
     - name: Conda install dependecies
       shell: bash -l {0}
-      run: conda install --yes -c conda-forge pythonocc-core=7.4.0 numpy scipy matplotlib vtk nose setuptools coveralls python=3.7
+      run: conda install --yes -c conda-forge pythonocc-core=7.4.0 numpy scipy matplotlib vtk nose setuptools coveralls sphinx_rtd_theme sphinx python=3.7
 
     - name: Conda info
-      shell: pwsh
-      run: conda info -a
+      shell: bash -l {0}
+      run: conda info
 
-    - name: Create the new documentation
-      uses: ammaraskar/sphinx-action@master
-      with:
-        pre-build-command: "python -m pip install pip sphinx_rtd_theme -U"
-        docs-folder: "docs/"
+    - name: Conda info
+      shell: bash -l {0}
+      run: cd docs && sphinx-build -b html -d build/doctrees  --keep-going --no-color -w '/tmp/sphinx-log' source build/html
+
+    #- name: Create the new documentation
+      #uses: ammaraskar/sphinx-action@master
+      #with:
+        #docs-folder: "docs/"
+        #pre-build-command: "ls -l /usr/share"
+        #build-command: "sphinx-build -b html -d build/doctrees  --keep-going --no-color -w '/tmp/sphinx-log' source build/html"
+
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3

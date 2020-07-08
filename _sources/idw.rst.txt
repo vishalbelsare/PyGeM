@@ -9,12 +9,11 @@ Inverse Distance Weighting
 	:toctree: _summaries
 	:nosignatures:
 
-	IDW.perform
-
-.. autoclass:: IDW
+.. autoclass:: pygem.idw.IDW
 	:members:
-	:private-members:
-	:undoc-members:
+	:special-members: __call__
+	:private-members: 
+	:exclude-members: _abd_impl
 	:show-inheritance:
 	:noindex:
 

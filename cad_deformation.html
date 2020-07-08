@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CAD Deformation &mdash; PyGeM 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Free-form Deformation [CAD]" href="ffdcad.html" />
+    <link rel="prev" title="Unvhandler" href="unvhandler.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ffd.html">Free-form Deformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">Radial Basis Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf_factory.html">RBF Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_deformation.html">Custom Deformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#cad">CAD</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CAD Deformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffdcad.html">Free-form Deformation [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbfcad.html">Radial Basis Function [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="idwcad.html">Inverse Distance Weighting [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_deformation_cad.html">Custom Deformation [CAD]</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#table-of-contents">Table of contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyGeM</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+        
+      <li>CAD Deformation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cad_deformation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pygem.cad.cad_deformation">
+<span id="cad-deformation"></span><h1>CAD Deformation<a class="headerlink" href="#module-pygem.cad.cad_deformation" title="Permalink to this headline">¶</a></h1>
+<p>Module for generic deformation for CAD file.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+<dl class="py class">
+<dt>
+<em class="property">class </em><code class="sig-name descname">CADDeformation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u_knots_to_add</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">v_knots_to_add</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">t_knots_to_add</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="o">=</span><span class="default_value">0.0001</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for applting deformation to CAD geometries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+along <cite>u</cite> direction before the deformation. This parameter is useful
+whenever the gradient of the imposed deformation present spatial scales
+that are smaller than the local distance among the original poles of
+the surface/curve. Enriching the poles will allow for a more accurate
+application of the deformation, and might also reduce possible
+mismatches between bordering faces. On the orther hand, it might result
+in higher computational cost and bigger output files. Default is 0.</p></li>
+<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+along <cite>v</cite> direction before the deformation. This parameter is useful
+whenever the gradient of the imposed deformation present spatial scales
+that are smaller than the local distance among the original poles of
+the surface/curve. Enriching the poles will allow for a more accurate
+application of the deformation, and might also reduce possible
+mismatches between bordering faces. On the orther hand, it might result
+in higher computational cost and bigger output files.  Default is 0.</p></li>
+<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS curves
+before the deformation. This parameter is useful whenever the gradient
+of the imposed deformation present spatial scales that are smaller than
+the local distance among the original poles of the surface/curve.
+Enriching the poles will allow for a more accurate application of the
+deformation, and might also reduce possible mismatches between
+bordering faces. On the orther hand, it might result in higher
+computational cost and bigger output files. Default is 0.</p></li>
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the tolerance involved in several internal
+operations of the procedure (joining wires in a single curve before
+deformation and placing new poles on curves and surfaces). Change the
+default value only if the input file scale is significantly different
+form mm, making some of the aforementioned operations fail. Default is
+0.0001.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+along <cite>u</cite> direction before the deformation.</p></li>
+<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+along <cite>v</cite> direction before the deformation.</p></li>
+<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS curves
+before the deformation.</p></li>
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the tolerance involved in several internal
+operations of the procedure (joining wires in a single curve before
+deformation and placing new poles on curves and surfaces).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt>
+<em class="property">static </em><code class="sig-name descname">read_shape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation.read_shape"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Static method to load the <cite>topoDS_Shape</cite> from a file.
+Supported extensions are: “.iges”, “.step”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the file containing the geometry.</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygem.cad</span> <span class="kn">import</span> <span class="n">CADDeformation</span> <span class="k">as</span> <span class="n">CAD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="n">CAD</span><span class="o">.</span><span class="n">read_shape</span><span class="p">(</span><span class="s1">&#39;example.iges&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<em class="property">static </em><code class="sig-name descname">write_shape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation.write_shape"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Static method to save a <cite>topoDS_Shape</cite> object to a file.
+Supported extensions are: “.iges”, “.step”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the file where the shape will be saved.</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygem.cad</span> <span class="kn">import</span> <span class="n">CADDeformation</span> <span class="k">as</span> <span class="n">CAD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CAD</span><span class="o">.</span><span class="n">read_shape</span><span class="p">(</span><span class="s1">&#39;example.step&#39;</span><span class="p">,</span> <span class="n">my_shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_bspline_surface_from_face</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">face</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._bspline_surface_from_face"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that takes a TopoDS_Face and transforms it into a
+Bspline_Surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>face</strong> (<em>TopoDS_Face</em>) – the TopoDS_Face to be converted</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Geom_BSplineSurface</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_bspline_curve_from_wire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wire</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._bspline_curve_from_wire"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that takes a TopoDS_Wire and transforms it into a
+Bspline_Curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wire</strong> (<em>TopoDS_Wire</em>) – the TopoDS_Face to be converted</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Geom_BSplineSurface</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_enrich_curve_knots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bsp_curve</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._enrich_curve_knots"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that adds <cite>self.t_knots_to_add</cite> poles to the passed
+curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bsp_curve</strong> (<em>Geom_BSplineCurve</em>) – the NURBS curve to enrich</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_enrich_surface_knots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bsp_surface</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._enrich_surface_knots"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that adds <cite>self.u_knots_to_add</cite> and <cite>self.v_knots_to_add</cite>
+knots to the input surface <cite>bsp_surface</cite>, in u and v direction respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bsp_surface</strong> (<em>Geom_BSplineCurve</em>) – the NURBS surface to enrich</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_pole_get_components</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pole</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._pole_get_components"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Extract component from gp_Pnt</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_pole_set_components</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">components</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._pole_set_components"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a gp_Pnt with the passed components</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_deform_bspline_curve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bsp_curve</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._deform_bspline_curve"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that deforms the control points of <cite>bsp_curve</cite> using the
+inherited method. All the changes are performed in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bsp_curve</strong> (<em>Geom_Bspline_Curve</em>) – the curve to deform</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_deform_bspline_surface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bsp_surface</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation._deform_bspline_surface"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Private method that deforms the control points of <cite>surface</cite> using the
+inherited method. All the changes are performed in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bsp_surface</strong> (<em>Geom_Bspline_Surface</em>) – the surface to deform</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">dst</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/cad/cad_deformation.html#CADDeformation.__call__"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method performs the deformation on the CAD geometry. If <cite>obj</cite> is a
+TopoDS_Shape, the method returns a TopoDS_Shape containing the deformed
+geometry. If <cite>obj</cite> is a filename, the method deforms the geometry
+contained in the file and writes the deformed shape to <cite>dst</cite> (which has
+to be set).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>TopoDS_Shape</em>) – the input geometry.</p></li>
+<li><p><strong>dst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – if <cite>obj</cite> is a string containing the input filename,
+<cite>dst</cite> refers to the file where the deformed geometry is saved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ffdcad.html" class="btn btn-neutral float-right" title="Free-form Deformation [CAD]" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="unvhandler.html" class="btn btn-neutral float-left" title="Unvhandler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

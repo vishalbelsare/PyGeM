@@ -1,6 +1,0 @@
-pygem.utils.mat_mat_mult
-========================
-
-.. currentmodule:: pygem.utils
-
-.. autofunction:: mat_mat_mult

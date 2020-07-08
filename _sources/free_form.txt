@@ -1,8 +1,0 @@
-Free Form Deformation
-=====================
-
-.. automodule:: pygem.freeform
-
-.. autoclass:: FFD
-    :members:
-    :private-members:

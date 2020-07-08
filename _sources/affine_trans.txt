@@ -1,5 +1,0 @@
-Affine Transformation
-=====================
-
-.. automodule:: pygem.affine
-    :members:

@@ -1,6 +1,0 @@
-pygem.plotters.plot_stl
-=======================
-
-.. currentmodule:: pygem.plotters
-
-.. autofunction:: plot_stl

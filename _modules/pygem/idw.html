@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.idw &mdash; PyGeM 1.1 documentation</title>
+  <title>pygem.idw &mdash; PyGeM 2.0.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
 
   
   
@@ -17,42 +21,36 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PyGeM 1.1 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> PyGeM
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.1
+                2.0.0
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,6 +87,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
@@ -96,13 +96,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">PyGeM</a>
@@ -110,9 +111,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -133,7 +135,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -172,7 +174,7 @@
 
 <span class="sd">    The interpolation value :math:`u` of a given point :math:`\\mathrm{x}`</span>
 <span class="sd">    from a set of samples :math:`u_k = u(\\mathrm{x}_k)`, with</span>
-<span class="sd">    :math:`k = 1,2,\dotsc,\\mathcal{N}`, is given by:</span>
+<span class="sd">    :math:`k = 1,2,\\dotsc,\\mathcal{N}`, is given by:</span>
 
 <span class="sd">    .. math::</span>
 <span class="sd">        u(\\mathrm{x}) = \\displaystyle\\sum_{k=1}^\\mathcal{N}</span>
@@ -191,70 +193,95 @@
 <span class="sd">    :math:`\\mathrm{x}_i` and :math:`p` is a power parameter, typically equal to</span>
 <span class="sd">    2.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">configparser</span> <span class="k">as</span> <span class="nn">configparser</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="k">as</span> <span class="nn">configparser</span>
+
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+<span class="kn">from</span> <span class="nn">.deformation</span> <span class="kn">import</span> <span class="n">Deformation</span>
 
 
-<div class="viewcode-block" id="IDW"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW">[docs]</a><span class="k">class</span> <span class="nc">IDW</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="IDW"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW">[docs]</a><span class="k">class</span> <span class="nc">IDW</span><span class="p">(</span><span class="n">Deformation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class that handles the IDW technique.</span>
+<span class="sd">    Class that perform the Inverse Distance Weighting (IDW).</span>
 
-<span class="sd">    :param idw_parameters: the parameters of the IDW</span>
-<span class="sd">    :type idw_parameters: :class:`IDWParameters`</span>
-<span class="sd">    :param numpy.ndarray original_mesh_points: coordinates of the original</span>
-<span class="sd">        points of the mesh.</span>
-
-<span class="sd">    :cvar parameters: the parameters of the IDW.</span>
-<span class="sd">    :vartype parameters: :class:`~pygem.params_idw.IDWParameters`</span>
-<span class="sd">    :cvar numpy.ndarray original_mesh_points: coordinates of the original</span>
-<span class="sd">        points of the mesh.</span>
-<span class="sd">    :cvar numpy.ndarray modified_mesh_points: coordinates of the deformed</span>
-<span class="sd">        points of the mesh.</span>
+<span class="sd">    :param int power: the power parameter. The default value is 2.</span>
+<span class="sd">    :param numpy.ndarray original_control_points: it is an</span>
+<span class="sd">        (*n_control_points*, *3*) array with the coordinates of the original</span>
+<span class="sd">        interpolation control points before the deformation. The default is the</span>
+<span class="sd">        vertices of the unit cube.</span>
+<span class="sd">    :param numpy.ndarray deformed_control_points: it is an</span>
+<span class="sd">        (*n_control_points*, *3*) array with the coordinates of the</span>
+<span class="sd">        interpolation control points after the deformation. The default is the</span>
+<span class="sd">        vertices of the unit cube.</span>
+<span class="sd">        </span>
+<span class="sd">    :cvar int power: the power parameter. The default value is 2.</span>
+<span class="sd">    :cvar numpy.ndarray original_control_points: it is an</span>
+<span class="sd">        (*n_control_points*, *3*) array with the coordinates of the original</span>
+<span class="sd">        interpolation control points before the deformation. The default is the</span>
+<span class="sd">        vertices of the unit cube.</span>
+<span class="sd">    :cvar numpy.ndarray deformed_control_points: it is an</span>
+<span class="sd">        (*n_control_points*, *3*) array with the coordinates of the</span>
+<span class="sd">        interpolation control points after the deformation. The default is the</span>
+<span class="sd">        vertices of the unit cube.</span>
 
 <span class="sd">    :Example:</span>
 
-<span class="sd">    &gt;&gt;&gt; from pygem.idw import IDW</span>
-<span class="sd">    &gt;&gt;&gt; from pygem.params_idw import IDWParameters</span>
+<span class="sd">    &gt;&gt;&gt; from pygem import IDW</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; params = IDWParameters()</span>
-<span class="sd">    &gt;&gt;&gt; params.read_parameters(&#39;tests/test_datasets/parameters_idw_cube.prm&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; nx, ny, nz = (20, 20, 20)</span>
 <span class="sd">    &gt;&gt;&gt; mesh = np.zeros((nx * ny * nz, 3))</span>
 <span class="sd">    &gt;&gt;&gt; xv = np.linspace(0, 1, nx)</span>
 <span class="sd">    &gt;&gt;&gt; yv = np.linspace(0, 1, ny)</span>
 <span class="sd">    &gt;&gt;&gt; zv = np.linspace(0, 1, nz)</span>
 <span class="sd">    &gt;&gt;&gt; z, y, x = np.meshgrid(zv, yv, xv)</span>
-<span class="sd">    &gt;&gt;&gt; mesh = np.array([x.ravel(), y.ravel(), z.ravel()])</span>
-<span class="sd">    &gt;&gt;&gt; original_mesh_points = mesh.T</span>
-<span class="sd">    &gt;&gt;&gt; idw = IDW(rbf_parameters, original_mesh_points)</span>
-<span class="sd">    &gt;&gt;&gt; idw.perform()</span>
-<span class="sd">    &gt;&gt;&gt; new_mesh_points = idw.modified_mesh_points</span>
+<span class="sd">    &gt;&gt;&gt; mesh_points = np.array([x.ravel(), y.ravel(), z.ravel()])</span>
+<span class="sd">    &gt;&gt;&gt; idw = IDW()</span>
+<span class="sd">    &gt;&gt;&gt; idw.read_parameters(&#39;tests/test_datasets/parameters_idw_cube.prm&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; new_mesh_points = idw(mesh_points.T)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">original_control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">deformed_control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idw_parameters</span><span class="p">,</span> <span class="n">original_mesh_points</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">idw_parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span> <span class="o">=</span> <span class="n">original_mesh_points</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">original_control_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span>
+                                                                    <span class="mf">1.</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="n">original_control_points</span>
 
-<div class="viewcode-block" id="IDW.perform"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW.perform">[docs]</a>    <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">deformed_control_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+                                                     <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span>
+                                                                    <span class="mf">1.</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="n">deformed_control_points</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
+
+<div class="viewcode-block" id="IDW.__call__"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_pts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method performs the deformation of the mesh points. After the</span>
 <span class="sd">        execution it sets `self.modified_mesh_points`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Norm of u - v</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">v</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+            <span class="sd">&quot;&quot;&quot; Norm of u - v &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">v</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
 
         <span class="c1"># Compute displacement of the control points</span>
-        <span class="n">displ</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">-</span>
-                 <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">)</span>
+        <span class="n">displ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span>
 
         <span class="c1"># Compute the distance between the mesh points and the control points</span>
-        <span class="n">dist</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span><span class="p">,</span>
-                     <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">src_pts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span>
 
         <span class="c1"># Weights are set as the reciprocal of the distance if the distance is</span>
         <span class="c1"># not zero, otherwise 1.0 where distance is zero.</span>
@@ -267,13 +294,89 @@
             <span class="k">for</span> <span class="n">wi</span> <span class="ow">in</span> <span class="n">weights</span>
         <span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">modified_mesh_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_mesh_points</span> <span class="o">+</span> <span class="n">offset</span></div></div>
+        <span class="k">return</span> <span class="n">src_pts</span> <span class="o">+</span> <span class="n">offset</span></div>
+
+<div class="viewcode-block" id="IDW.read_parameters"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW.read_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">read_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads in the parameters file and fill the self structure.</span>
+
+<span class="sd">        :param string filename: parameters file to be read in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;filename must be a string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;filename does not exist&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Inverse Distance Weighting&#39;</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">)</span>
+
+        <span class="n">ctrl_points</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Control points&#39;</span><span class="p">,</span> <span class="s1">&#39;original control points&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ctrl_points</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="n">defo_points</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Control points&#39;</span><span class="p">,</span> <span class="s1">&#39;deformed control points&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">defo_points</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IDW.write_parameters"><a class="viewcode-back" href="../../idw.html#pygem.idw.IDW.write_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">write_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method writes a parameters file (.prm) called `filename` and fills</span>
+<span class="sd">        it with all the parameters class members.</span>
+
+<span class="sd">        :param string filename: parameters file to be written out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
+
+        <span class="n">output_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Inverse Distance Weighting]</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# This section describes the settings of idw.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# the power parameter</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;power = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[Control points]</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# This section describes the IDW control points.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# original control points collects the coordinates</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# of the interpolation control points before the</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# deformation.</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;original control points: &quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="s1">&#39;   &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">points</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">output_string</span> <span class="o">+=</span> <span class="mi">25</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">points</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# deformed control points collects the coordinates</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# of the interpolation control points after the</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;# deformation.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s2">&quot;deformed control points: &quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="s1">&#39;   &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">points</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">output_string</span> <span class="o">+=</span> <span class="mi">25</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">points</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_string</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method prints all the IDW parameters on the screen. Its purpose is</span>
+<span class="sd">        for debugging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;p = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">original_control_points =</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_control_points</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">deformed_control_points =</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deformed_control_points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -282,12 +385,22 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2018, PyGeM contributors.
-      Last updated on Apr 04, 2018.
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -299,38 +412,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

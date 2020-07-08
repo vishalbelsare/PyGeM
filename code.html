@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Documentation &mdash; PyGeM 1.1 documentation</title>
+  <title>Code Documentation &mdash; PyGeM 2.0.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
 
   
   
@@ -17,43 +21,38 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PyGeM 1.1 documentation" href="index.html"/>
-        <link rel="next" title="Affine" href="affine.html"/>
-        <link rel="prev" title="Welcome to PyGeM’s documentation!" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Free-form Deformation" href="ffd.html" />
+    <link rel="prev" title="Welcome to PyGeM’s documentation!" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> PyGeM
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
           
 
           
@@ -63,7 +62,7 @@
             
             
               <div class="version">
-                1.1
+                2.0.0
               </div>
             
           
@@ -80,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -89,23 +89,28 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="affine.html">Affine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="freeform.html">Freeform</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radial.html">Radial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffd.html">Free-form Deformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">Radial Basis Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf_factory.html">RBF Factory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ffdparams.html">FFDParameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbfparams.html">RBFParameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="idwparams.html">IDWParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_deformation.html">Custom Deformation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="igeshandler.html">Igeshandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cad">CAD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cad_deformation.html">CAD Deformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffdcad.html">Free-form Deformation [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbfcad.html">Radial Basis Function [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="idwcad.html">Inverse Distance Weighting [CAD]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_deformation_cad.html">Custom Deformation [CAD]</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
@@ -114,13 +119,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PyGeM</a>
@@ -128,9 +134,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -151,7 +158,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Code Documentation</li>
     
@@ -159,7 +166,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/code.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/code.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -176,127 +183,53 @@
 <h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="affine.html">Affine</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.affine.angles2matrix.html">pygem.affine.angles2matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.affine.to_reduced_row_echelon_form.html">pygem.affine.to_reduced_row_echelon_form</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.affine.affine_points_fit.html">pygem.affine.affine_points_fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffd.html">Free-form Deformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf.html">Radial Basis Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf_factory.html">RBF Factory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_deformation.html">Custom Deformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filehandler.html">Filehandler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="freeform.html">Freeform</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.freeform.FFD._transform_points.html">pygem.freeform.FFD._transform_points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.freeform.FFD.perform.html">pygem.freeform.FFD.perform</a></li>
+</div>
+<div class="section" id="cad">
+<h2>CAD<a class="headerlink" href="#cad" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cad_deformation.html">CAD Deformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffdcad.html">Free-form Deformation [CAD]</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbfcad.html">Radial Basis Function [CAD]</a></li>
+<li class="toctree-l1"><a class="reference internal" href="idwcad.html">Inverse Distance Weighting [CAD]</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_deformation_cad.html">Custom Deformation [CAD]</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="radial.html">Radial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF._distance_matrix.html">pygem.radial.RBF._distance_matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF._get_weights.html">pygem.radial.RBF._get_weights</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.beckert_wendland_c2_basis.html">pygem.radial.RBF.beckert_wendland_c2_basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.gaussian_spline.html">pygem.radial.RBF.gaussian_spline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline.html">pygem.radial.RBF.inv_multi_quadratic_biharmonic_spline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.multi_quadratic_biharmonic_spline.html">pygem.radial.RBF.multi_quadratic_biharmonic_spline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.perform.html">pygem.radial.RBF.perform</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.thin_plate_spline.html">pygem.radial.RBF.thin_plate_spline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.radial.RBF.polyharmonic_spline.html">pygem.radial.RBF.polyharmonic_spline</a></li>
+</div>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.idw.IDW.perform.html">pygem.idw.IDW.perform</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ffdparams.html">FFDParameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.psi_mapping.html">pygem.params.ffdparams.FFDParameters.psi_mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.inv_psi_mapping.html">pygem.params.ffdparams.FFDParameters.inv_psi_mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.rotation_matrix.html">pygem.params.ffdparams.FFDParameters.rotation_matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.position_vertices.html">pygem.params.ffdparams.FFDParameters.position_vertices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.read_parameters.html">pygem.params.ffdparams.FFDParameters.read_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.write_parameters.html">pygem.params.ffdparams.FFDParameters.write_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.save_points.html">pygem.params.ffdparams.FFDParameters.save_points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.build_bounding_box.html">pygem.params.ffdparams.FFDParameters.build_bounding_box</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.ffdparams.FFDParameters.reset_deformation.html">pygem.params.ffdparams.FFDParameters.reset_deformation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rbfparams.html">RBFParameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.rbfparams.RBFParameters.n_control_points.html">pygem.params.rbfparams.RBFParameters.n_control_points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.rbfparams.RBFParameters.read_parameters.html">pygem.params.rbfparams.RBFParameters.read_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.rbfparams.RBFParameters.write_parameters.html">pygem.params.rbfparams.RBFParameters.write_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.rbfparams.RBFParameters.save_points.html">pygem.params.rbfparams.RBFParameters.save_points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.rbfparams.RBFParameters.plot_points.html">pygem.params.rbfparams.RBFParameters.plot_points</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="idwparams.html">IDWParameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.idwparams.IDWParameters.read_parameters.html">pygem.params.idwparams.IDWParameters.read_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.params.idwparams.IDWParameters.write_parameters.html">pygem.params.idwparams.IDWParameters.write_parameters</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="filehandler.html">Filehandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_extension.html">pygem.filehandler.FileHandler._check_extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_filename_type.html">pygem.filehandler.FileHandler._check_filename_type</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_infile_instantiation.html">pygem.filehandler.FileHandler._check_infile_instantiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.parse.html">pygem.filehandler.FileHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.write.html">pygem.filehandler.FileHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="openfhandler.html">Openfhandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.openfhandler.OpenFoamHandler.parse.html">pygem.openfhandler.OpenFoamHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.openfhandler.OpenFoamHandler.write.html">pygem.openfhandler.OpenFoamHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="stlhandler.html">Stlhandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.stlhandler.StlHandler.parse.html">pygem.stlhandler.StlHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.stlhandler.StlHandler.plot.html">pygem.stlhandler.StlHandler.plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.stlhandler.StlHandler.write.html">pygem.stlhandler.StlHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.vtkhandler.VtkHandler.parse.html">pygem.vtkhandler.VtkHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.vtkhandler.VtkHandler.plot.html">pygem.vtkhandler.VtkHandler.plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.vtkhandler.VtkHandler.show.html">pygem.vtkhandler.VtkHandler.show</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.vtkhandler.VtkHandler.write.html">pygem.vtkhandler.VtkHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="unvhandler.html">Unvhandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.unvhandler.UnvHandler.parse.html">pygem.unvhandler.UnvHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.unvhandler.UnvHandler.write.html">pygem.unvhandler.UnvHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler._check_infile_instantiation.html">pygem.nurbshandler.NurbsHandler._check_infile_instantiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.load_shape_from_file.html">pygem.nurbshandler.NurbsHandler.load_shape_from_file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.parse.html">pygem.nurbshandler.NurbsHandler.parse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.plot.html">pygem.nurbshandler.NurbsHandler.plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.show.html">pygem.nurbshandler.NurbsHandler.show</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.write.html">pygem.nurbshandler.NurbsHandler.write</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.nurbshandler.NurbsHandler.write_shape_to_file.html">pygem.nurbshandler.NurbsHandler.write_shape_to_file</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="igeshandler.html">Igeshandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.igeshandler.IgesHandler.load_shape_from_file.html">pygem.igeshandler.IgesHandler.load_shape_from_file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.igeshandler.IgesHandler.write_shape_to_file.html">pygem.igeshandler.IgesHandler.write_shape_to_file</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="stephandler.html">Stephandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.stephandler.StepHandler.load_shape_from_file.html">pygem.stephandler.StepHandler.load_shape_from_file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_summaries/pygem.stephandler.StepHandler.write_shape_to_file.html">pygem.stephandler.StepHandler.write_shape_to_file</a></li>
-</ul>
-</li>
-</ul>
+</div></blockquote>
 </div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="affine.html" class="btn btn-neutral float-right" title="Affine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ffd.html" class="btn btn-neutral float-right" title="Free-form Deformation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to PyGeM’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PyGeM’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,12 +238,22 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2018, PyGeM contributors.
-      Last updated on Apr 04, 2018.
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -322,38 +265,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

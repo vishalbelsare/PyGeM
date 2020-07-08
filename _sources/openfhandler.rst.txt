@@ -9,9 +9,6 @@ Openfhandler
 	:toctree: _summaries
 	:nosignatures:
 
-	OpenFoamHandler.parse
-	OpenFoamHandler.write
-
 .. autoclass:: OpenFoamHandler
 	:members:
 	:private-members:

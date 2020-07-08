@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pygem.ffd &mdash; PyGeM 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyGeM</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pygem.ffd</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pygem.ffd</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for performing Free Form Deformation (FFD).</span>
+
+<span class="sd">:Theoretical Insight:</span>
+
+<span class="sd">    Free Form Deformation is a technique for the efficient, smooth and accurate</span>
+<span class="sd">    geometrical parametrization. It has been proposed the first time in</span>
+<span class="sd">    *Sederberg, Thomas W., and Scott R. Parry. &quot;Free-form deformation of solid</span>
+<span class="sd">    geometric models.&quot; ACM SIGGRAPH computer graphics 20.4 (1986): 151-160*. It</span>
+<span class="sd">    consists in three different step:</span>
+<span class="sd">    </span>
+<span class="sd">    - Mapping the physical domain to the reference one with map</span>
+<span class="sd">      :math:`\\boldsymbol{\\psi}`.  In the code it is named *transformation*.</span>
+
+<span class="sd">    - Moving some control points to deform the lattice with :math:`\\hat{T}`.</span>
+<span class="sd">      The movement of the control points is basically the weight (or</span>
+<span class="sd">      displacement) :math:`\\boldsymbol{\\mu}` we set in the *parameters file*.</span>
+
+<span class="sd">    - Mapping back to the physical domain with map</span>
+<span class="sd">      :math:`\\boldsymbol{\\psi}^{-1}`.  In the code it is named</span>
+<span class="sd">      *inverse_transformation*.</span>
+
+<span class="sd">    FFD map (:math:`T`) is the composition of the three maps, that is</span>
+
+<span class="sd">    .. math:: T(\\cdot, \\boldsymbol{\\mu}) = (\\Psi^{-1} \\circ \\hat{T} \\circ</span>
+<span class="sd">            \\Psi) (\\cdot, \\boldsymbol{\\mu})</span>
+
+<span class="sd">    In this way, every point inside the FFD box changes it position according to</span>
+
+<span class="sd">    .. math:: \\boldsymbol{P} = \\boldsymbol{\\psi}^{-1} \\left( \\sum_{l=0}^L</span>
+<span class="sd">            \\sum_{m=0}^M \\sum_{n=0}^N</span>
+<span class="sd">            \\mathsf{b}_{lmn}(\\boldsymbol{\\psi}(\\boldsymbol{P}_0))</span>
+<span class="sd">            \\boldsymbol{\\mu}_{lmn} \\right)</span>
+
+<span class="sd">    where :math:`\\mathsf{b}_{lmn}` are Bernstein polynomials.  We improve the</span>
+<span class="sd">    traditional version by allowing a rotation of the FFD lattice in order to</span>
+<span class="sd">    give more flexibility to the tool.</span>
+<span class="sd"> </span>
+<span class="sd">    You can try to add more shapes to the lattice to allow more and more</span>
+<span class="sd">    involved transformations.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">configparser</span> <span class="k">as</span> <span class="nn">configparser</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="k">as</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span>
+
+<span class="kn">from</span> <span class="nn">pygem</span> <span class="kn">import</span> <span class="n">Deformation</span>
+<span class="kn">from</span> <span class="nn">pygem.utils</span> <span class="kn">import</span> <span class="n">fit_affine_transformation</span><span class="p">,</span> <span class="n">angles2matrix</span>
+
+
+<div class="viewcode-block" id="FFD"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD">[docs]</a><span class="k">class</span> <span class="nc">FFD</span><span class="p">(</span><span class="n">Deformation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that handles the Free Form Deformation on the mesh points.</span>
+
+<span class="sd">    :param list n_control_points: number of control points in the x, y, and z</span>
+<span class="sd">        direction. Default is [2, 2, 2].</span>
+<span class="sd">        </span>
+<span class="sd">    :cvar numpy.ndarray box_length: dimension of the FFD bounding box, in the</span>
+<span class="sd">        x, y and z direction (local coordinate system).</span>
+<span class="sd">    :cvar numpy.ndarray box_origin: the x, y and z coordinates of the origin of</span>
+<span class="sd">        the FFD bounding box.</span>
+<span class="sd">    :cvar numpy.ndarray rot_angle: rotation angle around x, y and z axis of the</span>
+<span class="sd">        FFD bounding box.</span>
+<span class="sd">    :cvar numpy.ndarray n_control_points: the number of control points in the</span>
+<span class="sd">        x, y, and z direction.</span>
+<span class="sd">    :cvar numpy.ndarray array_mu_x: collects the displacements (weights) along</span>
+<span class="sd">        x, normalized with the box length x.</span>
+<span class="sd">    :cvar numpy.ndarray array_mu_y: collects the displacements (weights) along</span>
+<span class="sd">        y, normalized with the box length y.</span>
+<span class="sd">    :cvar numpy.ndarray array_mu_z: collects the displacements (weights) along</span>
+<span class="sd">        z, normalized with the box length z.</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; from pygem import FFD</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; ffd = FFD()</span>
+<span class="sd">        &gt;&gt;&gt; ffd.read_parameters(</span>
+<span class="sd">        &gt;&gt;&gt;        &#39;tests/test_datasets/parameters_test_ffd_sphere.prm&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; original_mesh_points = np.load(</span>
+<span class="sd">        &gt;&gt;&gt;         &#39;tests/test_datasets/meshpoints_sphere_orig.npy&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; new_mesh_points = ffd(original_mesh_points)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reference_frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_unit</span> <span class="o">=</span> <span class="mf">1.</span> <span class="c1"># TODO: unused at the moment</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">n_control_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_control_points</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span> <span class="o">=</span> <span class="n">n_control_points</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of control points in X, Y and Z directions</span>
+
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_control_points</span>
+
+    <span class="nd">@n_control_points</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">n_control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">npts</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the function that map the physical domain to the reference</span>
+<span class="sd">        domain.</span>
+
+<span class="sd">        :rtype: callable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">physical_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span>
+        <span class="k">return</span> <span class="n">fit_affine_transformation</span><span class="p">(</span><span class="n">physical_frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_frame</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">inverse_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the function that map the reference domain to the physical</span>
+<span class="sd">        domain.</span>
+
+<span class="sd">        :rtype: callable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">physical_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_vertices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span>
+        <span class="k">return</span> <span class="n">fit_affine_transformation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_frame</span><span class="p">,</span> <span class="n">physical_frame</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the function that deforms the points within the unit cube.</span>
+
+<span class="sd">        :rtype: callable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">T_mapping</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">)</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span>
+            <span class="p">(</span><span class="n">dim_n_mu</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="o">.</span><span class="n">shape</span>
+
+            <span class="c1"># Initialization. In order to exploit the contiguity in memory the</span>
+            <span class="c1"># following are transposed</span>
+            <span class="n">bernstein_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_n_mu</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">))</span>
+            <span class="n">bernstein_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_m_mu</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">))</span>
+            <span class="n">bernstein_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_t_mu</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">))</span>
+            <span class="n">shift_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_cols</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">))</span>
+
+            <span class="c1"># TODO check no-loop implementation</span>
+            <span class="c1">#bernstein_x = (</span>
+            <span class="c1">#    np.power(mesh_points[:, 0][:, None], range(dim_n_mu)) *</span>
+            <span class="c1">#    np.power(1 - mesh_points[:, 0][:, None], range(dim_n_mu-1, -1, -1)) *</span>
+            <span class="c1">#    special.binom(np.array([dim_n_mu-1]*dim_n_mu), np.arange(dim_n_mu))</span>
+            <span class="c1">#)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_n_mu</span><span class="p">):</span>
+                <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">dim_n_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">bernstein_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_n_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span>
+                                     <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">):</span>
+                <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">dim_m_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">bernstein_y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_m_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">):</span>
+                <span class="n">aux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">dim_t_mu</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">bernstein_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">dim_t_mu</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">)</span>
+
+            <span class="n">aux_x</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">aux_y</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">aux_z</span> <span class="o">=</span> <span class="mf">0.</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_m_mu</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_t_mu</span><span class="p">):</span>
+                    <span class="n">bernstein_yz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">bernstein_y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:],</span>
+                                               <span class="n">bernstein_z</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:])</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_n_mu</span><span class="p">):</span>
+                        <span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">bernstein_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">bernstein_yz</span><span class="p">)</span>
+                        <span class="n">aux_x</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="n">aux_y</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="n">aux_z</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+
+            <span class="n">shift_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_x</span>
+            <span class="n">shift_points</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_y</span>
+            <span class="n">shift_points</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux_z</span>
+            <span class="k">return</span> <span class="n">shift_points</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">points</span>
+
+        <span class="k">return</span> <span class="n">T_mapping</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The rotation matrix (according to rot_angle_x, rot_angle_y,</span>
+<span class="sd">        rot_angle_z).</span>
+
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">angles2matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">position_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The position of the vertices of the FFD bounding box.</span>
+
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="p">])</span>
+
+<div class="viewcode-block" id="FFD.reset_weights"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.reset_weights">[docs]</a>    <span class="k">def</span> <span class="nf">reset_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set transformation parameters to arrays of zeros.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FFD.read_parameters"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.read_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">read_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;parameters.prm&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads in the parameters file and fill the self structure.</span>
+
+<span class="sd">        :param string filename: parameters file to be read in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Checks if the parameters file exists. If not it writes the default</span>
+        <span class="c1"># class into filename.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_parameters</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;n control points x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;n control points y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;n control points z&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box length x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box length y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box length z&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box origin x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box origin y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;box origin z&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;rotation angle x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;rotation angle y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Box info&#39;</span><span class="p">,</span> <span class="s1">&#39;rotation angle z&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+
+        <span class="n">mux</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Parameters weights&#39;</span><span class="p">,</span> <span class="s1">&#39;parameter x&#39;</span><span class="p">)</span>
+        <span class="n">muy</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Parameters weights&#39;</span><span class="p">,</span> <span class="s1">&#39;parameter y&#39;</span><span class="p">)</span>
+        <span class="n">muz</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Parameters weights&#39;</span><span class="p">,</span> <span class="s1">&#39;parameter z&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">mux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]))]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">muy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]))]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">muz</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]))]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="FFD.write_parameters"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.write_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">write_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;parameters.prm&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method writes a parameters file (.prm) called `filename` and fills</span>
+<span class="sd">        it with all the parameters class members.</span>
+
+<span class="sd">        :param string filename: parameters file to be written out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;filename must be a string&quot;</span><span class="p">)</span>
+
+        <span class="n">output_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">[Box info]</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# This section collects all the properties of the&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39; FFD bounding box.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># n control points indicates the number of control&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39; points in each direction (x, y, z).</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# For example, to create a 2 x 3 x 2 grid, use the&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39; following: n control points: 2, 3, 2</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;n control points x: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;n control points y: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;n control points z: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># box length indicates the length of the FFD &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;bounding box along the three canonical directions &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;(x, y, z).</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# It uses the local coordinate system.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# For example to create a 2 x 1.5 x 3 meters box &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;use the following: box length: 2.0, 1.5, 3.0</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box length x: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box length y: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box length z: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># box origin indicates the x, y, and z coordinates &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;of the origin of the FFD bounding box. That is &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;center of</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# rotation of the bounding box. It corresponds to &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;the point coordinates with position [0][0][0].</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# See section &quot;Parameters weights&quot; for more &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;details.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# For example, if the origin is equal to 0., 0., 0., &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;use the following: box origin: 0., 0., 0.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box origin x: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box origin y: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;box origin z: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># rotation angle indicates the rotation angle &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;around the x, y, and z axis of the FFD bounding box &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;in degrees.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# The rotation is done with respect to the box &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;origin.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# For example, to rotate the box by 2 deg along &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;the z &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;direction, use the following: rotation angle: &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;0., 0., 2.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;rotation angle x: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;rotation angle y: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;rotation angle z: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">[Parameters weights]</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# This section describes the weights of the FFD &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;control points.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# We adopt the following convention:</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# For example with a 2x2x2 grid of control points we &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;have to fill a 2x2x2 matrix of weights.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# If a weight is equal to zero you can discard the &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;line since the default is zero.</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# | x index | y index | z index | weight |</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;#  --------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# |    0    |    0    |    0    |  1.0   |</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# |    0    |    1    |    1    |  0.0   | --&gt; you &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;can erase this line without effects</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# |    0    |    1    |    0    | -2.1   |</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;# |    0    |    0    |    1    |  3.4   |</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># parameter x collects the displacements along x, &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;normalized with the box length x.&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">parameter x:&#39;</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">output_string</span> <span class="o">+=</span> <span class="n">offset</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                        <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="mi">13</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># parameter y collects the displacements along y, &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;normalized with the box length y.&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">parameter y:&#39;</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">output_string</span> <span class="o">+=</span> <span class="n">offset</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                        <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="mi">13</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># parameter z collects the displacements along z, &#39;</span>
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;normalized with the box length z.&#39;</span>
+
+        <span class="n">output_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">parameter z:&#39;</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">output_string</span> <span class="o">+=</span> <span class="n">offset</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                        <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="mi">13</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_string</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method prints all the FFD parameters on the screen. Its purpose is</span>
+<span class="sd">        for debugging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;conversion_unit = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conversion_unit</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;n_control_points = </span><span class="si">{}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;box_length = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;box_origin = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;rot_angle  = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_angle</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_x =</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_y =</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">array_mu_z =</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">rotation_matrix = </span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">position_vertices = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_vertices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+<div class="viewcode-block" id="FFD.control_points"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.control_points">[docs]</a>    <span class="k">def</span> <span class="nf">control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deformed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method that returns the FFD control points. If the `deformed` flag is</span>
+<span class="sd">        set to True the method returns the deformed lattice, otherwise it</span>
+<span class="sd">        returns the original undeformed lattice.</span>
+
+<span class="sd">        :param bool deformed: flag to select the original or modified FFD</span>
+<span class="sd">            control lattice. The default is True.</span>
+<span class="sd">        :return: the FFD control points (by row).</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">y_coords</span><span class="p">,</span> <span class="n">x_coords</span><span class="p">,</span> <span class="n">z_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+        <span class="n">box_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">x_coords</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+             <span class="n">y_coords</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+             <span class="n">z_coords</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+
+        <span class="k">if</span> <span class="n">deformed</span><span class="p">:</span>
+            <span class="n">box_points</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="p">])</span>
+
+        <span class="n">n_rows</span> <span class="o">=</span> <span class="n">box_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">box_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">box_points</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">,</span> <span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">box_points</span><span class="o">.</span><span class="n">T</span></div>
+
+<div class="viewcode-block" id="FFD.reflect"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.reflect">[docs]</a>    <span class="k">def</span> <span class="nf">reflect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reflect the lattice of control points along the direction defined</span>
+<span class="sd">        by `axis`. In particular the origin point of the lattice is preserved.</span>
+<span class="sd">        So, for instance, the reflection along x, is made with respect to the</span>
+<span class="sd">        face of the lattice in the yz plane that is opposite to the origin.</span>
+<span class="sd">        Same for the other directions. Only the weights (mu) along the chosen</span>
+<span class="sd">        axis are reflected, while the others are preserved. The symmetry plane</span>
+<span class="sd">        can not present deformations along the chosen axis.</span>
+<span class="sd">        After the refletcion there will be 2n-1 control points along `axis`,</span>
+<span class="sd">        witha doubled box length.</span>
+
+<span class="sd">        :param int axis: axis along which the reflection is performed.</span>
+<span class="sd">            Default is 0. Possible values are 0, 1, or 2, corresponding</span>
+<span class="sd">            to x, y, and z respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check axis value</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The axis has to be 0, 1, or 2. Current value </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span>
+
+        <span class="c1"># check that the plane of symmetry is undeformed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">axis</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">axis</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">axis</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;If you want to reflect the FFD bounding box along axis &quot;</span> <span class="o">+</span> \
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> you can not diplace the control &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="s2">&quot;points in the symmetry plane along that axis.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># double the control points in the given axis -1 (the symmetry plane)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_control_points</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># double the box length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_length</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
+
+        <span class="c1"># we have to reflect the dispacements only along the correct axis</span>
+        <span class="n">reflection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">reflection</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># we select all the indeces but the ones in the plane of symmetry</span>
+        <span class="n">indeces</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span>  <span class="c1"># = [:, :, :]</span>
+        <span class="n">indeces</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># = [1:]</span>
+        <span class="n">indeces</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">indeces</span><span class="p">)</span>
+
+        <span class="c1"># we append along the given axis all the displacements reflected</span>
+        <span class="c1"># and in the reverse order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">,</span>
+                                    <span class="n">reflection</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_x</span><span class="p">,</span> <span class="n">axis</span><span class="p">)[</span><span class="n">indeces</span><span class="p">],</span>
+                                    <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">,</span>
+                                    <span class="n">reflection</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_y</span><span class="p">,</span> <span class="n">axis</span><span class="p">)[</span><span class="n">indeces</span><span class="p">],</span>
+                                    <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">,</span>
+                                    <span class="n">reflection</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_mu_z</span><span class="p">,</span> <span class="n">axis</span><span class="p">)[</span><span class="n">indeces</span><span class="p">],</span>
+                                    <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FFD.__call__"><a class="viewcode-back" href="../../ffd.html#pygem.ffd.FFD.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_pts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method performs the FFD to `src_pts` and return the deformed</span>
+<span class="sd">        points.</span>
+<span class="sd">        </span>
+<span class="sd">        :param numpy.ndarray src_pts: the array of dimensions (*n_points*, *3*)</span>
+<span class="sd">            containing the points to deform. The points have to be arranged by</span>
+<span class="sd">            row.</span>
+<span class="sd">        :return: the deformed points</span>
+<span class="sd">        :rtype: numpy.ndarray (with shape = (*n_points*, *3*))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">is_inside</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">boundaries</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">            Check is `pts` is inside the ranges provided by `boundaries`.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pts</span> <span class="o">&gt;=</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                         <span class="n">pts</span> <span class="o">&lt;=</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># map to the reference domain</span>
+        <span class="n">src_reference_frame_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">src_pts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span><span class="p">)</span>
+
+        <span class="c1"># apply deformation for all the pts in the unit cube</span>
+        <span class="n">index_pts_inside</span> <span class="o">=</span> <span class="n">is_inside</span><span class="p">(</span><span class="n">src_reference_frame_pts</span><span class="p">,</span>
+                                     <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]))</span>
+        <span class="n">shifted_reference_frame_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+            <span class="n">src_reference_frame_pts</span><span class="p">[</span><span class="n">index_pts_inside</span><span class="p">])</span>
+
+        <span class="c1"># map to the physical domain</span>
+        <span class="n">shifted_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_psi</span><span class="p">(</span>
+            <span class="n">shifted_reference_frame_pts</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_origin</span>
+
+        <span class="n">dst_pts</span> <span class="o">=</span> <span class="n">src_pts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dst_pts</span><span class="p">[</span><span class="n">index_pts_inside</span><span class="p">]</span> <span class="o">=</span> <span class="n">shifted_pts</span>
+        <span class="k">return</span> <span class="n">dst_pts</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

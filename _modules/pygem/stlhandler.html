@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.stlhandler &mdash; PyGeM 1.1 documentation</title>
+  <title>pygem.stlhandler &mdash; PyGeM 2.0.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
 
   
   
@@ -17,42 +21,36 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PyGeM 1.1 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> PyGeM
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.1
+                2.0.0
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,6 +87,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
@@ -96,13 +96,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">PyGeM</a>
@@ -110,9 +111,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -133,7 +135,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -155,13 +157,19 @@
   <h1>Source code for pygem.stlhandler</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Derived module from filehandler.py to handle STereoLithography files.</span>
+
+<span class="sd">.. warning::</span>
+<span class="sd">    This module will be deprecated in next releases. Follow updates on</span>
+<span class="sd">    https://github.com/mathLab for news about file handling. </span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">as</span> <span class="nn">a3</span>
-<span class="kn">import</span> <span class="nn">pygem.filehandler</span> <span class="kn">as</span> <span class="nn">fh</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">as</span> <span class="nn">a3</span>
+<span class="kn">import</span> <span class="nn">pygem.filehandler</span> <span class="k">as</span> <span class="nn">fh</span>
 <span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;This module will be deprecated in next releases&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="StlHandler"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler">[docs]</a><span class="k">class</span> <span class="nc">StlHandler</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">):</span>
@@ -208,7 +216,7 @@
 
         <span class="k">return</span> <span class="n">mesh_points</span></div>
 
-<div class="viewcode-block" id="StlHandler.write"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_points</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">write_bin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="StlHandler.write"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_points</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">write_bin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes a stl file, called filename, copying all the lines from</span>
 <span class="sd">        self.filename but the coordinates. mesh_points is a matrix that contains</span>
@@ -250,7 +258,7 @@
 
         <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StlHandler.plot"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_file</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="StlHandler.plot"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to plot an stl file. If `plot_file` is not given it plots</span>
 <span class="sd">        `self.infile`.</span>
@@ -263,7 +271,7 @@
 <span class="sd">            geometry</span>
 <span class="sd">        :rtype: matplotlib.pyplot.figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">plot_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plot_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plot_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infile</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">plot_file</span><span class="p">)</span>
@@ -317,14 +325,14 @@
 
         <span class="k">return</span> <span class="n">figure</span></div>
 
-<div class="viewcode-block" id="StlHandler.show"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_file</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StlHandler.show"><a class="viewcode-back" href="../../stlhandler.html#pygem.stlhandler.StlHandler.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to show a vtk file. If `show_file` is not given it shows</span>
 <span class="sd">        `self.infile`.</span>
 
 <span class="sd">        :param string show_file: the vtk filename you want to show.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">show_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">show_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">show_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infile</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_filename_type</span><span class="p">(</span><span class="n">show_file</span><span class="p">)</span>
@@ -364,9 +372,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -375,12 +381,22 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2018, PyGeM contributors.
-      Last updated on Apr 04, 2018.
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -392,38 +408,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

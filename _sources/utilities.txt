@@ -1,6 +1,0 @@
-Utilities
-=====================
-
-.. automodule:: pygem.utils
-	:members:
-	:private-members:

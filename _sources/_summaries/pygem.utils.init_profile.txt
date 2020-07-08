@@ -1,6 +1,0 @@
-pygem.utils.init_profile
-========================
-
-.. currentmodule:: pygem.utils
-
-.. autofunction:: init_profile

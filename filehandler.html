@@ -1,15 +1,19 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Filehandler &mdash; PyGeM 1.1 documentation</title>
+  <title>Filehandler &mdash; PyGeM 2.0.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
 
   
   
@@ -17,44 +21,38 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PyGeM 1.1 documentation" href="index.html"/>
-        <link rel="up" title="Code Documentation" href="code.html"/>
-        <link rel="next" title="pygem.filehandler.FileHandler._check_extension" href="_summaries/pygem.filehandler.FileHandler._check_extension.html"/>
-        <link rel="prev" title="pygem.params.idwparams.IDWParameters.write_parameters" href="_summaries/pygem.params.idwparams.IDWParameters.write_parameters.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Vtkhandler" href="vtkhandler.html" />
+    <link rel="prev" title="Custom Deformation" href="custom_deformation.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> PyGeM
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PyGeM
           
 
           
@@ -64,7 +62,7 @@
             
             
               <div class="version">
-                1.1
+                2.0.0
               </div>
             
           
@@ -81,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -90,30 +89,21 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="affine.html">Affine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="freeform.html">Freeform</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radial.html">Radial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffd.html">Free-form Deformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">Radial Basis Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf_factory.html">RBF Factory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="idw.html">Inverse Distance Weighting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ffdparams.html">FFDParameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbfparams.html">RBFParameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="idwparams.html">IDWParameters</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Filehandler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_extension.html">pygem.filehandler.FileHandler._check_extension</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_filename_type.html">pygem.filehandler.FileHandler._check_filename_type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_infile_instantiation.html">pygem.filehandler.FileHandler._check_infile_instantiation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.parse.html">pygem.filehandler.FileHandler.parse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.write.html">pygem.filehandler.FileHandler.write</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_deformation.html">Custom Deformation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Filehandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">Vtkhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">Stlhandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfhandler.html">Openfhandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unvhandler.html">Unvhandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nurbshandler.html">Nurbshandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="igeshandler.html">Igeshandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stephandler.html">Stephandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#cad">CAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#table-of-contents">Table of contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
@@ -122,13 +112,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PyGeM</a>
@@ -136,9 +127,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -159,7 +151,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
         
@@ -169,7 +161,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/filehandler.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/filehandler.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -184,99 +176,79 @@
             
   <div class="section" id="module-pygem.filehandler">
 <span id="filehandler"></span><h1>Filehandler<a class="headerlink" href="#module-pygem.filehandler" title="Permalink to this headline">¶</a></h1>
-<p>Base module with the base class for reading and writing different CAD files.</p>
-<table border="1" class="longtable docutils">
+<p>Base module with the base class for reading and writing different files.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This module will be deprecated in next releases. Follow updates on
+<a class="reference external" href="https://github.com/mathLab">https://github.com/mathLab</a> for news about file handling.</p>
+</div>
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_extension.html#pygem.filehandler.FileHandler._check_extension" title="pygem.filehandler.FileHandler._check_extension"><code class="xref py py-obj docutils literal"><span class="pre">FileHandler._check_extension</span></code></a></td>
-<td>This private class method checks if the given <cite>filename</cite> has the proper <cite>extension</cite> set in the child class.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_filename_type.html#pygem.filehandler.FileHandler._check_filename_type" title="pygem.filehandler.FileHandler._check_filename_type"><code class="xref py py-obj docutils literal"><span class="pre">FileHandler._check_filename_type</span></code></a></td>
-<td>This private static method checks if <cite>filename</cite> is a string.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler._check_infile_instantiation.html#pygem.filehandler.FileHandler._check_infile_instantiation" title="pygem.filehandler.FileHandler._check_infile_instantiation"><code class="xref py py-obj docutils literal"><span class="pre">FileHandler._check_infile_instantiation</span></code></a></td>
-<td>This private method checks if <cite>self.infile</cite> is instantiated.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.parse.html#pygem.filehandler.FileHandler.parse" title="pygem.filehandler.FileHandler.parse"><code class="xref py py-obj docutils literal"><span class="pre">FileHandler.parse</span></code></a></td>
-<td>Abstract method to parse a specific file.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="_summaries/pygem.filehandler.FileHandler.write.html#pygem.filehandler.FileHandler.write" title="pygem.filehandler.FileHandler.write"><code class="xref py py-obj docutils literal"><span class="pre">FileHandler.write</span></code></a></td>
-<td>Abstract method to write a specific file.</td>
-</tr>
+<tbody>
 </tbody>
 </table>
-<dl class="class">
+<dl class="py class">
 <dt>
-<em class="property">class </em><code class="descname">FileHandler</code><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-name descname">FileHandler</code><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A base class for file handling.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
-<li><strong>infile</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the input file to be processed.</li>
-<li><strong>outfile</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; name of the output file where to write in.</li>
-<li><strong>extensions</strong> (<em>list</em>) &#8211; extensions of the input/output files. It is specific
-for each subclass.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infile</strong> (<em>string</em>) – name of the input file to be processed.</p></li>
+<li><p><strong>outfile</strong> (<em>string</em>) – name of the output file where to write in.</p></li>
+<li><p><strong>extensions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – extensions of the input/output files. It is specific
+for each subclass.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt>
-<code class="descname">_check_extension</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_extension"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>This private class method checks if the given <cite>filename</cite> has the proper
-<cite>extension</cite> set in the child class. If not it raises a ValueError.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; file to check.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt>
-<em class="property">static </em><code class="descname">_check_filename_type</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_filename_type"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>This private static method checks if <cite>filename</cite> is a string. If not it
-raises a TypeError.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; file to check.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="descname">_check_infile_instantiation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_infile_instantiation"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>This private method checks if <cite>self.infile</cite> is instantiated. If not
-it means that nobody called the parse method and <cite>self.infile</cite> is None.
-If the check fails it raises a RuntimeError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="descname">parse</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler.parse"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler.parse"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Abstract method to parse a specific file.</p>
 <p>Not implemented, it has to be implemented in subclasses.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="descname">write</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler.write"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler.write"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Abstract method to write a specific file.</p>
 <p>Not implemented, it has to be implemented in subclasses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_check_extension</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_extension"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This private class method checks if the given <cite>filename</cite> has the proper
+<cite>extension</cite> set in the child class. If not it raises a ValueError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>string</em>) – file to check.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<em class="property">static </em><code class="sig-name descname">_check_filename_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_filename_type"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This private static method checks if <cite>filename</cite> is a string. If not it
+raises a TypeError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>string</em>) – file to check.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">_check_infile_instantiation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/filehandler.html#FileHandler._check_infile_instantiation"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This private method checks if <cite>self.infile</cite> is instantiated. If not
+it means that nobody called the parse method and <cite>self.infile</cite> is None.
+If the check fails it raises a RuntimeError.</p>
 </dd></dl>
 
 </dd></dl>
@@ -285,18 +257,16 @@ If the check fails it raises a RuntimeError.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="_summaries/pygem.filehandler.FileHandler._check_extension.html" class="btn btn-neutral float-right" title="pygem.filehandler.FileHandler._check_extension" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="vtkhandler.html" class="btn btn-neutral float-right" title="Vtkhandler" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="_summaries/pygem.params.idwparams.IDWParameters.write_parameters.html" class="btn btn-neutral" title="pygem.params.idwparams.IDWParameters.write_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="custom_deformation.html" class="btn btn-neutral float-left" title="Custom Deformation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,12 +275,22 @@ If the check fails it raises a RuntimeError.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2018, PyGeM contributors.
-      Last updated on Apr 04, 2018.
+        
+        &copy; Copyright Copyright 2017-2020, PyGeM contributors
+      <span class="lastupdated">
+        Last updated on Jul 08, 2020.
+      </span>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -322,38 +302,15 @@ If the check fails it raises a RuntimeError.</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

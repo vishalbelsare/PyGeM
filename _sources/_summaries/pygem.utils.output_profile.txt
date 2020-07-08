@@ -1,6 +1,0 @@
-pygem.utils.output_profile
-==========================
-
-.. currentmodule:: pygem.utils
-
-.. autofunction:: output_profile

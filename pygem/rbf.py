@@ -57,6 +57,11 @@ The module is analogous to the freeform one.
 """
 import os
 import numpy as np
+try:
+    import configparser as configparser
+except ImportError:
+    import ConfigParser as configparser
+
 
 from scipy.spatial.distance import cdist
 
@@ -125,13 +130,7 @@ class RBF(Deformation):
                  radius=0.5,
                  extra_parameter=None):
 
-        if callable(func):
-            self.basis = func
-        elif isinstance(func, str):
-            self.basis = RBFFactory(func)
-        else:
-            raise TypeError('`func` is not valid.')
-
+        self.basis = func
         self.radius = radius
 
         if original_control_points is None:
@@ -157,6 +156,7 @@ class RBF(Deformation):
         self.weights = self._get_weights(self.original_control_points,
                                          self.deformed_control_points)
 
+
     @property
     def n_control_points(self):
         """
@@ -165,6 +165,29 @@ class RBF(Deformation):
         :rtype: int
         """
         return self.original_control_points.shape[0]
+
+    @property
+    def basis(self):
+        """
+        The kernel to use in the deformation.
+
+        :getter: Returns the callable kernel
+        :setter: Sets the kernel. It is possible to pass the name of the
+            function (check the list of all implemented functions in the
+            `pygem.rbf_factory.RBFFactory` class) or directly the callable
+            function.
+        :type: callable
+        """
+        return self.__basis
+
+    @basis.setter
+    def basis(self, func):
+        if callable(func):
+            self.__basis = func
+        elif isinstance(func, str):
+            self.__basis = RBFFactory(func)
+        else:
+            raise TypeError('`func` is not valid.')
 
     def _get_weights(self, X, Y):
         """
@@ -185,7 +208,7 @@ class RBF(Deformation):
         """
         npts, dim = X.shape
         H = np.zeros((npts + 3 + 1, npts + 3 + 1))
-        H[:npts, :npts] = self.basis(cdist(X, X), self.radius, **self.extra)
+        H[:npts, :npts] = self.basis(cdist(X, X), self.radius)#, **self.extra)
         H[npts, :npts] = 1.0
         H[:npts, npts] = 1.0
         H[:npts, -3:] = X
@@ -221,13 +244,14 @@ class RBF(Deformation):
 
         ctrl_points = config.get('Control points', 'original control points')
         lines = ctrl_points.split('\n')
-        self.original_control_points = np.zeros((len(lines), 3))
+        original_control_points = np.zeros((len(lines), 3))
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
-            self.original_control_points[i] = np.array(
+            original_control_points[i] = np.array(
                 [float(values[0]),
                  float(values[1]),
                  float(values[2])])
+        self.original_control_points = original_control_points
 
         mod_points = config.get('Control points', 'deformed control points')
         lines = mod_points.split('\n')
@@ -238,13 +262,15 @@ class RBF(Deformation):
                             "control points' section of the parameters file"
                             "({0!s})".format(filename))
 
-        self.deformed_control_points = np.zeros((self.n_control_points, 3))
+        deformed_control_points = np.zeros((self.n_control_points, 3))
         for line, i in zip(lines, list(range(0, self.n_control_points))):
             values = line.split()
-            self.deformed_control_points[i] = np.array(
+            deformed_control_points[i] = np.array(
                 [float(values[0]),
                  float(values[1]),
                  float(values[2])])
+        self.deformed_control_points = deformed_control_points
+    
 
     def write_parameters(self, filename='parameters_rbf.prm'):
         """
@@ -271,7 +297,7 @@ class RBF(Deformation):
         output_string += ' polyharmonic_spline.\n'
         output_string += '# For a comprehensive list with details see the'
         output_string += ' class RBF.\n'
-        output_string += 'basis function: {}\n'.format(str(self.basis))
+        output_string += 'basis function: {}\n'.format('gaussian_spline')
 
         output_string += '\n# radius is the scaling parameter r that affects'
         output_string += ' the shape of the basis functions. See the'
@@ -362,15 +388,26 @@ class RBF(Deformation):
         else:
             fig.savefig(filename)
 
+    def compute_weights(self):
+        """
+        This method compute the weights according to the
+        `original_control_points` and `deformed_control_points` arrays.
+        """
+        self.weights = self._get_weights(self.original_control_points,
+                                         self.deformed_control_points)
+
     def __call__(self, src_pts):
         """
         This method performs the deformation of the mesh points. After the
         execution it sets `self.modified_mesh_points`.
         """
-        H = np.zeros((n_mesh_points, self.n_control_points + 3 + 1))
+        self.compute_weights()
+
+        H = np.zeros((src_pts.shape[0], self.n_control_points + 3 + 1))
         H[:, :self.n_control_points] = self.basis(
-            cdist(src_pts, self.original_control_points), self.radius,
-            **self.extra)
-        H[:, n_control_points] = 1.0
-        H[:, -3:] = self.original_mesh_points
-        self.modified_mesh_points = np.asarray(np.dot(H, self.weights))
+            cdist(src_pts, self.original_control_points), 
+            self.radius)
+            #**self.extra)
+        H[:, self.n_control_points] = 1.0
+        H[:, -3:] = src_pts
+        return np.asarray(np.dot(H, self.weights))

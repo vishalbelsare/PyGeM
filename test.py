@@ -4,13 +4,12 @@ matplotlib.use('agg')
 import nose
 
 test_defaults = [
-    'tests/test_freeform.py',
-    'tests/test_idwparams.py',
+    'tests/test_ffd.py',
     'tests/test_idw.py',
+    'tests/test_rbf.py',
     'tests/test_khandler.py',
     'tests/test_mdpahandler.py',
     'tests/test_openfhandler.py',
-    'tests/test_rbfparams.py',
     'tests/test_stlhandler.py',
     'tests/test_unvhandler.py',
     'tests/test_vtkhandler.py',

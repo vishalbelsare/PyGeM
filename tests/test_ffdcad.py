@@ -21,7 +21,9 @@ class TestFFDCAD(TestCase):
              cre = created.readlines()[5:]
              self.assertEqual(len(ref),len(cre))
              for i in range(len(cre)):
-                 self.assertMultiLineEqual(ref[i], cre[i])
+                 ref_ = np.asarray(ref[i].split(',')[:-1], dtype=float)
+                 cre_ = np.asarray(cre[i].split(',')[:-1], dtype=float)
+                 np.testing.assert_array_almost_equal(cre_, ref_, decimal=6)
         self.addCleanup(os.remove, 'test_pipe_result.iges')
 
     def test_ffd_iges_pipe_mod_through_topods_shape(self):
@@ -38,5 +40,7 @@ class TestFFDCAD(TestCase):
              cre = created.readlines()[5:]
              self.assertEqual(len(ref),len(cre))
              for i in range(len(cre)):
-                 self.assertMultiLineEqual(ref[i], cre[i])
+                 ref_ = np.asarray(ref[i].split(',')[:-1], dtype=float)
+                 cre_ = np.asarray(cre[i].split(',')[:-1], dtype=float)
+                 np.testing.assert_array_almost_equal(cre_, ref_, decimal=6)
         self.addCleanup(os.remove, 'test_pipe_hollow_result.iges')

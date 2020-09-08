@@ -244,33 +244,19 @@ class RBF(Deformation):
 
         ctrl_points = config.get('Control points', 'original control points')
         lines = ctrl_points.split('\n')
-        original_control_points = np.zeros((len(lines), 3))
-        for line, i in zip(lines, list(range(0, self.n_control_points))):
-            values = line.split()
-            original_control_points[i] = np.array(
-                [float(values[0]),
-                 float(values[1]),
-                 float(values[2])])
-        self.original_control_points = original_control_points
+        self.original_control_points = np.array(
+            list(map(lambda x: x.split(), lines)), dtype=float)
 
         mod_points = config.get('Control points', 'deformed control points')
         lines = mod_points.split('\n')
+        self.deformed_control_points = np.array(
+            list(map(lambda x: x.split(), lines)), dtype=float)
 
         if len(lines) != self.n_control_points:
             raise TypeError("The number of control points must be equal both in"
                             "the 'original control points' and in the 'deformed"
                             "control points' section of the parameters file"
                             "({0!s})".format(filename))
-
-        deformed_control_points = np.zeros((self.n_control_points, 3))
-        for line, i in zip(lines, list(range(0, self.n_control_points))):
-            values = line.split()
-            deformed_control_points[i] = np.array(
-                [float(values[0]),
-                 float(values[1]),
-                 float(values[2])])
-        self.deformed_control_points = deformed_control_points
-    
 
     def write_parameters(self, filename='parameters_rbf.prm'):
         """

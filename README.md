@@ -228,6 +228,7 @@ Here there is a list of the scientific works involving **PyGeM** you can consult
 **PyGeM** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
 * [Marco Tezzele](mailto:marcotez@gmail.com)
 * [Nicola Demo](mailto:demo.nicola@gmail.com)
+* [Andrea Mola](mailto:amola@sissa.it)
 
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
 

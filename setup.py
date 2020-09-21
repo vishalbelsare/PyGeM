@@ -95,7 +95,7 @@ setup(
     keywords=KEYWORDS,
     url=URL,
     license='MIT',
-    packages=[NAME],
+    packages=find_packages(),
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     test_suite='nose.collector',

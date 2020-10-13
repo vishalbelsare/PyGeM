@@ -11,14 +11,6 @@ from pygem.cad import CADDeformation
 
 
 
-
-def floatstrcmp(left, right):
-   try:
-      return cmp(float(left), float(right))
-   except ValueError:
-      return cmp(left, right)
-
-
 class TestFFDCAD(TestCase):
 
     def test_ffd_iges_pipe_mod_through_files(self):

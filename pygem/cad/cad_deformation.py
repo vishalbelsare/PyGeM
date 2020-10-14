@@ -150,6 +150,7 @@ class CADDeformation():
             # It is considered the most secure standard for STEP.
             # *According to PythonOCC documentation (http://www.pythonocc.org/)
             Interface_Static_SetCVal("write.step.schema", "AP203")
+            Interface_Static_SetCVal('write.surfacecurve.mode','0')
             step_writer.Transfer(shape, STEPControl_AsIs)
             step_writer.Write(filename)
 

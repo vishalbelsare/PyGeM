@@ -53,7 +53,7 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 **PyGeM** requires `numpy`, `scipy`, `matplotlib`, `sphinx` (for the
 documentation) and `nose` (for local test). They can be easily installed via
 `pip`. The code has been tested with Python3.7 version, but it should be
-compatible with Python3. The Python2 support is no longer maintained.
+compatible with a generic Python3.x. The Python2 support is no longer maintained.
 To enable the `CAD`
 [submodule](https://github.com/mathLab/PyGeM/tree/master/pygem/cad), the
 module `pythonocc-core` is required to deal with IGES files. This requirement

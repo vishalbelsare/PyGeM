@@ -1,31 +1,27 @@
 # Tutorials
 
-In this folder you can find a collection of useful tutorials in order to understand the principles and the potential of **PyGeM**.
+In this folder we collect several useful tutorials in order to understand the principles and the potential of **PyGeM**. Please read the following table for details about the tutorials.
 
-#### [Tutorial 1](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-1-ffd.ipynb)
-Here we show how it is possible to perform a free form deformation on a sphere.
 
-#### [Tutorial 2](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-2-iges.ipynb)
+| Name  | Description   | PyGeM used classes | input geometries  |
+|---|---|---|---|---|
+| Tutorial1&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial1/tutorial-1-ffd.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial1/tutorial-1-ffd.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-1-ffd.html)]| free-form deformation to morph a spherical mesh | `pygem.FFD`  | `numpy.ndarray`  |
+| Tutorial2&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-2-iges.html)] | free-form deformation to morph a cylinder | `pygem.cad.FFD`  | IGES file |
+| Tutorial3&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-3-rbf.html)] | radial basis function to morph a cubic mesh | `pygem.RBF`  | `numpy.ndarray` |
+| Tutorial4&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial4/tutorial-4-idw.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial4/tutorial-4-idw.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-4-idw.html)] | inverse distance weighting to deform a cubic mesh | `pygem.IDW`  | `numpy.ndarray` |
+
+
+
 # Old version
-Here we show how to manage basic iges files and again free form deformation. In particular here we deform the CAD of a cylinder.
+Below all the tutorials for the previous release. We will convert them in order to make compatible with the latest version of **PyGeM**; meanwhile we still publish these _old_ examples since they may help the users in some application.
 
 #### [Tutorial 3](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-3-unv.ipynb)
-# Old version
 Here it is possible to understand how to deform a unv file with a prescribed continuity using the free form deformation.
 
-#### [Tutorial 4](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-4-rbf.ipynb)
-# Old version
-Here we present the radial basis functions interpolation technique on a simple cube.
-
-#### [Tutorial 5](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-5-idw.ipynb)
-# Old version
-Here we show the inverse distance weighting interpolation technique on a simple cube.
-
-# [Tutorial 6](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-6-k.ipynb)
-##### Old version
+#### [Tutorial 6](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-6-k.ipynb) [[.py]](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-6-k.py)
 This tutorial shows how to deform a LS-Dyna k file with a prescribed continuity using the free-form deformation.
 
-#### [Tutorial 7](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-7-mdpa.ipynb)
+#### [Tutorial 7](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-7-mdpa.ipynb) [[.py]](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial-7-mdpa.py)
 This tutorial shows how to deform a Kratos Multiphysics mdpa file with a prescribed continuity using the free-form deformation.
 
 #### More to come...

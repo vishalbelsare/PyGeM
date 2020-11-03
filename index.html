@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to PyGeM’s documentation! &mdash; PyGeM 2.0.0 documentation</title>
+  <title>Welcome to PyGeM’s documentation! &mdash; PyGeM 2.0.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.2
               </div>
             
           
@@ -165,15 +165,17 @@
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>PyGeM is a python library using Free Form Deformation, Radial Basis Functions and Inverse Distance Weighting to parametrize and morph complex geometries.  It is ideally suited for actual industrial problems, since it allows to handle:</p>
 <ul class="simple">
-<li><p>Computer Aided Design files (in .iges and .stl formats)</p></li>
-<li><p>Mesh files (in .unv and OpenFOAM formats)</p></li>
+<li><p>Computer Aided Design files (in .iges, .step, and .stl formats)</p></li>
+<li><p>Mesh files (in .unv, Elmer, and OpenFOAM formats)</p></li>
 <li><p>Output files (in .vtk format)</p></li>
 <li><p>LS-Dyna Keyword files (.k format)</p></li>
 </ul>
-<p>By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!</p>
+<p>By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files!
+See the Tutorials section below to have an idea of the potential of this package.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The code has been tested with Python3.7 version, but it should be compatible with a generic Python3.x. The Python2 support is no longer maintained.</p>
 <p>To install the pygem package, open the terminal/command line and clone the repository with the command</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">mathLab</span><span class="o">/</span><span class="n">PyGeM</span>
 </pre></div>
@@ -184,6 +186,7 @@ After installing the dependencies you can navigate into the <code class="docutil
 </pre></div>
 </div>
 <p>You should now be able to import the pygem library in Python scripts and interpreters with the command <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pygem</span></code>.</p>
+<p>Alternatively, there is the possibility to get PyGeM through prebuilt and high-performance Docker images. Please, for the details, refer to the official <a class="reference external" href="https://github.com/mathLab/PyGeM">repository</a>.</p>
 </div>
 <div class="section" id="developer-s-guide">
 <h2>Developer’s Guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">¶</a></h2>
@@ -220,7 +223,7 @@ After installing the dependencies you can navigate into the <code class="docutil
         
         &copy; Copyright Copyright 2017-2020, PyGeM contributors
       <span class="lastupdated">
-        Last updated on Jul 08, 2020.
+        Last updated on Nov 03, 2020.
       </span>
 
     </p>

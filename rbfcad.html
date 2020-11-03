@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Radial Basis Function [CAD] &mdash; PyGeM 2.0.0 documentation</title>
+  <title>Radial Basis Function [CAD] &mdash; PyGeM 2.0.2 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.2
               </div>
             
           
@@ -264,12 +264,12 @@ function are already implemented and they are available through the
 function (see class documentation for the updated list of basis
 function).  A callable object can be passed as basis function. Default
 is ‘gaussian_spline’.</p></li>
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scaling parameter r that affects the shape of the
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the scaling parameter r that affects the shape of the
 basis functions.  For details see the class
 <code class="xref py py-class docutils literal notranslate"><span class="pre">RBF</span></code>. The default value is 0.5.</p></li>
-<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – the additional parameters that may be passed to
+<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – the additional parameters that may be passed to
 the kernel function. Default is None.</p></li>
-<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
 along <cite>u</cite> direction before the deformation. This parameter is useful
 whenever the gradient of the imposed deformation present spatial scales
 that are smaller than the local distance among the original poles of
@@ -277,7 +277,7 @@ the surface/curve. Enriching the poles will allow for a more accurate
 application of the deformation, and might also reduce possible
 mismatches between bordering faces. On the orther hand, it might result
 in higher computational cost and bigger output files. Default is 0.</p></li>
-<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
 along <cite>v</cite> direction before the deformation. This parameter is useful
 whenever the gradient of the imposed deformation present spatial scales
 that are smaller than the local distance among the original poles of
@@ -285,7 +285,7 @@ the surface/curve. Enriching the poles will allow for a more accurate
 application of the deformation, and might also reduce possible
 mismatches between bordering faces. On the orther hand, it might result
 in higher computational cost and bigger output files.  Default is 0.</p></li>
-<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS curves
+<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS curves
 before the deformation. This parameter is useful whenever the gradient
 of the imposed deformation present spatial scales that are smaller than
 the local distance among the original poles of the surface/curve.
@@ -293,7 +293,7 @@ Enriching the poles will allow for a more accurate application of the
 deformation, and might also reduce possible mismatches between
 bordering faces. On the orther hand, it might result in higher
 computational cost and bigger output files. Default is 0.</p></li>
-<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the tolerance involved in several internal
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the tolerance involved in several internal
 operations of the procedure (joining wires in a single curve before
 deformation and placing new poles on curves and surfaces). Change the
 default value only if the input file scale is significantly different
@@ -316,17 +316,17 @@ interpolation control points before the deformation.</p></li>
 interpolation control points after the deformation.</p></li>
 <li><p><strong>basis</strong> (<em>callable</em>) – the basis functions to use in the
 transformation.</p></li>
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scaling parameter that affects the shape of the
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the scaling parameter that affects the shape of the
 basis functions.</p></li>
-<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – the additional parameters that may be passed to
+<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – the additional parameters that may be passed to
 the kernel function.</p></li>
-<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+<li><p><strong>u_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
 along <cite>u</cite> direction before the deformation.</p></li>
-<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
+<li><p><strong>v_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS surfaces
 along <cite>v</cite> direction before the deformation.</p></li>
-<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the number of knots to add to the NURBS curves
+<li><p><strong>t_knots_to_add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of knots to add to the NURBS curves
 before the deformation.</p></li>
-<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the tolerance involved in several internal
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the tolerance involved in several internal
 operations of the procedure (joining wires in a single curve before
 deformation and placing new poles on curves and surfaces).</p></li>
 </ul>
@@ -370,7 +370,7 @@ deformation and placing new poles on curves and surfaces).</p></li>
         
         &copy; Copyright Copyright 2017-2020, PyGeM contributors
       <span class="lastupdated">
-        Last updated on Jul 08, 2020.
+        Last updated on Nov 03, 2020.
       </span>
 
     </p>

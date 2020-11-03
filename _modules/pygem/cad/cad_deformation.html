@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pygem.cad.cad_deformation &mdash; PyGeM 2.0.0 documentation</title>
+  <title>pygem.cad.cad_deformation &mdash; PyGeM 2.0.2 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.2
               </div>
             
           
@@ -307,6 +307,7 @@
             <span class="c1"># It is considered the most secure standard for STEP.</span>
             <span class="c1"># *According to PythonOCC documentation (http://www.pythonocc.org/)</span>
             <span class="n">Interface_Static_SetCVal</span><span class="p">(</span><span class="s2">&quot;write.step.schema&quot;</span><span class="p">,</span> <span class="s2">&quot;AP203&quot;</span><span class="p">)</span>
+            <span class="n">Interface_Static_SetCVal</span><span class="p">(</span><span class="s1">&#39;write.surfacecurve.mode&#39;</span><span class="p">,</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
             <span class="n">step_writer</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">STEPControl_AsIs</span><span class="p">)</span>
             <span class="n">step_writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -649,7 +650,7 @@
         
         &copy; Copyright Copyright 2017-2020, PyGeM contributors
       <span class="lastupdated">
-        Last updated on Jul 08, 2020.
+        Last updated on Nov 03, 2020.
       </span>
 
     </p>

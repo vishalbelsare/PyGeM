@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Radial Basis Function &mdash; PyGeM 2.0.0 documentation</title>
+  <title>Radial Basis Function &mdash; PyGeM 2.0.2 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.2
               </div>
             
           
@@ -256,10 +256,10 @@ function are already implemented and they are available through the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">RBF</span></code> by passing the name of the right
 function (see class documentation for the updated list of basis
 function).  A callable object can be passed as basis function.</p></li>
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scaling parameter r that affects the shape of the
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the scaling parameter r that affects the shape of the
 basis functions.  For details see the class
 <code class="xref py py-class docutils literal notranslate"><span class="pre">RBF</span></code>. The default value is 0.5.</p></li>
-<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – the additional parameters that may be passed to
+<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – the additional parameters that may be passed to
 the kernel function. Default is None.</p></li>
 </ul>
 </dd>
@@ -278,9 +278,9 @@ interpolation control points before the deformation.</p></li>
 interpolation control points after the deformation.</p></li>
 <li><p><strong>basis</strong> (<em>callable</em>) – the basis functions to use in the
 transformation.</p></li>
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the scaling parameter that affects the shape of the
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – the scaling parameter that affects the shape of the
 basis functions.</p></li>
-<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – the additional parameters that may be passed to
+<li><p><strong>extra_parameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – the additional parameters that may be passed to
 the kernel function.</p></li>
 </ul>
 </dd>
@@ -304,7 +304,27 @@ the kernel function.</p></li>
 <dd><p>Total number of control points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">basis</code></dt>
+<dd><p>The kernel to use in the deformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the callable kernel</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the kernel. It is possible to pass the name of the
+function (check the list of all implemented functions in the
+<cite>pygem.rbf_factory.RBFFactory</cite> class) or directly the callable
+function.</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
 </dd></dl>
@@ -368,10 +388,17 @@ parameters_rbf.prm.</p>
 figure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – if None the figure is shown, otherwise it is saved
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – if None the figure is shown, otherwise it is saved
 on the specified <cite>filename</cite>. Default is None.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygem/rbf.html#RBF.compute_weights"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>This method compute the weights according to the
+<cite>original_control_points</cite> and <cite>deformed_control_points</cite> arrays.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -408,7 +435,7 @@ execution it sets <cite>self.modified_mesh_points</cite>.</p>
         
         &copy; Copyright Copyright 2017-2020, PyGeM contributors
       <span class="lastupdated">
-        Last updated on Jul 08, 2020.
+        Last updated on Nov 03, 2020.
       </span>
 
     </p>

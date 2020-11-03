@@ -4,7 +4,7 @@ In this folder we collect several useful tutorials in order to understand the pr
 
 
 | Name  | Description   | PyGeM used classes | input geometries  |
-|---|---|---|---|---|
+|-------|---------------|--------------------|-------------------|
 | Tutorial1&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial1/tutorial-1-ffd.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial1/tutorial-1-ffd.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-1-ffd.html)]| free-form deformation to morph a spherical mesh | `pygem.FFD`  | `numpy.ndarray`  |
 | Tutorial2&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-2-iges.html)] | free-form deformation to morph a cylinder | `pygem.cad.FFD`  | IGES file |
 | Tutorial3&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-3-rbf.html)] | radial basis function to morph a cubic mesh | `pygem.RBF`  | `numpy.ndarray` |

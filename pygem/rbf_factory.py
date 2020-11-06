@@ -4,7 +4,7 @@ Factory class for radial basis functions
 import numpy as np
 
 
-class classproperty(object):
+class classproperty():
     def __init__(self, f):
         self.f = f
 
@@ -12,7 +12,7 @@ class classproperty(object):
         return self.f(owner)
 
 
-class RBFFactory(object):
+class RBFFactory():
     """
     Factory class that spawns the radial basis functions.
 
@@ -24,6 +24,7 @@ class RBFFactory(object):
         >>> for fname in RBFFactory.bases:
         >>>     y = RBFFactory(fname)(x)
     """
+    @staticmethod
     def gaussian_spline(X, r=1):
         """
         It implements the following formula:
@@ -40,6 +41,7 @@ class RBFFactory(object):
         result = np.exp(-(X * X) / (r * r))
         return result
 
+    @staticmethod
     def multi_quadratic_biharmonic_spline(X, r=1):
         """
         It implements the following formula:
@@ -56,6 +58,7 @@ class RBFFactory(object):
         result = np.sqrt((X * X) + (r * r))
         return result
 
+    @staticmethod
     def inv_multi_quadratic_biharmonic_spline(X, r=1):
         """
         It implements the following formula:
@@ -73,6 +76,7 @@ class RBFFactory(object):
         result = 1.0 / (np.sqrt((X * X) + (r * r)))
         return result
 
+    @staticmethod
     def thin_plate_spline(X, r=1):
         """
         It implements the following formula:
@@ -93,6 +97,7 @@ class RBFFactory(object):
         result = np.where(arg > 0, result * np.log(arg), result)
         return result
 
+    @staticmethod
     def beckert_wendland_c2_basis(X, r=1):
         """
         It implements the following formula:
@@ -114,6 +119,7 @@ class RBFFactory(object):
         result = first * second
         return result
 
+    @staticmethod
     def polyharmonic_spline(X, r=1, k=2):
         """
         It implements the following formula:
@@ -162,13 +168,14 @@ class RBFFactory(object):
     ##                                                                        ##
     ############################################################################
     __bases = {
-        'gaussian_spline': gaussian_spline,
-        'multi_quadratic_biharmonic_spline': multi_quadratic_biharmonic_spline,
+        'gaussian_spline': gaussian_spline.__func__,
+        'multi_quadratic_biharmonic_spline': 
+        multi_quadratic_biharmonic_spline.__func__,
         'inv_multi_quadratic_biharmonic_spline':
-        inv_multi_quadratic_biharmonic_spline,
-        'thin_plate_spline': thin_plate_spline,
-        'beckert_wendland_c2_basis': beckert_wendland_c2_basis,
-        'polyharmonic_spline': polyharmonic_spline
+        inv_multi_quadratic_biharmonic_spline.__func__,
+        'thin_plate_spline': thin_plate_spline.__func__,
+        'beckert_wendland_c2_basis': beckert_wendland_c2_basis.__func__,
+        'polyharmonic_spline': polyharmonic_spline.__func__
     }
 
     def __new__(self, fname):
@@ -177,11 +184,10 @@ class RBFFactory(object):
         # implemented radial basis functions
         if fname in self.bases:
             return self.__bases[fname]
-        else:
-            raise NameError(
-                """The name of the basis function in the parameters file is not
-                correct or not implemented. Check the documentation for
-                all the available functions.""")
+        raise NameError(
+            """The name of the basis function in the parameters file is not
+            correct or not implemented. Check the documentation for
+            all the available functions.""")
 
     @classproperty
     def bases(self):

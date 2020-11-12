@@ -45,6 +45,7 @@ try:
 except ImportError:
     import ConfigParser as configparser
 import os
+import copy
 import numpy as np
 from scipy import special
 
@@ -477,7 +478,7 @@ class FFD(Deformation):
 
         return box_points.T
 
-    def reflect(self, axis=0):
+    def reflect(self, axis=0, in_place=True):
         """
         Reflect the lattice of control points along the direction defined
         by `axis`. In particular the origin point of the lattice is preserved.
@@ -492,6 +493,17 @@ class FFD(Deformation):
         :param int axis: axis along which the reflection is performed.
             Default is 0. Possible values are 0, 1, or 2, corresponding
             to x, y, and z respectively.
+        :param bool in_place: if True, the object attributes are modified in
+            place; if False, a new object is return with the reflected lattice.
+            Default is True.
+        :return: a new object with the same parameters and the reflected
+            lattice if `in_place` is False, otherwise NoneType.
+ 
+        :Example:
+
+            >>> ffd.reflect(axis=0, in_place=True) # irreversible
+            >>> # or ...
+            >>> refle_ffd = ffd.reflect(axis=0, in_place=False)
         """
         # check axis value
         if axis not in (0, 1, 2):
@@ -507,6 +519,9 @@ class FFD(Deformation):
                 "{} you can not diplace the control ".format(axis) + \
                 "points in the symmetry plane along that axis."
                 )
+
+        if in_place is False:
+            self = copy.deepcopy(self)
 
         # double the control points in the given axis -1 (the symmetry plane)
         self.n_control_points[axis] = 2 * self.n_control_points[axis] - 1
@@ -536,6 +551,10 @@ class FFD(Deformation):
                                     reflection[2] *
                                     np.flip(self.array_mu_z, axis)[indeces],
                                     axis=axis)
+        if in_place is False:
+            return self
+
+
 
     def __call__(self, src_pts):
         """

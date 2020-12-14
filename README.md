@@ -165,8 +165,16 @@ Here we show three applications, taken from the **naval**, **nautical** and **au
 If you use this package in your publications please cite the package as follows:
 
 ```tex
-\bibitem{pygem}
-{PyGeM: Python Geometrical Morphing. Available at}: \href{https://github.com/mathLab/PyGeM}{https://github.com/mathLab/PyGeM}.
+@article{TezzeleDemoMolaRozza2020PyGeM,
+author = {Marco Tezzele and Nicola Demo and Andrea Mola and Gianluigi Rozza},
+title = {{PyGeM: Python Geometrical Morphing}},
+journal = {Software Impacts},
+pages = {100047},
+year = {2020},
+issn = {2665-9638},
+doi = {10.1016/j.simpa.2020.100047},
+url = {http://www.sciencedirect.com/science/article/pii/S2665963820300385}
+}
 ```
 
 ### References

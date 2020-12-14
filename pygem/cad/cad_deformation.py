@@ -206,7 +206,9 @@ class CADDeformation():
             edge = topods_Edge(edge_explorer.Current())
 
             # edge can be joined only if it is not degenerated (zero length)
-            if BRep_Tool.Degenerated(edge): continue
+            if BRep_Tool.Degenerated(edge):
+                edge_explorer.Next()
+                continue
 
             # the edge must be converted to Nurbs edge
             nurbs_converter = BRepBuilderAPI_NurbsConvert(edge)

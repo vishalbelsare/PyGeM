@@ -51,6 +51,10 @@ class TestRBF(TestCase):
         rbf = RBF()
         assert rbf.radius == 0.5
 
+    def test_class_members_default_extra(self):
+        rbf = RBF()
+        assert rbf.extra == {}
+
     def test_class_members_default_n_control_points(self):
         rbf = RBF()
         assert rbf.n_control_points == 8
@@ -68,10 +72,20 @@ class TestRBF(TestCase):
         rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
         assert rbf.basis == RBFFactory('gaussian_spline')
 
+    def test_read_parameters_basis2(self):
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_extra.prm')
+        assert rbf.basis == RBFFactory('polyharmonic_spline')
+
     def test_read_parameters_radius(self):
         rbf = RBF()
-        rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
-        assert rbf.radius == 0.5
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_radius.prm')
+        assert rbf.radius == 2.0
+
+    def test_read_extra_parameters(self):
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_extra.prm')
+        assert rbf.extra == {'k': 4}
 
     def test_read_parameters_n_control_points(self):
         rbf = RBF()
@@ -145,17 +159,23 @@ class TestRBF(TestCase):
         
         self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
         #os.remove(outfilename)
-
-    def test_read_parameters_filename_default(self):
-        params = RBF()
-        params.read_parameters()
-        outfilename = 'parameters_rbf.prm'
-        outfilename_expected = 'tests/test_datasets/parameters_rbf_default.prm'
-
-        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-        os.remove(outfilename)
     """
 
     def test_print_info(self):
-        params = RBF()
-        print(params)
+        rbf = RBF()
+        print(rbf)
+
+    def test_call_dummy_transformation(self):
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_default.prm')
+        mesh = self.get_cube_mesh_points()
+        new = rbf(mesh)
+        np.testing.assert_array_almost_equal(new[17], mesh[17])
+
+    def test_call(self):
+        rbf = RBF()
+        rbf.read_parameters('tests/test_datasets/parameters_rbf_extra.prm')
+        mesh = self.get_cube_mesh_points()
+        new = rbf(mesh)
+        np.testing.assert_array_almost_equal(new[17], [8.947368e-01, 5.353524e-17, 8.845331e-03])
+

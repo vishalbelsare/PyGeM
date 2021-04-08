@@ -108,14 +108,14 @@ class RBF(Deformation):
         transformation.
     :cvar float radius: the scaling parameter that affects the shape of the
         basis functions.
-    :cvar dict extra_parameter: the additional parameters that may be passed to
-    	the kernel function.
+    :cvar dict extra: the additional parameters that may be passed to the
+        kernel function.
         
     :Example:
 
         >>> from pygem import RBF
         >>> import numpy as np
-        >>> rbf = RBF('gaussian_spline')
+        >>> rbf = RBF(func='gaussian_spline')
         >>> xv = np.linspace(0, 1, 20)
         >>> yv = np.linspace(0, 1, 20)
         >>> zv = np.linspace(0, 1, 20)
@@ -208,7 +208,7 @@ class RBF(Deformation):
         """
         npts, dim = X.shape
         H = np.zeros((npts + 3 + 1, npts + 3 + 1))
-        H[:npts, :npts] = self.basis(cdist(X, X), self.radius)#, **self.extra)
+        H[:npts, :npts] = self.basis(cdist(X, X), self.radius, **self.extra)
         H[npts, :npts] = 1.0
         H[:npts, npts] = 1.0
         H[:npts, -3:] = X
@@ -239,8 +239,11 @@ class RBF(Deformation):
         config = configparser.RawConfigParser()
         config.read(filename)
 
-        self.basis = config.get('Radial Basis Functions', 'basis function')
-        self.radius = config.getfloat('Radial Basis Functions', 'radius')
+        rbf_settings = dict(config.items('Radial Basis Functions'))
+        
+        self.basis = rbf_settings.pop('basis function')
+        self.radius = float(rbf_settings.pop('radius'))
+        self.extra = {k: eval(v) for k, v in rbf_settings.items()}
 
         ctrl_points = config.get('Control points', 'original control points')
         lines = ctrl_points.split('\n')
@@ -331,6 +334,7 @@ class RBF(Deformation):
         string = ''
         string += 'basis function = {}\n'.format(self.basis)
         string += 'radius = {}\n'.format(self.radius)
+        string += 'extra_parameter = {}\n'.format(self.extra)
         string += '\noriginal control points =\n'
         string += '{}\n'.format(self.original_control_points)
         string += '\ndeformed control points =\n'

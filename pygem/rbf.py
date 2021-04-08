@@ -392,8 +392,8 @@ class RBF(Deformation):
         H = np.zeros((src_pts.shape[0], self.n_control_points + 3 + 1))
         H[:, :self.n_control_points] = self.basis(
             cdist(src_pts, self.original_control_points), 
-            self.radius)
-            #**self.extra)
+            self.radius,
+            **self.extra)
         H[:, self.n_control_points] = 1.0
         H[:, -3:] = src_pts
         return np.asarray(np.dot(H, self.weights))

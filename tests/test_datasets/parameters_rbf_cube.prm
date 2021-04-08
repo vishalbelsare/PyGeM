@@ -12,9 +12,6 @@ basis function: gaussian_spline
 # of the class RBF for details.
 radius: 0.5
 
-# The power parameter k for polyharmonic spline
-# See the documentation for details
-power: 2
 
 
 [Control points]

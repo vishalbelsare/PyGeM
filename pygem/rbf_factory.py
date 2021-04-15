@@ -77,7 +77,7 @@ class RBFFactory():
         return result
 
     @staticmethod
-    def thin_plate_spline(X, r=1):
+    def thin_plate_spline(X, r=1, k=2):
         """
         It implements the following formula:
 
@@ -93,7 +93,7 @@ class RBFFactory():
         :rtype: float
         """
         arg = X / r
-        result = arg * arg
+        result = np.power(arg,k)
         result = np.where(arg > 0, result * np.log(arg), result)
         return result
 

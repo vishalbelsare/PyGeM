@@ -88,15 +88,15 @@ class RBFFactory():
 
         :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above. 
+        :param float k: the parameter k in the formula above.
          
+         With k=2 the function is "radius free", that means independent of radius value.
 
         :return: result: the result of the formula above.
-        :rtype: float
-
-        With k=2 the function is "radius free", that means independent of radius value.
+        :rtype: float      
         """
         arg = X / r
-        result = np.power(arg,k)
+        result = np.power(arg, k)
         result = np.where(arg > 0, result * np.log(arg), result)
         return result
 

@@ -77,23 +77,26 @@ class RBFFactory():
         return result
 
     @staticmethod
-    def thin_plate_spline(X, r=1):
+    def thin_plate_spline(X, r=1, k=2):
         """
         It implements the following formula:
 
         .. math::
             \\varphi(\\boldsymbol{x}) =
-            \\left(\\frac{\\boldsymbol{x}}{r}\\right)^2
+            \\left(\\frac{\\boldsymbol{x}}{r}\\right)^k
             \\ln\\frac{\\boldsymbol{x}}{r}
 
-        :param numpy.ndarray X: the norm x in the formula above.
-        :param float r: the parameter r in the formula above.
+         With k=2 the function is "radius free", that means independent of radius value.
 
+        :param numpy.ndarray X: the norm x in the formula above.
+        :param float r: the parameter r in the formula above. 
+        :param float k: the parameter k in the formula above.
+         
         :return: result: the result of the formula above.
-        :rtype: float
+        :rtype: float      
         """
         arg = X / r
-        result = arg * arg
+        result = np.power(arg, k)
         result = np.where(arg > 0, result * np.log(arg), result)
         return result
 

@@ -86,12 +86,12 @@ class RBFFactory():
             \\left(\\frac{\\boldsymbol{x}}{r}\\right)^k
             \\ln\\frac{\\boldsymbol{x}}{r}
 
+         With k=2 the function is "radius free", that means independent of radius value.
+
         :param numpy.ndarray X: the norm x in the formula above.
         :param float r: the parameter r in the formula above. 
         :param float k: the parameter k in the formula above.
          
-         With k=2 the function is "radius free", that means independent of radius value.
-
         :return: result: the result of the formula above.
         :rtype: float      
         """

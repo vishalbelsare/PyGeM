@@ -68,6 +68,8 @@ from scipy.spatial.distance import cdist
 from .deformation import Deformation
 from .rbf_factory import RBFFactory
 
+import matplotlib.pyplot as plt
+
 
 class RBF(Deformation):
     """

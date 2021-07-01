@@ -4,8 +4,8 @@ technique.  This technique is still based on the use of a set of parameters, the
 so-called control points, as for FFD, but RBF is interpolatory. Another
 important key point of RBF strategy relies in the way we can locate the control
 points: in fact, instead of FFD where control points need to be placed inside a
-regular lattice, with RBF we hano no more limitations. So we have the
-possibility to perform localized control points refiniments.
+regular lattice, with RBF we have no more limitations. So we have the
+possibility to perform localized control points refinements.
 The module is analogous to the freeform one.
 
 :Theoretical Insight:

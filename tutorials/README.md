@@ -9,6 +9,7 @@ In this folder we collect several useful tutorials in order to understand the pr
 | Tutorial2&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial2/tutorial-2-iges.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-2-iges.html)] | free-form deformation to morph a cylinder | `pygem.cad.FFD`  | IGES file |
 | Tutorial3&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial3/tutorial-3-rbf.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-3-rbf.html)] | radial basis function to morph a cubic mesh | `pygem.RBF`  | `numpy.ndarray` |
 | Tutorial4&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial4/tutorial-4-idw.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial4/tutorial-4-idw.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-4-idw.html)] | inverse distance weighting to deform a cubic mesh | `pygem.IDW`  | `numpy.ndarray` |
+| Tutorial5&#160;[[.ipynb](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial5/tutorial-5-file.ipynb),&#160;[.py](https://github.com/mathLab/PyGeM/blob/master/tutorials/tutorial5/tutorial-5-file.py),&#160;[.html](http://mathlab.github.io/PyGeM/tutorial-5-file.html)] | free-form deformation to deform an object contained to file | `pygem.FFD`  | `.vtp` file, `.stl` file |
 
 
 

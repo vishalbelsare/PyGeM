@@ -14,6 +14,7 @@ Code Documentation
    stlhandler
    openfhandler
    unvhandler
+   utils
 
 CAD
 ---

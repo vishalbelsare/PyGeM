@@ -6,13 +6,17 @@ import sys
 from setuptools import setup, find_packages, Command
 import pygem
 
+meta = {}
+with open("pygem/meta.py") as fp:
+    exec(fp.read(), meta)
+
 # Package meta-data.
-NAME = pygem.__title__
+NAME = meta['__title__']
 DESCRIPTION = 'Python Geometrical Morphing.'
 URL = 'https://github.com/mathLab/PyGeM'
-MAIL = pygem.__mail__
-AUTHOR = pygem.__author__
-VERSION = pygem.__version__
+MAIL = meta['__mail__']
+AUTHOR = meta['__author__']
+VERSION = meta['__version__']
 KEYWORDS = 'dimension_reduction mathematics ffd morphing iges stl vtk openfoam'
 
 REQUIRED = [
